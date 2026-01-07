@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/BussinessServices/">
+    <Project Path="Netrex.Frontend.Application/Netrex.Frontend.Application.csproj" Id="953f67ac-ab88-428b-8802-ffe96273f98c" />
+  </Folder>
   <Folder Name="/Netrex.Frontend/">
     <Project Path="Netrex.Frontend.Blazor/Netrex.Frontend.Blazor.csproj" Id="2d081c5e-f7f8-4eaf-83d9-4dd4a68337ed" />
   </Folder>

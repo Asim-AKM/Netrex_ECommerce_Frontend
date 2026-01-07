@@ -9,6 +9,12 @@ body {
     position: relative;
 }
 
+.main-content {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
 header {
     display: flex;
     align-items: center;

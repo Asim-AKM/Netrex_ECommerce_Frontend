@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+using Netrex.Frontend.Application.DIs;
 using Netrex.Frontend.Blazor.Components;
 using Netrex.Frontend.Blazor.Services;
 
@@ -12,6 +12,10 @@ builder.Services.AddHttpClient("ApiClient", client =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Application Layer DIs
+builder.Services.AddApplicationDIs();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,0 +1,47 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+
+<div class="auth-wrapper">
+    <div class="auth-left">
+        <h1>NETREX<br />ECOMMERCE</h1>
+        <p>Create your account and start selling smarter.</p>
+    </div>
+
+    <EditForm class="auth-right" OnValidSubmit="HandleLogin" FormName="SignIn" Model="_model">
+        <DataAnnotationsValidator />
+
+        <h2>Login</h2>
+
+        <div class="input-group">
+            <span class="icon">
+                <img src="assets/user-management-assets/icons/email-icon.png" />
+            </span>
+            <input @bind-value="_model.Email" type="email" placeholder="Email" />
+        </div>
+
+        <div class="input-group">
+            <span class="icon">
+                <img src="assets/user-management-assets/icons/Lock black.png" />
+            </span>
+
+            <input name="Password" id="password" type="password" @bind-value="_model.Password" placeholder="Password" />
+
+            <span class="toggle-password" onclick="togglePassword()">
+                <img id="eyeIcon" src="assets/user-management-assets/icons/monkey-password-hide.png" style="height:25px" required />
+            </span>
+        </div>
+
+
+        <button class="btn">Login</button>
+
+        <div class="auth-footer">
+            <div class="auth-footer-links">
+                Don't have an account? <a href="/register">Create</a>
+            </div>
+            <div class="auth-footer-links">
+                Forgot Password? <a href="/verify-email">Reset</a>
+            </div>
+        </div>
+    </EditForm>
+</div>
+

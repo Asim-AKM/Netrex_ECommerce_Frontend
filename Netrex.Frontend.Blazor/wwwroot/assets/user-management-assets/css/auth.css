@@ -27,6 +27,8 @@
     overflow: hidden;
     box-shadow: var(--shadow);
     animation: fadeSlide .8s ease;
+
+    margin-bottom:25px;
 }
 
 /* LEFT */

@@ -16,7 +16,7 @@
             <span class="icon">
                 <img src="assets/user-management-assets/icons/email-icon.png" />
             </span>
-            <input @bind-value="_model.Email" type="email" placeholder="Email" />
+            <InputText @bind-value="_model.Email" type="email" placeholder="Email" />
         </div>
 
         <div class="input-group">
@@ -24,7 +24,7 @@
                 <img src="assets/user-management-assets/icons/Lock black.png" />
             </span>
 
-            <input name="Password" id="password" type="password" @bind-value="_model.Password" placeholder="Password" />
+            <InputText name="Password" id="password" type="password" @bind-value="_model.Password" placeholder="Password" />
 
             <span class="toggle-password" onclick="togglePassword()">
                 <img id="eyeIcon" src="assets/user-management-assets/icons/monkey-password-hide.png" style="height:25px" required />

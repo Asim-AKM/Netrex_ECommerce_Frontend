@@ -78,8 +78,12 @@
         transition: .3s;
     }
 
-        .input-group input:focus {
+        .input-group input:focus,
+        .input-group input:active,
+        .input-group input:valid {
             border-bottom-color: var(--primary);
+            outline: none !important;
+            box-shadow: none !important;
         }
 
 .icon {
@@ -113,10 +117,19 @@
     color: #fff;
     cursor: pointer;
     transition: .3s;
+    outline: none;
+    border: none;
 }
 
     .btn:hover {
         background: var(--secondary);
+    }
+
+    .btn:focus,
+    .btn:active,
+    .btn:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
     }
 
 /* LINKS */

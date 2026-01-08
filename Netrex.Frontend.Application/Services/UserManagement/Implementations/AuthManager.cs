@@ -1,5 +1,6 @@
 ﻿using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
+using System.Net;
 using System.Net.Http.Json;
 
 
@@ -10,15 +11,15 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
         private readonly HttpClient _httpClient;
         public AuthManager(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClientFactory.CreateClient("Netrex");
+            _httpClient = httpClientFactory.CreateClient("ApiClient");
         }
-        public async Task<bool> RegisterAsync(RegisterViewModel registerView)
+        public async Task<HttpStatusCode> RegisterAsync(VmRegister registerView)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Authentication/Create", registerView);
-            return response.IsSuccessStatusCode;
+            return response.StatusCode;
         }
 
-        public async Task<bool> LoginAsync(LoginViewModel viewModel)
+        public async Task<bool> LoginAsync(VmLogin viewModel)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Authentication/Login", viewModel);
             return response.IsSuccessStatusCode;

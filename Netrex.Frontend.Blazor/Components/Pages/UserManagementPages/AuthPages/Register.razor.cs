@@ -7,6 +7,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
     public partial class Register
     {
+
         [Inject]
         private IAuthManager _authManager { get; set; }
         VmRegister _model = new VmRegister();
@@ -27,5 +28,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
                 message = "Response is not valide(false)";
             }
         }
+
     }
 }

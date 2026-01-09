@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
 using System.Net;
+using System.Text.Json;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -11,23 +13,38 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         [Inject]
         private IAuthManager _authManager { get; set; }
         VmRegister _model = new VmRegister();
-        private string? message;
+        string? generalMessage;
+        Dictionary<string, string> fieldErrors = new Dictionary<string, string>();
+
         public async Task HandleSignUp()
         {
-            var response = await _authManager.RegisterAsync(_model);
-            if (response == HttpStatusCode.Created)
+            generalMessage = null;
+            fieldErrors.Clear();
+
+            var response = await _authManager.RegisterAsync<object>(_model);
+
+            if (response.IsSuccess)
             {
-                message = "Created Succefuly";
+                generalMessage = response.Message; // "User Created Successfully"
+                _model = new VmRegister();
             }
-            else if (response == HttpStatusCode.BadGateway)
+            else if (response.Status == 400 && response.Data is JsonElement element)
             {
-                message = "Validation Error";
+                var errors = JsonSerializer.Deserialize<List<ValidationError>>(element.GetRawText());
+
+                foreach (var error in errors!)
+                {
+                    fieldErrors[error.Field] = string.Join(", ", error.Errors);
+                }
+
+                generalMessage = response.Message;
             }
             else
             {
-                message = "Response is not valide(false)";
+                generalMessage = response.Message;
             }
         }
+
 
     }
 }

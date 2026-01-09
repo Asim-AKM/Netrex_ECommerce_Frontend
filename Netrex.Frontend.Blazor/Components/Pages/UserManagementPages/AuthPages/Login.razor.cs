@@ -8,7 +8,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
     {
         [Inject]
         public IAuthManager? _authManager { get; set; }
-        LoginViewModel _model = new LoginViewModel();
+        VmLogin _model = new VmLogin();
         public async Task HandleLogin()
         {
             await _authManager!.LoginAsync(_model);

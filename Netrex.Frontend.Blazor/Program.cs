@@ -13,6 +13,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Add Loader Service
+builder.Services.AddScoped<LoaderService>();
+
 // Application Layer DIs
 builder.Services.AddApplicationDIs();
 

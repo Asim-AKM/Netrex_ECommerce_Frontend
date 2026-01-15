@@ -11,7 +11,6 @@ builder.Services.AddHttpClient("ApiClient", client =>
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Application Layer DIs
 builder.Services.AddApplicationDIs();

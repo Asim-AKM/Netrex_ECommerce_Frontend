@@ -1,0 +1,37 @@
+@implements IDisposable
+@inject LoaderService LoaderService
+
+@if (IsVisible)
+{
+    <div class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+}
+
+@code {
+    private bool IsVisible;
+
+    protected override void OnInitialized()
+    {
+        LoaderService.OnShow += ShowLoader;
+        LoaderService.OnHide += HideLoader;
+    }
+
+    void ShowLoader()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    void HideLoader()
+    {
+        IsVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        LoaderService.OnShow -= ShowLoader;
+        LoaderService.OnHide -= HideLoader;
+    }
+}

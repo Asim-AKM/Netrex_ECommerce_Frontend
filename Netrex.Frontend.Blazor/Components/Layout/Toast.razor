@@ -1,0 +1,102 @@
+﻿@using Netrex.Frontend.Application.Commons.Enums
+@using Netrex.Frontend.Application.Services.Common
+@using Netrex.Frontend.Application.ViewModels.Common
+@implements IDisposable
+@inject ToastManager _toastManager
+
+<div class="toast-wrapper">
+    @foreach (var toast in ActiveToasts.Values)
+    {
+        <div class="toast-container @toast.Message.Type.ToString().ToLower()"
+             @key="toast.Message.Id"
+             @onmouseenter="() => PauseToast(toast)"
+             @onmouseleave="() => ResumeToast(toast)">
+
+            <div class="toast-icon">@GetIcon((ToastType)toast.Message.Type)</div>
+
+            <div class="toast-content">
+                <strong class="toast-title">@toast.Message.Title</strong>
+                <p>@toast.Message.Message</p>
+            </div>
+
+            <span class="toast-close" @onclick="() => RemoveToast(toast.Message.Id)">×</span>
+
+            <div class="toast-progress-container">
+                <div class="toast-progress-bar"
+                     style="animation-duration: @(toast.Message.Duration)ms;">
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // We use a internal helper class to track the timer for each toast
+    private class ToastRuntime
+    {
+        public ToastMessage Message { get; set; } = null!;
+        public CancellationTokenSource TokenSource { get; set; } = new();
+    }
+
+    // Using a Dictionary for faster lookup via ID
+    private Dictionary<Guid, ToastRuntime> ActiveToasts = new();
+
+    protected override void OnInitialized() => _toastManager.OnShow += HandleShow;
+
+    private void HandleShow(ToastMessage message)
+    {
+        InvokeAsync(async () =>
+        {
+            var runtime = new ToastRuntime { Message = message };
+            ActiveToasts.Add(message.Id, runtime);
+            StateHasChanged();
+
+            await StartTimer(runtime);
+        });
+    }
+
+    private async Task StartTimer(ToastRuntime runtime)
+    {
+        try
+        {
+            // Wait for the duration, but stop if TokenSource is cancelled
+            await Task.Delay(runtime.Message.Duration, runtime.TokenSource.Token);
+            RemoveToast(runtime.Message.Id);
+        }
+        catch (TaskCanceledException)
+        {
+            // The mouse hovered, so the task was cancelled. Do nothing.
+        }
+    }
+
+    private void PauseToast(ToastRuntime runtime)
+    {
+        // Cancel the current "waiting" task
+        runtime.TokenSource.Cancel();
+    }
+
+    private void ResumeToast(ToastRuntime runtime)
+    {
+        // Create a new token and start waiting again
+        runtime.TokenSource = new CancellationTokenSource();
+        _ = StartTimer(runtime);
+    }
+
+    private void RemoveToast(Guid id)
+    {
+        if (ActiveToasts.Remove(id, out var runtime))
+        {
+            runtime.TokenSource.Cancel();
+            StateHasChanged();
+        }
+    }
+
+    private string GetIcon(ToastType type) => type switch
+    {
+        ToastType.Success => "✔️",
+        ToastType.Error => "❌",
+        _ => "ℹ️"
+    };
+
+    public void Dispose() => _toastManager.OnShow -= HandleShow;
+}

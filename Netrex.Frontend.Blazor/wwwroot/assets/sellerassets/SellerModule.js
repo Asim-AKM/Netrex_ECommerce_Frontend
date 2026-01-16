@@ -2,11 +2,10 @@
 let sellerProfile = {
     name: 'saqibkhan',
     email: 'saqibkhanskm1@gmail.com',
-    phone: '+1-555-0123',
+    phone: '0333501115',
     bio: 'Premium electronics store with quality products',
-    image: 'Pictures/WhatsApp Image 2025-12-27 at 09.30.06.jpeg"'
+    image: '/assets/sellerassets/Pictures/MyImage.png'
 };
-
 // Product Data
 let products = [
     {
@@ -15,7 +14,7 @@ let products = [
         sku: 'WH-001',
         price: 129.99,
         stock: 45,
-        image:'Pictures/image.png'
+        image: '/assets/sellerassets/Pictures/image.png'
     },
     {
         id: 2,
@@ -23,7 +22,7 @@ let products = [
         sku: 'USB-002',
         price: 19.99,
         stock: 200,
-        image: 'Pictures/image copy.png'
+        image: '/assets/sellerassets/Pictures/image copy.png'
     },
     {
         id: 3,
@@ -31,25 +30,27 @@ let products = [
         sku: 'PC-003',
         price: 24.99,
         stock: 150,
-        image: 'Pictures/image copy 2.png'
+        image: '/assets/sellerassets/Pictures/image copy 2.png'
     },
     {
-        id:4,
-        name:'Portable HardDrive',
-        sku:'PC-004',
-        price:12.99,
-        stock:25,
-         image: 'Pictures/image copy 3.png'
+        id: 4,
+        name: 'Portable HardDrive',
+        sku: 'PC-004',
+        price: 12.99,
+        stock: 25,
+        image: '/assets/sellerassets/Pictures/image copy 3.png'
     }
 ];
+
 
 // Tab Navigation
 function showTab(tabName, event) {
     event.preventDefault();
 
     // Hide all tabs
-    const tabs = document.querySelectorAll('.tab-pane');
-    tabs.forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(tab => {
+        tab.classList.remove('active');
+    });
 
     // Show selected tab
     const selectedTab = document.getElementById(tabName);
@@ -58,13 +59,18 @@ function showTab(tabName, event) {
     }
 
     // Update nav links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
     event.target.closest('.nav-link').classList.add('active');
 
-    // Initialize charts if reports tab
+    // 🔥 IMPORTANT FIX
+    if (tabName === 'products') {
+        renderProducts();
+    }
+
     if (tabName === 'reports') {
-        setTimeout(initializeCharts, 500);
+        setTimeout(initializeCharts, 300);
     }
 }
 

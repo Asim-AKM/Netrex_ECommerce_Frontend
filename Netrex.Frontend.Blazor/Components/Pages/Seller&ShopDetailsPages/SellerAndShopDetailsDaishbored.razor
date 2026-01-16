@@ -1,7 +1,7 @@
 ﻿@page "/SellerAndShopDetailsDaishbored"
 @using Netrex.Frontend.Blazor.Components.Layout
 @rendermode InteractiveServer
-@layout MainLayout
+@layout SellerMainLayout
 
 <PageTitle>Seller Hub</PageTitle>
 
@@ -9,7 +9,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <img src="/assets/SellerModuleassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 32px; width: auto;">
+            <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 32px; width: auto;">
             <h3>Seller Hub</h3>
         </div>
 
@@ -29,17 +29,6 @@
 
     <!-- Main Content -->
     <div class="main-wrapper">
-        <!-- Top Bar -->
-        <div class="topbar">
-            <h2 class="topbar-title">Seller Dashboard</h2>
-            <div class="topbar-actions">
-                <input type="text" class="topbar-search" placeholder="Search orders, products...">
-                <div class="topbar-profile">
-                    <i class="fas fa-bell" style="font-size: 18px; color: #64748b; cursor: pointer;"></i>
-                    <img src="/assets/SellerModuleassets/Pictures/WhatsApp Image 2025-12-27 at 09.30.06.jpeg" alt="Profile">
-                </div>
-            </div>
-        </div>
 
         <!-- Content Area -->
         <div class="content-area">
@@ -456,7 +445,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" style="text-align: center;">
-                    <img id="profileImg" src="/assets/SellerModuleassets/Pictures/WhatsApp Image 2025-12-27 at 09.30.06.jpeg" alt="Profile" style="border-radius: 50%; margin-bottom: 16px; max-width: 150px; width: 150px; height: 150px; object-fit: cover;">
+                <img id="profileImg" src="/assets/sellerassets/Pictures/WhatsApp Image 2025-12-27 at 09.30.06.jpeg" alt="Profile" style="border-radius: 50%; margin-bottom: 16px; max-width: 150px; width: 150px; height: 150px; object-fit: cover;">
                     <h4 id="sellerName">Saqib Khan</h4>
                     <p id="sellerEmail" style="color: #64748b;">saqibkhan1@gmail.com</p>
                     <p id="sellerPhone" style="color: #64748b;">03335011154</p>

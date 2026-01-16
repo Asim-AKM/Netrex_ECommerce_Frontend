@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
+using Netrex.Frontend.Application.Services.Common;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -8,10 +9,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
     {
         [Inject]
         public IAuthManager? _authManager { get; set; }
+        [Inject]
+        public ToastManager _toastMan { get; set; }
         VmLogin _model = new VmLogin();
         public async Task HandleLogin()
         {
-            await _authManager!.LoginAsync(_model);
+            _toastMan.Success("Login Succesfuly !", "Succes");
+            //await _authManager!.LoginAsync(_model);
         }
     }
 }

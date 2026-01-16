@@ -2,8 +2,8 @@
 using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
-using System.Net;
 using System.Text.Json;
+using Netrex.Frontend.Application.Services.Common;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -12,6 +12,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 
         [Inject]
         private IAuthManager _authManager { get; set; }
+        [Inject]
+        public ToastManager _toastManager { get; set; }
         VmRegister _model = new VmRegister();
         string? generalMessage;
         Dictionary<string, string> fieldErrors = new Dictionary<string, string>();
@@ -25,6 +27,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 
             if (response.IsSuccess)
             {
+                _toastManager.Success("Registration successful! You can now log in.", "Registration Successful");
                 generalMessage = response.Message; // "User Created Successfully"
                 _model = new VmRegister();
             }

@@ -1,9 +1,16 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavManager
 
 <div class="layout-root">
 
-    <!-- HEADER -->
-    <NavMenu />
+    <!-- CONDITIONAL HEADER -->
+    @if (!IsAuthPage)
+    {
+        <NavMenu />
+    }
+
+    <!-- MAIN NAVBAR (always visible) -->
+    <MainNavbar />
 
     <!-- PAGE CONTENT -->
     <main class="main-content">
@@ -22,3 +29,24 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    // List of all auth-related routes
+    private readonly string[] AuthPages = new[]
+    {
+        "login",
+        "register",
+        "reset-password",
+        "verify-email"
+    };
+
+    // Returns true if current page is an auth page
+    private bool IsAuthPage
+    {
+        get
+        {
+            var relativePath = NavManager.ToBaseRelativePath(NavManager.Uri).ToLower();
+            return AuthPages.Any(page => relativePath.StartsWith(page));
+        }
+    }
+}

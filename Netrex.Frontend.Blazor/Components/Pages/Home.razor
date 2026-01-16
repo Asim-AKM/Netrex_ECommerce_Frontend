@@ -1,17 +1,66 @@
 ﻿@page "/"
-@inject IJSRuntime JS
-@rendermode InteractiveServer
-
 <PageTitle>Home</PageTitle>
 
 <div class="home-page">
+
+    <!-- Categories Section -->
+    <div class="Categories-list">
+        <ul>
+            <h2>Electronics</h2>
+            <li><a href="">Mobile</a></li>
+            <li><a href="">Laptops</a></li>
+            <li><a href="">Accessories</a></li>
+        </ul>
+
+        <ul>
+            <h2>Fashion</h2>
+            <li><a href="">Men</a></li>
+            <li><a href="">Women</a></li>
+            <li><a href="">Kids</a></li>
+        </ul>
+
+        <ul>
+            <h2>Home</h2>
+            <li><a href="">Furniture</a></li>
+            <li><a href="">Kitchen</a></li>
+            <li><a href="">Decor</a></li>
+        </ul>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul class="nav-items">
+            <li><a href="">Home</a></li>
+            <li><a href="">Shop</a></li>
+            <li><a href="">About Us</a></li>
+            <li><a href="">Blog</a></li>
+            <li><a href="">Contact Us</a></li>
+        </ul>
+
+        <div class="nav-icons">
+            <ul>
+                <li>
+                    <a href="/login"><img src="/assets/icons/people.png" width="32px" alt="" /></a>
+                </li>
+                <li>
+                    <a href=""><img src="/assets/icons/love.png" width="28px" height="28px" alt="" /></a>
+                </li>
+                <li class="cart">
+                    <a href=""><img src="/assets/icons/shopping-bag.png" width="30px" alt="" /></a>
+                    <div class="cart-count">
+                        <p class="counter"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- Slider -->
     <div class="slide-container">
         <div class="slide">
             <img src="assets/images/home1-slider-1.jpg" alt="" />
             <div class="caption">
-                <h2>Pakistan's Smart Shopping Destination</h2>
+                <h2>Pakistan’s Smart Shopping Destination</h2>
                 <p>Your one-stop online store for authentic products, easy returns, and nationwide delivery.</p>
                 <button>Explore Now</button>
             </div>
@@ -26,8 +75,8 @@
             </div>
         </div>
 
-        <span class="arrow prev">&#10094;</span>
-        <span class="arrow next">&#10095;</span>
+        <span class="arrow prev" onclick="slideControler(-1)">&#10094;</span>
+        <span class="arrow next" onclick="slideControler(1)">&#10095;</span>
     </div>
 
     <!-- Categories Icons -->
@@ -42,6 +91,7 @@
     </section>
 
     <!-- Products -->
+
     <section class="product-list">
         <h2 class="featured">Featured Products</h2>
 
@@ -150,7 +200,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="product-card">
                 <div class="product-image">
                     <span class="discount">-30%</span>
@@ -317,12 +366,3 @@
     </section>
 
 </div>
-
-@code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // This runs after the component renders
-        // Call your JavaScript initialization function
-        await JS.InvokeVoidAsync("initializeHomePage");
-    }
-}

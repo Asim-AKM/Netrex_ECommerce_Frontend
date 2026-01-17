@@ -1,0 +1,421 @@
+﻿@page "/admindashboard"
+@using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
+@layout MainAdmindashboardLayout
+<aside class="ad-sidebar">
+    <ul>
+        <li><a href="#ad-dashboard">Dashboard</a></li>
+        <li><a href="#ad-user-management">User Management</a></li>
+        <li><a href="#ad-seller-module">Seller Module</a></li>
+        <li><a href="#ad-product-management">Product Management</a></li>
+        <li><a href="#ad-payment-payout">Payment &amp; Payout</a></li>
+        <li><a href="#ad-cart-order">Cart &amp; Order</a></li>
+        <li><a href="#ad-analytics">Analytics</a></li>
+        <li><a href="#ad-settings">Settings</a></li>
+    </ul>
+</aside>
+
+<main class="ad-main-content">
+    <section id="ad-dashboard" class="ad-section">
+        <h2>Dashboard Overview</h2>
+
+        <div class="ad-dashboard-cards">
+            <div class="ad-card sales">
+                <h3>Total Sales</h3>
+                <p>$12,345</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,20 L10,18 L20,22 L30,15 L40,25 L50,10 L60,20 L70,12 L80,18 L90,8 L100,15"
+                              stroke="#6366f1" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="ad-card orders">
+                <h3>Orders</h3>
+                <p>156</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,25 L10,20 L20,15 L30,22 L40,18 L50,12 L60,25 L70,10 L80,20 L90,15 L100,8"
+                              stroke="#f59e0b" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="ad-card customers">
+                <h3>Customers</h3>
+                <p>89</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,20 L10,15 L20,25 L30,10 L40,20 L50,15 L60,8 L70,22 L80,18 L90,12 L100,25"
+                              stroke="#10b981" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="ad-card products">
+                <h3>Products</h3>
+                <p>234</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,15 L10,20 L20,10 L30,25 L40,15 L50,8 L60,22 L70,18 L80,12 L90,25 L100,10"
+                              stroke="#3b82f6" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="ad-card sellers">
+                <h3>Sellers</h3>
+                <p>45</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,22 L10,18 L20,25 L30,12 L40,20 L50,15 L60,8 L70,22 L80,10 L90,18 L100,12"
+                              stroke="#8b5cf6" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="ad-card payments">
+                <h3>Payments</h3>
+                <p>$8,900</p>
+                <div class="ad-sparkline">
+                    <svg viewBox="0 0 100 30">
+                        <path d="M0,18 L10,22 L20,15 L30,25 L40,10 L50,20 L60,12 L70,18 L80,8 L90,22 L100,15"
+                              stroke="#ef4444" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ad-user-management" class="ad-section">
+        <h2>User Management</h2>
+        <button class="ad-btn">Add New User</button>
+
+        <div class="ad-table-wrapper">
+            <table class="ad-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>john@example.com</td>
+                        <td>Customer</td>
+                        <td><span class="ad-status-badge">Active</span></td>
+                        <td>
+                            <button class="ad-action-btn edit"></button>
+                            <button class="ad-action-btn delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>jane@example.com</td>
+                        <td>Seller</td>
+                        <td><span class="ad-status-badge">Active</span></td>
+                        <td>
+                            <button class="ad-action-btn edit"></button>
+                            <button class="ad-action-btn delete"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="ad-seller-module" class="ad-section">
+        <h2>Seller Module</h2>
+        <button class="ad-btn">Add New Seller</button>
+
+        <div class="ad-table-wrapper">
+            <table class="ad-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Products</th>
+                        <th>Revenue</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Seller A</td>
+                        <td>sellerA@example.com</td>
+                        <td>20</td>
+                        <td>$5,000</td>
+                        <td>
+                            <button class="ad-btn">View</button>
+                            <button class="ad-btn">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Seller B</td>
+                        <td>sellerB@example.com</td>
+                        <td>15</td>
+                        <td>$3,200</td>
+                        <td>
+                            <button class="ad-btn">View</button>
+                            <button class="ad-btn">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="ad-product-management" class="ad-section">
+        <h2>Product Management</h2>
+        <button class="ad-btn">Add New Product</button>
+
+        <div class="ad-table-wrapper">
+            <table class="ad-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Seller</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Product A</td>
+                        <td>$29.99</td>
+                        <td>50</td>
+                        <td>Seller A</td>
+                        <td>
+                            <button class="ad-btn">Edit</button>
+                            <button class="ad-btn ad-btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Product B</td>
+                        <td>$49.99</td>
+                        <td>30</td>
+                        <td>Seller B</td>
+                        <td>
+                            <button class="ad-btn">Edit</button>
+                            <button class="ad-btn ad-btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="ad-payment-payout" class="ad-section">
+        <h2>Payment and Payout Module</h2>
+        <button class="ad-btn">Process Payout</button>
+
+        <div class="ad-table-wrapper">
+            <table class="ad-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Seller</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Seller A</td>
+                        <td>$1,000</td>
+                        <td>Pending</td>
+                        <td>2023-10-01</td>
+                        <td>
+                            <button class="ad-btn">Approve</button>
+                            <button class="ad-btn ad-btn-danger">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Seller B</td>
+                        <td>$800</td>
+                        <td>Completed</td>
+                        <td>2023-09-28</td>
+                        <td>
+                            <button class="ad-btn">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="ad-cart-order" class="ad-section">
+        <h2>Cart and Order Module</h2>
+        <button class="ad-btn">View All Carts</button>
+
+        <div class="ad-table-wrapper">
+            <table class="ad-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#12345</td>
+                        <td>John Doe</td>
+                        <td>$79.98</td>
+                        <td>Pending</td>
+                        <td>2023-10-01</td>
+                        <td>
+                            <button class="ad-btn">View</button>
+                            <button class="ad-btn">Update</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12346</td>
+                        <td>Jane Smith</td>
+                        <td>$129.97</td>
+                        <td>Shipped</td>
+                        <td>2023-10-02</td>
+                        <td>
+                            <button class="ad-btn">View</button>
+                            <button class="ad-btn">Update</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="ad-analytics" class="ad-section">
+        <h2 style="font-weight:900;color:#000000;">Analytics</h2>
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="font-weight: 900; color: #000000; margin-bottom: 1rem;">Revenue Overview</h3>
+                <svg viewBox="0 0 400 200" style="width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff;">
+                    <defs>
+                        <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.1" />
+                        </linearGradient>
+                    </defs>
+                    <g transform="translate(50,20)">
+                        <line x1="0" y1="150" x2="300" y2="150" stroke="#000000" stroke-width="1" />
+                        <line x1="0" y1="0" x2="0" y2="150" stroke="#000000" stroke-width="1" />
+                        <text x="-10" y="155" font-size="12" fill="#000000">0</text>
+                        <text x="-20" y="75" font-size="12" fill="#000000">50k</text>
+                        <text x="-25" y="5" font-size="12" fill="#000000">100k</text>
+                        <text x="0" y="170" font-size="12" fill="#000000">Jan</text>
+                        <text x="75" y="170" font-size="12" fill="#000000">Feb</text>
+                        <text x="150" y="170" font-size="12" fill="#000000">Mar</text>
+                        <text x="225" y="170" font-size="12" fill="#000000">Apr</text>
+                        <text x="300" y="170" font-size="12" fill="#000000">May</text>
+                        <path d="M0,120 L75,100 L150,80 L225,110 L300,60" stroke="url(#revenueGradient)" stroke-width="3" fill="none" />
+                        <circle cx="0" cy="120" r="4" fill="#3b82f6" />
+                        <circle cx="75" cy="100" r="4" fill="#3b82f6" />
+                        <circle cx="150" cy="80" r="4" fill="#3b82f6" />
+                        <circle cx="225" cy="110" r="4" fill="#3b82f6" />
+                        <circle cx="300" cy="60" r="4" fill="#3b82f6" />
+                    </g>
+                </svg>
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="font-weight: 900; color: #000000; margin-bottom: 1rem;">Sales by Category</h3>
+                <svg viewBox="0 0 400 200" style="width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff;">
+                    <g transform="translate(50,20)">
+                        <line x1="0" y1="150" x2="300" y2="150" stroke="#000000" stroke-width="1" />
+                        <line x1="0" y1="0" x2="0" y2="150" stroke="#000000" stroke-width="1" />
+                        <text x="-10" y="155" font-size="12" fill="#000000">0</text>
+                        <text x="-20" y="75" font-size="12" fill="#000000">50</text>
+                        <text x="-25" y="5" font-size="12" fill="#000000">100</text>
+                        <rect x="20" y="50" width="40" height="100" fill="#ef4444" />
+                        <rect x="80" y="30" width="40" height="120" fill="#f59e0b" />
+                        <rect x="140" y="70" width="40" height="80" fill="#10b981" />
+                        <rect x="200" y="40" width="40" height="110" fill="#3b82f6" />
+                        <rect x="260" y="60" width="40" height="90" fill="#8b5cf6" />
+                        <text x="35" y="170" font-size="12" fill="#000000">Cat1</text>
+                        <text x="95" y="170" font-size="12" fill="#000000">Cat2</text>
+                        <text x="155" y="170" font-size="12" fill="#000000">Cat3</text>
+                        <text x="215" y="170" font-size="12" fill="#000000">Cat4</text>
+                        <text x="275" y="170" font-size="12" fill="#000000">Cat5</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section id="ad-settings" class="ad-section">
+        <h2>Settings</h2>
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="color: #000000; margin-bottom: 1rem;">Account Settings</h3>
+                <form style="background: #ffffff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="username" style="color: #000000; display: block; margin-bottom: 0.5rem;">Username</label>
+                        <input type="text" id="username" name="username" style="width: 100%; padding: 0.5rem; border: 1px solid #000000; border-radius: 4px; background: #ffffff; color: #000000;" placeholder="Enter username">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="email" style="color: #000000; display: block; margin-bottom: 0.5rem;">Email</label>
+                        <input type="email" id="email" name="email" style="width: 100%; padding: 0.5rem; border: 1px solid #000000; border-radius: 4px; background: #ffffff; color: #000000;" placeholder="Enter email">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="password" style="color: #000000; display: block; margin-bottom: 0.5rem;">Password</label>
+                        <input type="password" id="password" name="password" style="width: 100%; padding: 0.5rem; border: 1px solid #000000; border-radius: 4px; background: #ffffff; color: #000000;" placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="ad-btn">Save Changes</button>
+                </form>
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="color: #000000; margin-bottom: 1rem;">Profile</h3>
+                <form style="background: #ffffff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="fullname" style="color: #000000; display: block; margin-bottom: 0.5rem;">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" style="width: 100%; padding: 0.5rem; border: 1px solid #000000; border-radius: 4px; background: #ffffff; color: #000000;" placeholder="Enter full name">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="bio" style="color: #000000; display: block; margin-bottom: 0.5rem;">Bio</label>
+                        <textarea id="bio" name="bio" style="width: 100%; padding: 0.5rem; border: 1px solid #000000; border-radius: 4px; background: #ffffff; color: #000000;" placeholder="Enter bio"></textarea>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="color: #000000; display: block; margin-bottom: 0.5rem;">Notifications</label>
+                        <label style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <input type="checkbox" style="margin-right: 0.5rem;">
+                            <span style="color: #000000;">Email Notifications</span>
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" style="margin-right: 0.5rem;">
+                            <span style="color: #000000;">Push Notifications</span>
+                        </label>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="color: #000000; display: block; margin-bottom: 0.5rem;">Dark Mode</label>
+                        <label class="ad-toggle-switch">
+                            <input type="checkbox">
+                            <span class="ad-slider"></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="ad-btn">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

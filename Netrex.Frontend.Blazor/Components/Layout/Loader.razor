@@ -1,0 +1,44 @@
+﻿@implements IDisposable
+@using Netrex.Frontend.Blazor.Services
+@inject LoaderService LoaderService
+
+@if (IsVisible)
+{
+    <div class="loader-overlay">
+        <div class="ai-loader">
+            @* Teen rings naye design ke liye *@
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+
+            <div class="core"></div>
+            <div class="loader-text">Lazzz intazar waka</div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool IsVisible;
+
+    protected override void OnInitialized()
+    {
+        LoaderService.OnShow += ShowLoader;
+        LoaderService.OnHide += HideLoader;
+    }
+
+    private async void ShowLoader()
+    {
+        await InvokeAsync(() => { IsVisible = true; StateHasChanged(); });
+    }
+
+    private async void HideLoader()
+    {
+        await InvokeAsync(() => { IsVisible = false; StateHasChanged(); });
+    }
+
+    public void Dispose()
+    {
+        LoaderService.OnShow -= ShowLoader;
+        LoaderService.OnHide -= HideLoader;
+    }
+}

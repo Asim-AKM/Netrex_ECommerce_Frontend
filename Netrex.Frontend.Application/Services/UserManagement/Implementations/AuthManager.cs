@@ -4,6 +4,8 @@ using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
 using System.Net;
 using System.Net.Http.Json;
+// LoaderService ka namespace add karein (Project reference check kar lein)
+using Netrex.Frontend.Blazor.Services;
 
 
 namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
@@ -11,29 +13,55 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
     public class AuthManager : IAuthManager
     {
         private readonly HttpClient _httpClient;
-        public AuthManager(IHttpClientFactory httpClientFactory)
+        private readonly LoaderService _loader; // 1. LoaderService field add karein
+        // 2. Constructor mein LoaderService inject karein
+        public AuthManager(IHttpClientFactory httpClientFactory, LoaderService loader)
         {
             _httpClient = httpClientFactory.CreateClient("ApiClient");
+            _loader = loader;
         }
 
         public async Task<ApiResponse<T>> RegisterAsync<T>(VmRegister registerView)
         {
-            var response = await _httpClient.PostAsJsonAsync(
-                "api/Authentication/Create",
-                registerView
-            );
+            try
+            {
+                // 3. Loader show karein
+                _loader.Show();
 
-            var json = await response.Content.ReadAsStringAsync();
+                // Testing ke liye optional delay
+                await Task.Delay(2000);
 
-            return ApiResponseDeserializer.Deserialize<T>(json);
+                var response = await _httpClient.PostAsJsonAsync(
+                    "api/Authentication/Create",
+                    registerView
+                );
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                return ApiResponseDeserializer.Deserialize<T>(json);
+            }
+            finally
+            {
+                // 4. Loader hide karein (chahe success ho ya error)
+                _loader.Hide();
+            }
         }
 
 
 
         public async Task<bool> LoginAsync(VmLogin viewModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/Authentication/Login", viewModel);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                _loader.Show();
+
+                var response = await _httpClient.PostAsJsonAsync("api/Authentication/Login", viewModel);
+                return response.IsSuccessStatusCode;
+            }
+            finally
+            {
+                _loader.Hide();
+            }
         }
     }
 }

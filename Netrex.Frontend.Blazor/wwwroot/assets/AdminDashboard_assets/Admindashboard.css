@@ -1,0 +1,676 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
+.ad-body {
+    position: relative;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: black;
+    min-height: 100vh;
+}
+
+.ad-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .ad-header h1 {
+        font-size: 1.5rem;
+        color: #e2e8f0;
+        font-weight: 600;
+    }
+
+    .ad-header .ad-search-container {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 50px;
+        padding: 8px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+        .ad-header .ad-search-container input {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #e2e8f0;
+            font-size: 14px;
+            width: 250px;
+            padding: 0 8px;
+        }
+
+            .ad-header .ad-search-container input::placeholder {
+                color: #64748b;
+            }
+
+        .ad-header .ad-search-container::before {
+            content: '🔍';
+            color: #64748b;
+            font-size: 16px;
+        }
+
+    .ad-header .ad-right-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .ad-header .ad-user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .ad-header .ad-user-profile .ad-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ad-header .ad-user-profile span {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+    .ad-header .ad-logout-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: all 0.3s;
+        color: #64748b;
+    }
+
+        .ad-header .ad-logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        .ad-header .ad-logout-btn::before {
+            content: '⏻';
+            font-size: 18px;
+        }
+
+    .ad-header .ad-hamburger-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 4px;
+        transition: all 0.3s;
+        color: #e2e8f0;
+    }
+
+        .ad-header .ad-hamburger-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .ad-header .ad-hamburger-btn span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 3px 0;
+            transition: all 0.3s;
+        }
+
+    .ad-header .ad-search-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: all 0.3s;
+        color: #64748b;
+        font-size: 18px;
+    }
+
+        .ad-header .ad-search-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+.ad-sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 80px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+
+    .ad-sidebar ul {
+        list-style: none;
+    }
+
+        .ad-sidebar ul li {
+            padding: 0;
+        }
+
+            .ad-sidebar ul li a {
+                color: #cbd5e1;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                padding: 20px;
+                border-radius: 8px;
+                transition: all 0.3s;
+                position: relative;
+                margin: 8px 16px;
+            }
+
+                .ad-sidebar ul li a::before {
+                    content: '';
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 12px;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    opacity: 0.8;
+                }
+
+            .ad-sidebar ul li:nth-child(1) a::before {
+                content: '🏠';
+            }
+            /* Dashboard */
+            .ad-sidebar ul li:nth-child(2) a::before {
+                content: '👥';
+            }
+            /* User Management */
+            .ad-sidebar ul li:nth-child(3) a::before {
+                content: '🏪';
+            }
+            /* Seller Module */
+            .ad-sidebar ul li:nth-child(4) a::before {
+                content: '📦';
+            }
+            /* Product Management */
+            .ad-sidebar ul li:nth-child(5) a::before {
+                content: '💳';
+            }
+            /* Payment & Payout */
+            .ad-sidebar ul li:nth-child(6) a::before {
+                content: '🛒';
+            }
+            /* Cart & Order */
+            .ad-sidebar ul li:nth-child(7) a::before {
+                content: '📊';
+            }
+            /* Analytics */
+            .ad-sidebar ul li:nth-child(8) a::before {
+                content: '⚙️';
+            }
+            /* Settings */
+            .ad-sidebar ul li a:hover {
+                background: rgba(59, 130, 246, 0.2);
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+                color: #ffffff;
+            }
+
+                .ad-sidebar ul li a:hover::before {
+                    opacity: 1;
+                }
+
+            .ad-sidebar ul li:first-child a {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3));
+                box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+                color: #ffffff;
+            }
+
+.ad-main-content {
+    margin-left: 250px;
+    padding: 60px 40px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.ad-dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.ad-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+}
+
+    .ad-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    }
+
+    .ad-card.sales::before {
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    }
+
+    .ad-card.orders::before {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .ad-card.customers::before {
+        background: linear-gradient(90deg, #10b981, #34d399);
+    }
+
+    .ad-card.products::before {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    }
+
+    .ad-card.sellers::before {
+        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+    }
+
+    .ad-card.payments::before {
+        background: linear-gradient(90deg, #ef4444, #f87171);
+    }
+
+    .ad-card h3 {
+        margin-bottom: 0.5rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .ad-card p {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .ad-card.sales p {
+        color: #6366f1;
+    }
+
+    .ad-card.orders p {
+        color: #f59e0b;
+    }
+
+    .ad-card.customers p {
+        color: #10b981;
+    }
+
+    .ad-card.products p {
+        color: #3b82f6;
+    }
+
+    .ad-card.sellers p {
+        color: #8b5cf6;
+    }
+
+    .ad-card.payments p {
+        color: #ef4444;
+    }
+
+.ad-sparkline {
+    width: 100%;
+    height: 30px;
+    margin-top: 0.5rem;
+}
+
+    .ad-sparkline svg {
+        width: 100%;
+        height: 100%;
+    }
+
+.ad-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 3rem;
+}
+
+.ad-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 600px; /* Ensure minimum width for scrolling */
+}
+
+    .ad-table th, .ad-table td {
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .ad-table th {
+        background: rgba(15, 23, 42, 0.8);
+        color: #e2e8f0;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+    }
+
+    .ad-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+        .ad-table tbody tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+            transform: scale(1.01);
+        }
+
+.ad-status-badge {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.ad-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .ad-action-btn.edit {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: #ffffff;
+    }
+
+        .ad-action-btn.edit:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+        }
+
+        .ad-action-btn.edit::before {
+            content: '✏️';
+            font-size: 16px;
+        }
+
+    .ad-action-btn.delete {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #ffffff;
+    }
+
+        .ad-action-btn.delete:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        .ad-action-btn.delete::before {
+            content: '🗑️';
+            font-size: 16px;
+        }
+
+.ad-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+    .ad-btn:hover {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+    }
+
+.ad-btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+    .ad-btn-danger:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
+    }
+
+.ad-section {
+    margin-bottom: 4rem;
+}
+
+    .ad-section h2 {
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+        font-size: 1.75rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+.ad-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    .ad-toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.ad-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    .ad-slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .ad-slider {
+    background-color: #3b82f6;
+}
+
+    input:checked + .ad-slider:before {
+        transform: translateX(26px);
+    }
+
+/* ===== Responsive cleanup ===== */
+@media (max-width: 1024px) {
+    .ad-sidebar {
+        width: 220px;
+    }
+
+    .ad-main-content {
+        margin-left: 220px;
+        padding: 30px;
+    }
+
+    .ad-dashboard-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 768px) {
+    .ad-header {
+        padding: 10px 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .ad-header h1 {
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .ad-header .ad-hamburger-btn {
+            display: block;
+        }
+
+        .ad-header .ad-search-container {
+            display: none;
+            position: static;
+            transform: none;
+            width: 100%;
+        }
+
+            .ad-header .ad-search-container input {
+                width: 100%;
+            }
+
+        .ad-header .ad-search-btn {
+            display: block;
+        }
+
+        .ad-header .ad-user-profile span {
+            display: none;
+        }
+
+        .ad-header .ad-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+
+    .ad-sidebar {
+        transform: translateX(-100%);
+    }
+
+        .ad-sidebar.open {
+            transform: translateX(0);
+        }
+
+    .ad-main-content {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .ad-dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .ad-section > .ad-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .ad-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .ad-table {
+        min-width: 720px;
+        font-size: 13px;
+    }
+
+        .ad-table th, .ad-table td {
+            padding: 8px;
+            white-space: nowrap;
+        }
+
+    .ad-table-wrapper .ad-btn {
+        width: auto;
+        margin-bottom: 0;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .ad-action-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .ad-status-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ad-header h1 {
+        font-size: 0.95rem;
+    }
+
+    .ad-card p {
+        font-size: 1.5rem;
+    }
+
+    .ad-table th:nth-child(3),
+    .ad-table td:nth-child(3),
+    .ad-table th:nth-child(4),
+    .ad-table td:nth-child(4) {
+        display: none;
+    }
+}

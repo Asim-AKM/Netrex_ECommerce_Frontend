@@ -4,15 +4,21 @@ using Netrex.Frontend.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. HttpClient Setup
 builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7239/");
 });
-// Add services to the container.
+
+// 2. Add Razor Components
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Application Layer DIs
+// 3. --- LOADER SERVICE REGISTER KAREIN ---
+// Isse AddScoped ke sath register karna hai taaki poori app mein ek hi instance chale
+builder.Services.AddScoped<LoaderService>();
+
+// 4. Application Layer DIs (Iske andar hi AuthManager register ho raha hai)
 builder.Services.AddApplicationDIs();
 
 var app = builder.Build();
@@ -21,17 +27,15 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
-
 app.UseAntiforgery();
-
 app.MapStaticAssets();
+
+// 5. Render Mode Setup
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode(); // Ye animations ke liye zaroori hai
 
 app.Run();

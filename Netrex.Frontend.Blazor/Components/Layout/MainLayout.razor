@@ -1,7 +1,10 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavManager
+@using Netrex.Frontend.Blazor.Components.Layout
 
 <div class="layout-root">
+    @* LOADER: Isse yahan rakhein taaki ye screen ke top par rahe *@
+    <Loader @rendermode="InteractiveServer" />
 
     <!-- CONDITIONAL HEADER -->
     @if (!IsAuthPage)
@@ -24,12 +27,6 @@
 
 <Toast @rendermode="InteractiveServer" />
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
-
 @code {
     // List of all auth-related routes
     private readonly string[] AuthPages = new[]
@@ -46,6 +43,7 @@
         get
         {
             var relativePath = NavManager.ToBaseRelativePath(NavManager.Uri).ToLower();
+            // Empty check handles home page which is ""
             return AuthPages.Any(page => relativePath.StartsWith(page));
         }
     }

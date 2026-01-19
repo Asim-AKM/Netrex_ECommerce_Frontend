@@ -20,9 +20,26 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         VmLogin _model = new VmLogin();
         public async Task HandleLogin()
         {
-            _loader.Show();
-            _toastMan.Success("Login Succesfuly !", "Succes");
-            //await _authManager!.LoginAsync(_model);
+            try
+            {
+                _loader.Show(); // Loader start karein
+
+                // Asal login process yahan hoga
+                // await _authManager!.LoginAsync(_model);
+
+                // Sirf demonstration ke liye delay (taki aap loader dekh sakein)
+                await Task.Delay(2000);
+
+                _toastMan.Success("Login Successfully!", "Success");
+            }
+            catch (Exception ex)
+            {
+                _toastMan.Error("Login failed: " + ex.Message, "Error");
+            }
+            finally
+            {
+                _loader.Hide(); // Task khatam hotay hi loader stop ho jayega (Success ho ya Error)
+            }
         }
     }
 }

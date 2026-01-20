@@ -147,6 +147,9 @@ function addProduct() {
     bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
     alert('✅ Product added successfully!');
 }
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+}
 
 // Preview Product Image
 function previewProductImage(event) {

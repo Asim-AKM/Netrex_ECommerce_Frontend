@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Http
+@inject IJSRuntime JS
 
 <nav>
     <div class="container-fluid">
@@ -34,21 +35,30 @@
 
                         <!-- Login -->
                         <li>
-                            <NavLink href="/login">
+                            <NavLink href="/login"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="bottom"
+                                     title="Login">
                                 <img src="/assets/icons/people.png" width="32" alt="Login" />
                             </NavLink>
                         </li>
 
                         <!-- Wishlist -->
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="bottom"
+                               title="Wishlist">
                                 <img src="/assets/icons/love.png" width="28" alt="Wishlist" />
                             </a>
                         </li>
 
                         <!-- Cart -->
                         <li class="cart">
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="bottom"
+                               title="Shopping Cart">
                                 <img src="/assets/icons/shopping-bag.png" width="30" alt="Cart" />
                             </a>
                             <div class="cart-count">
@@ -56,14 +66,13 @@
                             </div>
                         </li>
 
-                        <!-- ✅ Seller Button -->
+                        <!-- Become a Seller -->
                         <li>
                             <a href="/sellerregister"
-                               asp-area="Identity"
-                               asp-page="/Account/Login"
-                               class="ntx-theme-btn ntx-theme-btn--outline">
-                                <i class="fas fa-store"></i>
-                                <span>Sell on Netrex</span>
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="bottom"
+                               title="Become a Seller">
+                                <img src="/assets/icons/seller.png" width="30" alt="Become a Seller" />
                             </a>
                         </li>
 
@@ -98,3 +107,19 @@
         </div>
     </div>
 </nav>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Initialize Bootstrap tooltips
+            await JS.InvokeVoidAsync("eval", @"
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle=""tooltip""]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            ");
+        }
+    }
+}

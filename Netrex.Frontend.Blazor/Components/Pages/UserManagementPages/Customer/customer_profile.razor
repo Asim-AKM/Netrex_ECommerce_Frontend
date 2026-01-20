@@ -1,0 +1,86 @@
+﻿@page "/Customer_profile"
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<div class="profile-card">
+
+    <!-- Header -->
+    <div class="profile-header">
+        <div class="profile-pic-wrapper">
+            <img src="@PreviewImage" class="profile-pic" />
+            <label class="camera-icon">
+                📷
+                <InputFile OnChange="OnImageChange" hidden />
+            </label>
+        </div>
+        <h4>Customer Profile</h4>
+    </div>
+
+    <!-- Body -->
+    <div class="profile-body">
+        <EditForm Model="customer" OnValidSubmit="SaveCustomer">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">City</label>
+                <InputText class="form-control" @bind-Value="customer.City" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Province</label>
+                <InputText class="form-control" @bind-Value="customer.Province" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Country</label>
+                <InputText class="form-control" @bind-Value="customer.Country" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Address</label>
+                <InputTextArea class="form-control" rows="3"
+                               @bind-Value="customer.Address" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Save Profile
+            </button>
+        </EditForm>
+    </div>
+</div>
+
+<div class="footer">
+    Built by Muhammad Ashar
+</div>
+
+@code {
+
+    private string PreviewImage = "images/default-avatar.png";
+
+    private CustomerDto customer = new();
+
+    // DTO
+    public class CustomerDto
+    {
+        public string City { get; set; }
+        public string Province { get; set; }
+        public string Country { get; set; }
+        public string Address { get; set; }
+    }
+
+    // Save (POST / PUT)
+    private async Task SaveCustomer()
+    {
+        await Http.PostAsJsonAsync("api/customers", customer);
+    }
+
+    // Image Preview
+    private async Task OnImageChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        PreviewImage = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+    }
+}

@@ -10,6 +10,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto;">
+        @* <button class="sidebar-close" onclick="toggleSidebar()">✕</button> *@
         </div>
 
         <ul class="sidebar-nav">
@@ -25,6 +26,11 @@
             <li><a href="#reports" class="nav-link" onclick="showTab('reports', event)"><i class="fas fa-file-alt"></i> Reports</a></li>
         </ul>
     </aside>
+
+
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
 
     <!-- Main Content -->
     <div class="main-wrapper">

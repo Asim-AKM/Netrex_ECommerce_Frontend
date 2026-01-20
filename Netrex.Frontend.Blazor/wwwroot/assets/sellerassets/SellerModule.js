@@ -218,6 +218,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Charts Configuration
 let salesChart, revenueChart, productChart, categoryChart;
 
+    function toggleSidebar() {
+        document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+
+
 function initializeCharts() {
     // Sales Chart (Line Chart)
     const salesCtx = document.getElementById('salesChart');

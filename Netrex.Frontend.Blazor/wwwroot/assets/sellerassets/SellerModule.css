@@ -29,9 +29,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* ===============================
-   FINAL SIDEBAR (CLEAN & FIXED)
-================================ */
 
 .sidebar {
     position: fixed;
@@ -50,12 +47,10 @@ html, body {
 }
 
 .sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
 }
 
 /* Scrollable menu */
@@ -87,6 +82,35 @@ html, body {
 .sidebar-nav {
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.6) transparent;
+}
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .logo-wrap img {
+        height: 42px;
+        width: auto;
+        display: block;
+    }
+
+/* Close button (?) */
+.sidebar-close {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #04ADB1;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+
+/* Show close icon only on mobile */
+@media (max-width: 768px) {
+    .sidebar-close {
+        display: block;
+    }
 }
 
     /* Links */
@@ -134,18 +158,17 @@ html, body {
 
 /* Toggle button */
 .sidebar-toggle {
-    display: none;
     position: fixed;
-    top: 16px;
-    left: 16px;
-    width: 42px;
-    height: 42px;
+    top: 14px;
+    left: 14px;
+    width: 44px;
+    height: 44px;
     background: var(--primary);
     color: #fff;
     border: none;
-    border-radius: 10px;
-    z-index: 1200;
-    cursor: pointer;
+    border-radius: 12px;
+    z-index: 1300;
+    display: none;
 }
 
 @media (max-width: 768px) {
@@ -783,4 +806,51 @@ html, body {
     .footer-right {
         text-align: center;
     }
+
+    @media (max-width: 768px) {
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            min-width: 700px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-container {
+            min-height: auto;
+        }
+
+        .chart-wrapper {
+            height: 260px;
+        }
+    }
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+            .page-header button {
+                width: 100%;
+            }
+    }
+
+    @media (max-width: 768px) {
+        .stat-card {
+            padding: 16px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+        }
+    }
+
+
 }

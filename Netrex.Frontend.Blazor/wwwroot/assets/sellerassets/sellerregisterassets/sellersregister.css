@@ -1,0 +1,206 @@
+﻿/* Unique Netrex Registration Styling */
+.ntx-reg-container {
+    width: 100%;
+    max-width: 900px; /* allow larger layout on wide screens while card itself can stay narrow */
+    margin: 40px auto;
+    padding: 16px; /* gutter on very small viewports */
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.ntx-reg-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 720px; /* card width cap */
+    border-top: 4px solid #00a8a8; /* Project Teal Theme */
+    box-sizing: border-box;
+}
+
+/* Title / Subtitle */
+.ntx-reg-title {
+    text-align: center;
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-size: 1.25rem;
+}
+
+.ntx-reg-subtitle {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+/* Grid helpers for responsive field layout */
+.ntx-reg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* two columns on wide screens */
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* Single field wrapper (works inside .ntx-reg-grid or alone) */
+.ntx-reg-field {
+    margin-bottom: 20px;
+}
+
+/* Labels and controls */
+.ntx-reg-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.ntx-reg-input,
+.ntx-reg-textarea,
+.ntx-reg-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* ensures padding included in width */
+    background-clip: padding-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.ntx-reg-textarea {
+    height: 100px;
+    resize: vertical; /* allow vertical resizing on desktop, limited on mobile */
+}
+
+/* Focus styles kept visible */
+.ntx-reg-input:focus,
+.ntx-reg-textarea:focus,
+.ntx-reg-select:focus {
+    outline: none;
+    border-color: #00a8a8;
+    box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.08);
+}
+
+/* Submit button */
+.ntx-reg-btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #00a8a8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.ntx-reg-btn-submit:hover {
+    background-color: #008a8a;
+}
+
+/* Utility: full-width on smaller devices for control elements */
+@media (max-width: 900px) {
+    .ntx-reg-card {
+        padding: 24px;
+    }
+
+    .ntx-reg-grid {
+        gap: 14px;
+    }
+
+    .ntx-reg-title {
+        font-size: 1.125rem;
+    }
+
+    .ntx-reg-subtitle {
+        font-size: 0.85rem;
+    }
+}
+
+/* Switch to single column grid for narrow screens */
+@media (max-width: 720px) {
+    .ntx-reg-container {
+        padding: 12px;
+        margin: 20px auto;
+    }
+
+    .ntx-reg-card {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .ntx-reg-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ntx-reg-input,
+    .ntx-reg-textarea,
+    .ntx-reg-select {
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    .ntx-reg-btn-submit {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .ntx-reg-textarea {
+        height: 90px;
+    }
+}
+
+/* Small phones - tighten spacing and typography */
+@media (max-width: 480px) {
+    .ntx-reg-card {
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .ntx-reg-title {
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .ntx-reg-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 18px;
+    }
+
+    .ntx-reg-input,
+    .ntx-reg-textarea,
+    .ntx-reg-select {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .ntx-reg-btn-submit {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .ntx-reg-grid {
+        gap: 12px;
+    }
+}
+
+/* Accessibility / print adjustments */
+@media print {
+    .ntx-reg-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

@@ -1,4 +1,5 @@
-﻿<nav>
+﻿@using Microsoft.AspNetCore.Http
+<nav>
     <!-- Navigation items -->
     <ul class="nav-items">
         <li>
@@ -40,6 +41,14 @@
 
                 <div class="cart-count">
                     <p class="counter"></p>
+                </div>
+            </li>
+            <li>
+                <div class="ntx-header-right">
+                    <a href="/sellerregister"  asp-area="Identity" asp-page="/Account/Login" class="ntx-theme-btn ntx-theme-btn--outline">
+                        <i class="fas fa-store"></i>
+                        <span>Sell on Netrex</span>
+                    </a>
                 </div>
             </li>
         </ul>

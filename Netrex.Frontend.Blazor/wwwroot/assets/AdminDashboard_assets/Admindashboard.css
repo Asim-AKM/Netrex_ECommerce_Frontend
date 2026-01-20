@@ -674,3 +674,53 @@ input:checked + .ad-slider {
         display: none;
     }
 }
+/* Container for alignment in header */
+.ntx-header-right {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+/* Unique Class Name: Netrex Theme Button */
+.ntx-theme-btn--outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    /* Theme Colors */
+    background-color: transparent;
+    color: #ffffff; /* White text for Teal background */
+    border: 1.5px solid rgba(255, 255, 255, 0.7); /* Subtle white border */
+}
+
+    /* Hover Effect */
+    .ntx-theme-btn--outline:hover {
+        background-color: #ffffff; /* Button fills white on hover */
+        color: #00a8a8; /* Text turns Teal on hover */
+        border-color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    /* Icon size adjustment */
+    .ntx-theme-btn--outline i {
+        font-size: 15px;
+    }
+
+/* Responsive: Choti screen par sirf icon dikhega */
+@media (max-width: 768px) {
+    .ntx-theme-btn--outline span {
+        display: none; /* Mobile par text hide ho jayega */
+    }
+
+    .ntx-theme-btn--outline {
+        padding: 8px;
+        border-radius: 50%; /* Circle icon button on mobile */
+    }
+}

@@ -1,27 +1,25 @@
 ﻿@page "/verify-email"
 
-<div class="auth-wrapper">
-    <div class="auth-left">
-        <h1>NETREX<br />ECOMMERCE</h1>
-        <p>Create your account and start selling smarter.</p>
-    </div>
-    <div class="auth-right">
-        <h2>Forget Password</h2>
-
-        <div class="input-group">
-            <span class="icon">
-                <img src="assets/user-management-assets/icons/email-icon.png" />
-            </span>
-            <input name="Email" type="email" placeholder="Email" required />
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 py-4">
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <h1>NETREX<br />ECOMMERCE</h1>
+            <p>Create your account and start selling smarter.</p>
         </div>
-
-        <button class="btn">Verify Email</button>
-
-        <div class="auth-footer">
-            <div class="auth-footer-links">
-                Back To Login <a href="/login">Login</a>
+        <div class="auth-right">
+            <h2>Forget Password</h2>
+            <div class="input-group mb-3">
+                <span class="icon">
+                    <img src="assets/user-management-assets/icons/email-icon.png" />
+                </span>
+                <input name="Email" type="email" class="form-control" placeholder="Email" required />
+            </div>
+            <button class="btn btn-primary w-100">Verify Email</button>
+            <div class="auth-footer mt-3">
+                <div class="auth-footer-links">
+                    Back To Login <a href="/login">Login</a>
+                </div>
             </div>
         </div>
-
     </div>
 </div>

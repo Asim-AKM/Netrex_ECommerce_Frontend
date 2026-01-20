@@ -1,57 +1,59 @@
 ﻿<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="address">
+                    <h2 class="h5 fs-4">Address</h2>
+                    <div class="address-content">
+                        <p>2nd Floor, Ashiyana center</p>
+                        <p>Dera Ismail Khan, Pakistan</p>
+                        <p>+92 3319270739</p>
+                        <p>affanwajid2001@gmail.com</p>
+                    </div>
+                </section>
+            </div>
 
-    <section class="address">
-        <h2>Address</h2>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="links">
+                    <h2 class="h5 fs-4">Quick Links</h2>
+                    <ul class="nav-items ps-0">
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Shop</a></li>
+                        <li><a href="">About Us</a></li>
+                        <li><a href="">Contact Us</a></li>
+                        <li><a href="">Blog</a></li>
+                    </ul>
+                </section>
+            </div>
 
-        <div class="address-content">
-            <p>2nd Floor,Ashiyana center</p>
-            <p>Dera Ismail Khan, Pakistan</p>
-            <p>+92 3319270739</p>
-            <p>affanwajid2001@gmail.com</p>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="contact-us">
+                    <h2 class="h5 fs-4">Contact Us</h2>
+                    <div class="contact-info">
+                        <p>Do you have any queries or suggestions?</p>
+                        <a href="">AsimAkm@gmail.com</a>
+                        <p>If you need support? Just give us a call.</p>
+                        <a href="">+92 3319270739</a>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+                <section class="subscribe-sect">
+                    <h2 class="h5 fs-4">Subscribe Us</h2>
+                    <div class="subscribe-info">
+                        <p>Subscribe to our newsletter to get updates about our grand offers.</p>
+                        <input type="email" class="form-control" placeholder="Email Address" @bind="email" />
+                        <input type="submit" class="btn mt-2" value="Subscribe" @onclick="Subscribe" />
+                        @if (!string.IsNullOrEmpty(message))
+                        {
+                            <p class="subscribe-msg mt-2">@message</p>
+                        }
+                    </div>
+                </section>
+            </div>
         </div>
-    </section>
-
-    <section class="links">
-        <h2>Quick Links</h2>
-
-        <ul class="nav-items">
-            <li><a href="">Home</a></li>
-            <li><a href="">Shop</a></li>
-            <li><a href="">About Us</a></li>
-            <li><a href="">Contact Us</a></li>
-            <li><a href="">Blog</a></li>
-        </ul>
-    </section>
-
-    <section class="contact-us">
-        <h2>Contact Us</h2>
-
-        <div class="contact-info">
-            <p>Do you have any queries or suggestions?</p>
-            <a href="">AsimAkm@gmail.com</a>
-
-            <p>If you need support? Just give <br /> us a call.</p>
-            <a href="">+92 3319270739</a>
-        </div>
-    </section>
-
-    <section class="subscribe-sect">
-        <h2>Subscribe Us</h2>
-
-        <div class="subscribe-info">
-            <p>Subscribe to our newsletter to get updates about our grand offers.</p>
-
-            <input type="email" placeholder="Email Address" @bind="email" />
-
-            <button class="btn" type="button" @onclick="Subscribe">Subscribe</button>
-
-            @if (!string.IsNullOrEmpty(message))
-            {
-                <p class="subscribe-msg">@message</p>
-            }
-        </div>
-    </section>
-
+    </div>
 </footer>
 
 @code {
@@ -65,7 +67,6 @@
             message = "Please enter an email address.";
             return;
         }
-
         message = "Thanks for subscribing!";
         email = string.Empty;
     }

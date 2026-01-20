@@ -1,47 +1,100 @@
-﻿<nav>
-    <!-- Navigation items -->
-    <ul class="nav-items">
-        <li>
-            <NavLink href="/" Match="NavLinkMatch.All">Home</NavLink>
-        </li>
-        <li>
-            <span class="disabled-link">Shop</span>
-        </li>
-        <li>
-            <span class="disabled-link">About Us</span>
-        </li>
-        <li>
-            <span class="disabled-link">Blog</span>
-        </li>
-        <li>
-            <span class="disabled-link">Contact Us</span>
-        </li>
-    </ul>
+@using Microsoft.AspNetCore.Http
 
-    <!-- Icons -->
-    <div class="nav-icons">
-        <ul>
-            <li>
-                <NavLink href="/login">
-                    <img src="/assets/icons/people.png" width="32px" alt="Login" />
-                </NavLink>
-            </li>
+<nav>
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-between">
 
-            <li>
-                <a href="javascript:void(0)">
-                    <img src="/assets/icons/love.png" width="28px" height="28px" alt="Wishlist" />
-                </a>
-            </li>
+            <!-- Hamburger Toggler - Shows below 1024px -->
+            <div class="col-auto d-lg-none">
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#navbarOffcanvas"
+                        aria-controls="navbarOffcanvas">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
 
-            <li class="cart">
-                <a href="javascript:void(0)">
-                    <img src="/assets/icons/shopping-bag.png" width="30px" alt="Cart" />
-                </a>
+            <!-- Desktop Navigation -->
+            <div class="col-lg-8 col-md-7 d-none d-lg-block">
+                <ul class="nav-items d-flex gap-2 mb-0 justify-content-center">
+                    <li>
+                        <NavLink href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    </li>
+                    <li><span class="disabled-link">Shop</span></li>
+                    <li><span class="disabled-link">About Us</span></li>
+                    <li><span class="disabled-link">Blog</span></li>
+                    <li><span class="disabled-link">Contact Us</span></li>
+                </ul>
+            </div>
 
-                <div class="cart-count">
-                    <p class="counter"></p>
+            <!-- Icons + Seller Button -->
+            <div class="col-auto ms-auto">
+                <div class="nav-icons">
+                    <ul class="d-flex gap-3 mb-0 align-items-center justify-content-end">
+
+                        <!-- Login -->
+                        <li>
+                            <NavLink href="/login">
+                                <img src="/assets/icons/people.png" width="32" alt="Login" />
+                            </NavLink>
+                        </li>
+
+                        <!-- Wishlist -->
+                        <li>
+                            <a href="javascript:void(0)">
+                                <img src="/assets/icons/love.png" width="28" alt="Wishlist" />
+                            </a>
+                        </li>
+
+                        <!-- Cart -->
+                        <li class="cart">
+                            <a href="javascript:void(0)">
+                                <img src="/assets/icons/shopping-bag.png" width="30" alt="Cart" />
+                            </a>
+                            <div class="cart-count">
+                                <p class="counter mb-0"></p>
+                            </div>
+                        </li>
+
+                        <!-- ✅ Seller Button -->
+                        <li>
+                            <a href="/sellerregister"
+                               asp-area="Identity"
+                               asp-page="/Account/Login"
+                               class="ntx-theme-btn ntx-theme-btn--outline">
+                                <i class="fas fa-store"></i>
+                                <span>Sell on Netrex</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </div>
-            </li>
-        </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Menu -->
+    <div class="offcanvas offcanvas-start"
+         tabindex="-1"
+         id="navbarOffcanvas"
+         aria-labelledby="navbarOffcanvasLabel">
+
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <ul class="nav-items-mobile">
+                <li><NavLink href="/" Match="NavLinkMatch.All">Home</NavLink></li>
+                <li><span class="disabled-link">Shop</span></li>
+                <li><span class="disabled-link">About Us</span></li>
+                <li><span class="disabled-link">Blog</span></li>
+                <li><span class="disabled-link">Contact Us</span></li>
+            </ul>
+        </div>
     </div>
 </nav>

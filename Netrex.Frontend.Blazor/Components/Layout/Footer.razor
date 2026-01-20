@@ -1,19 +1,50 @@
-﻿<footer>
+﻿<style>
+    footer {
+        padding: 15px 30px; /* footer chhota */
+        /* background: unchanged (jo pehle tha wahi rahega) */
+    }
 
+        footer section {
+            margin-bottom: 8px; /* sections ka gap kam */
+        }
+
+        footer h2 {
+            margin-bottom: 5px;
+            font-size: 17px;
+        }
+
+        footer p,
+        footer a,
+        footer li {
+            margin: 3px 0;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+    .subscribe-info input {
+        padding: 6px;
+        margin-top: 4px;
+    }
+
+    .subscribe-info button {
+        padding: 6px 12px;
+        margin-top: 4px;
+    }
+</style>
+
+<footer>
     <section class="address">
         <h2>Address</h2>
-
         <div class="address-content">
-            <p>2nd Floor,Ashiyana center</p>
+            <p>2nd Floor, Ashiyana center</p>
             <p>Dera Ismail Khan, Pakistan</p>
-            <p>+92 3319270739</p>
-            <p>affanwajid2001@gmail.com</p>
+            <p>+92 3409784453</p>
+            <p>NizamUllah@gmail.com</p>
         </div>
     </section>
 
     <section class="links">
         <h2>Quick Links</h2>
-
         <ul class="nav-items">
             <li><a href="">Home</a></li>
             <li><a href="">Shop</a></li>
@@ -25,7 +56,6 @@
 
     <section class="contact-us">
         <h2>Contact Us</h2>
-
         <div class="contact-info">
             <p>Do you have any queries or suggestions?</p>
             <a href="">AsimAkm@gmail.com</a>
@@ -37,12 +67,10 @@
 
     <section class="subscribe-sect">
         <h2>Subscribe Us</h2>
-
         <div class="subscribe-info">
             <p>Subscribe to our newsletter to get updates about our grand offers.</p>
 
             <input type="email" placeholder="Email Address" @bind="email" />
-
             <button class="btn" type="button" @onclick="Subscribe">Subscribe</button>
 
             @if (!string.IsNullOrEmpty(message))
@@ -51,7 +79,6 @@
             }
         </div>
     </section>
-
 </footer>
 
 @code {

@@ -1,97 +1,79 @@
-﻿:root {
-    --c1: #00ffd5;
-    --c2: #00aaff;
-    --c3: #7a5cff;
-}
-
-/* 1. Loader Overlay */
-.loader-overlay {
+﻿.loader-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at top, rgba(5, 11, 26, 0.95), #000);
-    backdrop-filter: blur(10px);
+    /* Mukammal transparent background */
+    background: rgba(0, 0, 0, 0.7); /* Halka sa dark shade taaki neon rings nazar aayein */
+    backdrop-filter: blur(3px); /* Content ko halka sa premium look dene ke liye */
     z-index: 10000;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-/* 2. Loader Container */
-.ai-loader {
-    position: relative;
+.vortex {
     width: 150px;
     height: 150px;
+    position: relative;
+    perspective: 1200px;
 }
 
-/* 3. Spinning Rings */
 .ring {
     position: absolute;
-    inset: 0;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    border: 4px solid transparent;
-    border-top-color: var(--c1);
-    animation: spin 1s linear infinite;
+    border-bottom: 8px solid #00f2fe;
+    animation: rotate-vortex var(--duration) linear infinite;
+    filter: drop-shadow(0 0 8px #00f2fe) drop-shadow(0 0 20px #00f2fe);
 }
 
-    /* Dusri ring (ulta ghumne wali) */
+    .ring:nth-child(1) {
+        --duration: 0.8s;
+        transform: rotateX(75deg) rotateY(15deg) rotateZ(0deg);
+    }
+
     .ring:nth-child(2) {
-        border-top-color: var(--c2);
-        animation-duration: 1.5s;
-        animation-direction: reverse;
-        transform: scale(0.8);
+        --duration: 1s;
+        border-bottom-color: #7000ff;
+        transform: rotateX(75deg) rotateY(-25deg) rotateZ(0deg);
+        filter: drop-shadow(0 0 8px #7000ff) drop-shadow(0 0 20px #7000ff);
     }
 
-    /* Tisri ring */
     .ring:nth-child(3) {
-        border-top-color: var(--c3);
-        animation-duration: 2s;
-        transform: scale(1.2);
+        --duration: 1.3s;
+        border-bottom-color: #ffffff;
+        transform: rotateX(75deg) rotateY(45deg) rotateZ(0deg);
+        filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 20px #ffffff);
     }
 
-/* 4. Center Core (Diamond shape) */
+@keyframes rotate-vortex {
+    to {
+        transform: rotateX(75deg) rotateY(var(--y, 15deg)) rotateZ(360deg);
+    }
+}
+
 .core {
     position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
     top: 50%;
     left: 50%;
-    width: 30px;
-    height: 30px;
-    background: white;
-    /* Rotation aur Translation fix */
-    transform-origin: center;
-    transform: translate(-50%, -50%) rotate(45deg);
-    box-shadow: 0 0 20px var(--c1);
-    animation: pulse 1.5s ease-in-out infinite;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px 5px #ffffff, 0 0 50px 15px #00f2fe;
+    animation: pulse-core 0.8s infinite alternate ease-in-out;
 }
 
-/* 5. Loading Text */
-.loader-text {
-    position: absolute;
-    bottom: -60px;
-    width: 100%;
-    text-align: center;
-    color: var(--c1);
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 2px;
-    font-size: 12px;
-    text-shadow: 0 0 10px var(--c1);
-    text-transform: uppercase;
-}
-
-/* Animations */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1) rotate(45deg);
+@keyframes pulse-core {
+    from {
+        transform: translate(-50%, -50%) scale(0.9);
         opacity: 1;
     }
 
-    50% {
-        transform: translate(-50%, -50%) scale(1.3) rotate(45deg);
-        opacity: 0.7;
+    to {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.8;
     }
 }

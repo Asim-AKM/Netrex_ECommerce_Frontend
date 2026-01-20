@@ -98,17 +98,17 @@ function initializeHomePage() {
     // Reviews functionality
     let reviews = [
         {
-            Image: "assets/clients-images/clients.jpeg",
+            Image: "assets/clients-images/DaaDu.jpeg",
             description: "Amazing shopping experience! The products were exactly as shown, delivery was super fast, and customer support was very helpful. I'll definitely shop again.",
             cust_name: "Affan Wajid"
         },
         {
-            Image: "",
+            Image: "assets/clients-images/NizamUllah.jpeg",
             description: "Highly recommended! Product quality exceeded my expectations, and the team was very responsive to my questions.",
             cust_name: "Saqib Khan"
         },
         {
-            Image: "",
+            Image: "assets/clients-images/Asim.jpeg",
             description: "Fast delivery, original products, and great support. This website has become my go-to place for online shopping.",
             cust_name: "Fayaz Khan"
         },

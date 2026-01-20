@@ -1,63 +1,76 @@
 ﻿<div class="navmenu-root">
-
-    <!-- HEADER -->
+    <!-- Header -->
     <header>
-        <div class="logo">
-            <img src="/assets/images/Logo for Netrex.png" width="135px" alt="logo" />
-        </div>
-
-        <div class="dropdown-Search">
-            <div class="Category-items">
-                <button class="Category-btn" type="button">
-                    <p>All Categories</p>
-                    <img src="/assets/icons/dropdown.png" width="13px" alt="dropdown" />
-                </button>
-            </div>
-
-            <div class="search-item">
-                <input type="text" placeholder="Search for Product" />
-                <div class="searchicon">
-                    <button type="button">
-                        <img src="/assets/icons/search.png" width="20px" alt="search" />
-                    </button>
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-2 col-md-3 col-6 mb-2 mb-md-0">
+                    <div class="logo">
+                        <img src="/assets/images/Logo for Netrex.png" width="135" class="img-fluid" alt="logo" />
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="contact">
-            <div>
-                <img src="/assets/icons/support.png" width="40px" alt="contact" />
-            </div>
+                <div class="col-lg-7 col-md-6 col-12 mb-2 mb-md-0">
+                    <div class="dropdown-Search d-flex gap-2 align-items-center justify-content-center flex-wrap">
+                        <div class="Category-items">
+                            <button class="Category-btn d-flex align-items-center gap-3">
+                                <p class="mb-0">All Categories</p>
+                                <img src="/assets/icons/dropdown.png" width="13" alt="dropdown" />
+                            </button>
+                        </div>
 
-            <div class="contact-number">
-                <h3>+92 3319270739</h3>
-                <p>abc@gmail.com</p>
+                        <div class="search-item d-flex">
+                            <input type="text" class="form-control" placeholder="Search for Product" style="width: 300px;" />
+                            <div class="searchicon">
+                                <button>
+                                    <img src="/assets/icons/search.png" width="20" alt="search" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-6">
+                    <div class="contact d-flex align-items-center justify-content-end gap-3">
+                        <div>
+                            <img src="/assets/icons/support.png" width="40" alt="contact" />
+                        </div>
+                        <div class="contact-number">
+                            <h3 class="h6 mb-0">+92 3319270739</h3>
+                            <p class="small mb-0">abc@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- CATEGORIES SECTION -->
+    <!-- Product Item Categories Dropdown -->
     <div class="Categories-list">
-        <ul>
-            <h2>Electronics</h2>
-            <li><a href="">Mobile</a></li>
-            <li><a href="">Laptops</a></li>
-            <li><a href="">Accessories</a></li>
-        </ul>
-
-        <ul>
-            <h2>Fashion</h2>
-            <li><a href="">Men</a></li>
-            <li><a href="">Women</a></li>
-            <li><a href="">Kids</a></li>
-        </ul>
-
-        <ul>
-            <h2>Home</h2>
-            <li><a href="">Furniture</a></li>
-            <li><a href="">Kitchen</a></li>
-            <li><a href="">Decor</a></li>
-        </ul>
+        <div class="row w-100 justify-content-around">
+            <div class="col-4">
+                <ul>
+                    <h2 class="h5">Electronics</h2>
+                    <li><a href="">Mobile</a></li>
+                    <li><a href="">Laptops</a></li>
+                    <li><a href="">Accessories</a></li>
+                </ul>
+            </div>
+            <div class="col-4">
+                <ul>
+                    <h2 class="h5">Fashion</h2>
+                    <li><a href="">Men</a></li>
+                    <li><a href="">Women</a></li>
+                    <li><a href="">Kids</a></li>
+                </ul>
+            </div>
+            <div class="col-4">
+                <ul>
+                    <h2 class="h5">Home</h2>
+                    <li><a href="">Furniture</a></li>
+                    <li><a href="">Kitchen</a></li>
+                    <li><a href="">Decor</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-
 </div>

@@ -1,0 +1,153 @@
+﻿body {
+    background-color: #F9FAFB;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Card */
+.profile-card {
+    max-width: 720px;
+    margin: 60px auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Header */
+.profile-header {
+    background: linear-gradient(135deg, #03ADAE, #026767);
+    padding: 35px 20px 70px;
+    text-align: center;
+    position: relative;
+    color: white;
+}
+
+    .profile-header h4 {
+        margin-top: 55px;
+        font-weight: 600;
+    }
+
+/* Profile Image */
+.profile-pic-wrapper {
+    position: absolute;
+    left: 50%;
+    bottom: -55px;
+    transform: translateX(-50%);
+}
+
+.profile-pic {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 34px;
+    height: 34px;
+    background: #03ADAE;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+    .camera-icon:hover {
+        background: #026767;
+    }
+
+/* Body */
+.profile-body {
+    padding: 75px 35px 35px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #026767;
+}
+
+.form-control:focus {
+    border-color: #03ADAE;
+    box-shadow: 0 0 0 0.2rem rgba(3,173,174,0.25);
+}
+
+.btn-primary {
+    background-color: #03ADAE;
+    border: none;
+    font-weight: 50;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+    .btn-primary:hover {
+        background-color: #026767;
+    }
+
+
+.orders-card {
+    max-width: 950px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 30px;
+}
+
+/* Orders Title */
+.section-title {
+    font-weight: 600;
+    color: #026767;
+    margin-bottom: 20px;
+}
+
+/* Orders Table */
+.table thead {
+    background-color: #03ADAE;
+    color: white;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Order Status Badges */
+.badge-completed {
+    background-color: #198754;
+}
+
+.badge-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+}
+
+/* Orders Summary */
+.summary-box {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #026767;
+}
+
+/* Footer */
+
+
+.footer {
+    text-align: center;
+    font-size: 13px;
+    margin: 15px 0;
+    color: #026767;
+}

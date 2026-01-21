@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Netrex.Frontend.Application.ViewModels.SellerModule
 {
-    public class VmSeller
+    public class VMSeller
     {
         [JsonPropertyName("storeName")]
         public string StoreName { get; set; } = string.Empty;

@@ -1,0 +1,101 @@
+﻿/* Background Overlay with Deep Blur */
+.netrex-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(12, 41, 75, 0.45); /* Light Dark Blue */
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+}
+
+/* Central Card Style */
+.netrex-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.error-code {
+    font-size: 72px;
+    font-weight: 900;
+    color: #0C294B; /* Netrex Dark Blue */
+    margin: 0;
+}
+
+.visual-animation {
+    font-size: 80px;
+    margin: 20px 0;
+    animation: floatAnim 3s infinite ease-in-out;
+}
+
+.title {
+    color: #111827;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.message {
+    color: #6B7280;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+/* Buttons matching Netrex Theme */
+.card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-main {
+    background-color: #03ADAE; /* Netrex Teal */
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+    .btn-main:hover {
+        background-color: #0C294B;
+        transform: translateY(-2px);
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #D1D5DB;
+    color: #4B5563;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+    .btn-secondary:hover {
+        background-color: #f9fafb;
+    }
+
+/* Floating Animation */
+@keyframes floatAnim {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}

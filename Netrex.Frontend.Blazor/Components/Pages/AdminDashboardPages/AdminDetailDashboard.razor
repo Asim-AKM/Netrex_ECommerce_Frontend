@@ -2,15 +2,58 @@
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
-    <ul>
-        <li><a href="#ad-dashboard">Dashboard</a></li>
-        <li><a href="#ad-user-management">User Management</a></li>
-        <li><a href="#ad-seller-module">Seller Module</a></li>
-        <li><a href="#ad-product-management">Product Management</a></li>
-        <li><a href="#ad-payment-payout">Payment &amp; Payout</a></li>
-        <li><a href="#ad-cart-order">Cart &amp; Order</a></li>
-        <li><a href="#ad-analytics">Analytics</a></li>
-        <li><a href="#ad-settings">Settings</a></li>
+    <div class="sidebar-header">
+        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto;">
+    </div>
+    <ul class="ntx-admin-nav list-unstyled">
+        <li>
+            <a href="#dashboard" class="ntx-nav-link active" onclick="showTab('dashboard', event)">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="#UserManagment" class="ntx-nav-link" onclick="showTab('UserManagment', event)">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>User Management</span>
+            </a>
+        </li>
+        <li>
+            <a href="#SellerModule" class="ntx-nav-link" onclick="showTab('SellerModule', event)">
+                <i class="fa-solid fa-store"></i>
+                <span>Seller Module</span>
+            </a>
+        </li>
+        <li>
+            <a href="#ProductManagment" class="ntx-nav-link" onclick="showTab('ProductManagment', event)">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Product Management</span>
+            </a>
+        </li>
+        <li>
+            <a href="#customers" class="ntx-nav-link" onclick="showTab('customers', event)">
+                <i class="fa-solid fa-cart-flatbed-suitcase"></i>
+                <span>Customer & Order</span>
+            </a>
+        </li>
+        <li>
+            <a href="#analytics" class="ntx-nav-link" onclick="showTab('analytics', event)">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Analytics</span>
+            </a>
+        </li>
+        <li>
+            <a href="#reports" class="ntx-nav-link" onclick="showTab('reports', event)">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+        <li>
+            <a href="#settings" class="ntx-nav-link" onclick="showTab('settings', event)">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+            </a>
+        </li>
     </ul>
 </aside>
 

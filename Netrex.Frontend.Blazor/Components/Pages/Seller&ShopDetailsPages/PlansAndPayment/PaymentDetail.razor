@@ -1,0 +1,117 @@
+﻿@page "/paymentdetail"
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.WebUtilities
+
+<div class="container my-5 ntx-payment-scope">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            @* Back button logic *@
+            <button @onclick="GoBack" class="btn btn-link ntx-back-link mb-4 p-0 d-inline-block text-decoration-none">
+                <i class="bi bi-arrow-left"></i> ❮ Back to Plans
+            </button>
+
+            <h3 class="ntx-section-title">Payment method</h3>
+            <div class="ntx-form-card mb-4">
+                <div class="mb-3">
+                    <label class="form-label ntx-label">Card number</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control ntx-input" placeholder="1234 5678 9101 1121">
+                        <span class="input-group-text bg-white ntx-card-icons">💳 🏦</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label ntx-label">Expiration date</label>
+                        <input type="text" class="form-control ntx-input" placeholder="MM / YY">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label ntx-label">Security code</label>
+                        <input type="text" class="form-control ntx-input" placeholder="CVC">
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="ntx-section-title">Billing address</h3>
+            <div class="ntx-form-card">
+                <div class="mb-3">
+                    <label class="form-label ntx-label">Full name</label>
+                    <input type="text" class="form-control ntx-input" placeholder="Ahmad Khan">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label ntx-label">Country or region</label>
+                    <select class="form-select ntx-input">
+                        <option>Pakistan</option>
+                        <option>United States</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="ntx-summary-box sticky-top" style="top: 2rem; z-index: auto">
+                <span class="badge ntx-badge mb-2">@SelectedPlan.ToUpper() PLAN</span>
+                <h2 class="fw-bold">@SelectedPlan Plan</h2>
+                <p class="text-muted small">Top features</p>
+
+                <ul class="list-unstyled ntx-features-list">
+                    <li><span class="me-2">⚡</span> Faster sales processing</li>
+                    <li><span class="me-2">📊</span> Advanced analytics & reports</li>
+                    <li><span class="me-2">🏷️</span> Unlimited product listings</li>
+                    <li><span class="me-2">🛠️</span> Dedicated support</li>
+                </ul>
+
+                <div class="ntx-price-breakdown mt-4 pt-4 border-top">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subscription Fee</span>
+                        <span class="fw-bold">$@PlanPrice</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Tax (0%)</span>
+                        <span>$0.00</span>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0 fw-bold">Due today</span>
+                        <span class="h4 mb-0 fw-bold text-primary">$@PlanPrice</span>
+                    </div>
+                </div>
+
+                @* Yahan /sellerregister ka link add kar diya hai *@
+                <button class="btn ntx-subscribe-btn w-100 mt-4" @onclick="HandleSubscribe">
+                    Subscribe Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string SelectedPlan { get; set; } = "Plus";
+    private string PlanPrice { get; set; } = "29.00";
+
+    protected override void OnInitialized()
+    {
+        // URL se data nikalne ke liye logic
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("plan", out var plan))
+        {
+            SelectedPlan = plan;
+        }
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("price", out var price))
+        {
+            PlanPrice = price;
+        }
+    }
+
+    private void HandleSubscribe()
+    {
+        // Payment success hone ke baad registration par bhejein
+        NavManager.NavigateTo("/sellerregister");
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/seller/plan");
+    }
+}

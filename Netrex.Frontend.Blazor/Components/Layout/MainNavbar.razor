@@ -66,15 +66,19 @@
                             </div>
                         </li>
 
-                        <!-- Become a Seller -->
-                        <li>
-                            <a href="/sellerregister"
-                               data-bs-toggle="tooltip"
-                               data-bs-placement="bottom"
-                               title="Become a Seller">
-                                <img src="/assets/icons/seller.png" width="30" alt="Become a Seller" />
+                        <!-- ✅ Seller Button -->
+                        <li class="nav-item ms-3">
+                            <a href="/seller/plan"
+                               asp-area="Identity"
+                               asp-page="/Account/Login"
+                               class="btn btn-outline-light btn-sm px-4 py-2 rounded-pill
+              d-flex align-items-center gap-2 fw-semibold shadow-sm
+              custom-sell-btn">
+                                <i class="fas fa-store"></i>
+                                <span>Become a Seller</span>
                             </a>
                         </li>
+
 
                     </ul>
                 </div>

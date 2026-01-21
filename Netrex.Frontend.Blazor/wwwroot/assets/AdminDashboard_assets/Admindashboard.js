@@ -1,22 +1,16 @@
-// Hamburger menu toggle
-const hamburgerBtn = document.querySelector('.ad-hamburger-btn');
-const sidebar = document.querySelector('.ad-sidebar');
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.querySelector('.ad-sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
 
-hamburgerBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-});
-
-// Search bar toggle on mobile
-const searchBtn = document.querySelector('.ad-search-btn');
-const searchContainer = document.querySelector('.ad-search-container');
-
-searchBtn.addEventListener('click', () => {
-    searchContainer.style.display = searchContainer.style.display === 'flex' ? 'none' : 'flex';
-});
-
-// Close sidebar when clicking a menu item on mobile
-document.querySelectorAll('.ad-sidebar ul li a').forEach(link => {
-    link.addEventListener('click', () => {
-        sidebar.classList.remove('open');
+    document.addEventListener("click", function (e) {
+        // 1. Hamburger toggle logic (using closest to catch icon clicks)
+        if (e.target.closest('#sidebarToggle')) {
+            sidebar.classList.toggle('open');
+            console.log("Sidebar Status: ", sidebar.classList.contains('open') ? "Open" : "Closed");
+        }
+        // 2. Sidebar ke bahar click karne par band ho jaye
+        else if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
     });
 });

@@ -1,0 +1,94 @@
+﻿:root {
+    --ntx-teal: #04ADB1;
+    --ntx-dark: #0C284D;
+    --ntx-border: #e2e8f0;
+}
+
+/* Scoping everything under .ntx-payment-scope to prevent global leaks */
+.ntx-payment-scope {
+    color: var(--ntx-dark);
+}
+
+.ntx-back-link {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+    .ntx-back-link:hover {
+        color: var(--ntx-teal);
+    }
+
+.ntx-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.ntx-form-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--ntx-border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.ntx-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.ntx-input {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border-color: var(--ntx-border);
+}
+
+    .ntx-input:focus {
+        border-color: var(--ntx-teal);
+        box-shadow: 0 0 0 3px rgba(4, 173, 177, 0.1);
+    }
+
+.ntx-summary-box {
+    background: #fff;
+    border: 1px solid var(--ntx-border);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.ntx-badge {
+    background: #f0fdfa;
+    color: var(--ntx-teal);
+    font-weight: 700;
+    padding: 0.5em 1em;
+}
+
+.ntx-features-list li {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.ntx-subscribe-btn {
+    background: linear-gradient(135deg, var(--ntx-teal) 0%, #0891b2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .ntx-subscribe-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(4, 173, 177, 0.3);
+    }
+
+.ntx-card-icons {
+    border-left: none;
+    color: #94a3b8;
+}

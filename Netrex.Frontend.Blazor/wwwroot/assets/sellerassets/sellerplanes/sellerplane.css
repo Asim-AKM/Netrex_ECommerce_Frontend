@@ -1,0 +1,77 @@
+﻿:root {
+    --brand-teal: #04ADB1;
+    --brand-dark: #0C284D;
+    --brand-bg: #f8fafc;
+}
+
+body {
+    background-color: var(--brand-bg);
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
+}
+
+/* Pricing Section Styles */
+.plan-card {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+    .plan-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .plan-card.featured {
+        border: 2px solid var(--brand-teal);
+        transform: scale(1.05);
+    }
+
+.price-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--brand-dark);
+}
+
+/* Checkout Section Styles */
+.checkout-container {
+    max-width: 1100px;
+    margin: 50px auto;
+}
+
+.checkout-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.summary-card {
+    background: white;
+    border: 2px solid var(--brand-teal);
+    border-radius: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+.btn-brand {
+    background-color: var(--brand-teal);
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+}
+
+    .btn-brand:hover {
+        background-color: #038d91;
+        color: white;
+    }
+
+.text-brand-dark {
+    color: var(--brand-dark);
+}
+
+.bg-brand-teal {
+    background-color: var(--brand-teal);
+}

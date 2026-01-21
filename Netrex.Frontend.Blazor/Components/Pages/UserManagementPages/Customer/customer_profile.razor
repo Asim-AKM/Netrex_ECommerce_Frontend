@@ -50,6 +50,61 @@
     </div>
 </div>
 
+
+<div class="orders-card mt-5">
+
+    <h4 class="section-title">Customer Orders</h4>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Order No</th>
+                    <th>Order Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var order in Orders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.OrderNo</td>
+                        <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                        <td>Rs. @order.TotalAmount</td>
+                        <td>
+                            <span class="badge @GetStatusClass(order.Status)">
+                                @order.Status
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="summary-box">
+        Total Orders: @Orders.Count
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="footer">
     Built by Muhammad Ashar
 </div>
@@ -84,4 +139,28 @@
 
         PreviewImage = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
     }
+
+ List<OrderDto> Orders = new()
+    {
+        new OrderDto { Id = 1, OrderNo = "ORD-1001", OrderDate = DateTime.Now.AddDays(-5), TotalAmount = 1500, Status = "Completed" },
+        new OrderDto { Id = 2, OrderNo = "ORD-1002", OrderDate = DateTime.Now.AddDays(-2), TotalAmount = 2200, Status = "Pending" },
+        new OrderDto { Id = 3, OrderNo = "ORD-1003", OrderDate = DateTime.Now.AddDays(-1), TotalAmount = 800, Status = "Cancelled" }
+    };
+
+    public class OrderDto
+    {
+        public int Id { get; set; }
+        public string OrderNo { get; set; }
+        public DateTime OrderDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Status { get; set; }
+    }
+
+    string GetStatusClass(string status) => status switch
+    {
+        "Completed" => "badge-completed",
+        "Pending" => "badge-pending",
+        "Cancelled" => "badge-cancelled",
+        _ => "bg-secondary"
+    };
 }

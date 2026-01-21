@@ -1,26 +1,58 @@
-﻿<header class="ad-header">
+﻿@* <header class="ad-header">
     <button class="ad-hamburger-btn" aria-label="Toggle Sidebar">
         <span></span>
         <span></span>
         <span></span>
     </button>
 
-    <h1>Admin Dashboard</h1>
+    <h2 class="ad-topbar-title">
+        Admin Dashboard
+    </h2>
 
     <div class="ad-right-section">
+
         <button class="ad-search-btn" aria-label="Search">
             🔍
         </button>
-
-        <div class="ad-user-profile">
-            <div class="ad-avatar">A</div>
-            <span>Admin</span>
-        </div>
-
-        <button class="ad-logout-btn"></button>
-    </div>
-
     <div class="ad-search-container">
         <input type="text" placeholder="Search..." />
+    </div>
+        <div class="ad-profile-img-wrapper">
+            <img src="/assets/admindashboard_assets/whatsapp image 2026-01-18 at 10.10.54 pm.jpeg"
+                 alt="Profile"
+                 class="rounded-circle border border-2 border-light shadow-sm">
+        </div>
+
+        <button class="ad-logout-btn btn d-flex align-items-center justify-content-center shadow-sm">
+            <img src="/assets/admindashboard_assets/logout.png" alt="Logout" class="logout-icon" />
+        </button>   
+    </div>
+
+</header> *@
+<header class="ad-header d-flex align-items-center justify-content-between">
+    <button class="ad-hamburger-btn d-lg-none" id="sidebarToggle" aria-label="Toggle Sidebar">
+        
+        <i class="fas fa-bars" style="color:black;font-weight:bold;"></i>
+    </button>
+
+    <h2 class="ad-topbar-title m-0">Admin Dashboard</h2>
+
+    <div class="ad-right-section d-flex align-items-center gap-3">
+        <div class="ad-search-container d-none d-md-flex">
+            <input type="text" placeholder="Search orders, products..." />
+        </div>
+
+        <div class="ad-user-actions d-flex align-items-center gap-2">
+            <button class="ad-search-btn d-md-none border-0 bg-transparent">🔍</button>
+
+            <div class="ad-profile-img-wrapper">
+                <img src="/assets/admindashboard_assets/whatsapp image 2026-01-18 at 10.10.54 pm.jpeg"
+                     alt="Profile" class="rounded-circle shadow-sm profile-img">
+            </div>
+
+            <button class="ad-logout-btn btn p-0 border-0 shadow-sm d-flex align-items-center justify-content-center">
+                <img src="/assets/admindashboard_assets/logout.png" alt="Logout" class="logout-icon" />
+            </button>
+        </div>
     </div>
 </header>

@@ -1,15 +1,28 @@
-﻿* {
+﻿:root {
+    --primary: #04ADB1;
+    --secondary: #0C284D;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #06b6d4;
+    --light-bg: #f0f4f8;
+    --white: #ffffff;
+    --text-main: #1e293b;
+    --sidebar-width: 260px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
 }
 
-.ad-body {
-    position: relative;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: black;
-    min-height: 100vh;
+body {
+    background: var(--light-bg);
+    color: var(--text-main);
+    overflow-x: hidden;
 }
 
 .ad-header {
@@ -18,56 +31,64 @@
     z-index: 1000;
     display: flex;
     align-items: center;
+    /* This ensures items are spaced out: Title | Search | Profile */
     justify-content: space-between;
-    padding: 15px 30px;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    gap: 20px;
 }
 
+    /* 1. TITLE STYLI NG - No longer overlapped */
     .ad-header h1 {
-        font-size: 1.5rem;
-        color: #e2e8f0;
+        font-size: 1.25rem;
+        color: #1b6ec2;
         font-weight: 600;
+        margin: 0;
+        white-space: nowrap;
     }
 
+    /* 2. SEARCH BAR - Centered but relative to other items */
     .ad-header .ad-search-container {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
         display: flex;
         align-items: center;
-        background: rgba(30, 41, 59, 0.8);
-        border-radius: 50px;
-        padding: 8px 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #f8f9fa;
+        border-radius: 4px;
+        padding: 5px 12px;
+        border: 1px solid #ced4da;
+        flex: 0 1 400px; /* Allows it to grow but caps it at 400px */
+        transition: border-color 0.15s ease-in-out;
     }
+
+        /* Fix: Icon is right next to the input */
+        .ad-header .ad-search-container::before {
+            content: '🔍';
+            font-size: 0.9rem;
+            margin-right: 8px;
+            color: #6c757d;
+        }
 
         .ad-header .ad-search-container input {
             border: none;
             outline: none;
             background: transparent;
-            color: #e2e8f0;
+            color: #495057;
+            width: 100%;
             font-size: 14px;
-            width: 250px;
-            padding: 0 8px;
         }
 
-            .ad-header .ad-search-container input::placeholder {
-                color: #64748b;
-            }
-
-        .ad-header .ad-search-container::before {
-            content: '🔍';
-            color: #64748b;
-            font-size: 16px;
+        /* Apply your specific focus theme */
+        .ad-header .ad-search-container:focus-within {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
         }
 
+    /* 3. RIGHT SECTION (Profile & Logout) */
     .ad-header .ad-right-section {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 1.5rem;
     }
 
     .ad-header .ad-user-profile {
@@ -77,277 +98,108 @@
     }
 
         .ad-header .ad-user-profile .ad-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: #1b6ec2;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
-            font-size: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
         }
 
         .ad-header .ad-user-profile span {
-            color: #e2e8f0;
+            color: #212529;
             font-weight: 500;
+            font-size: 14px;
         }
 
+    /* 4. LOGOUT BUTTON - Restored with icon */
     .ad-header .ad-logout-btn {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 10px;
-        border-radius: 50%;
-        transition: all 0.3s;
-        color: #64748b;
+        color: #6c757d;
+        padding: 4px;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
     }
-
-        .ad-header .ad-logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-        }
 
         .ad-header .ad-logout-btn::before {
-            content: '⏻';
-            font-size: 18px;
+            font-size: 1.2rem;
         }
 
-    .ad-header .ad-hamburger-btn {
-        display: none;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 10px;
-        border-radius: 4px;
-        transition: all 0.3s;
-        color: #e2e8f0;
-    }
-
-        .ad-header .ad-hamburger-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .ad-header .ad-logout-btn:hover {
+            color: #e50000; /* Your theme's invalid/red color */
         }
 
-        .ad-header .ad-hamburger-btn span {
-            display: block;
-            width: 20px;
-            height: 2px;
-            background: #e2e8f0;
-            margin: 3px 0;
-            transition: all 0.3s;
-        }
-
-    .ad-header .ad-search-btn {
-        display: none;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 10px;
-        border-radius: 50%;
-        transition: all 0.3s;
-        color: #64748b;
-        font-size: 18px;
-    }
-
-        .ad-header .ad-search-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-        }
+/* Hidden elements from your HTML that aren't needed for desktop */
+.ad-hamburger-btn, .ad-search-btn {
+    display: none;
+}
+/* ===============================
+    SIDEBAR
+================================ */
 
 .ad-sidebar {
-    width: 250px;
+    width: var(--sidebar-width);
     height: 100vh;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--primary); /* Teal background from Seller theme */
     position: fixed;
     top: 0;
     left: 0;
-    padding-top: 80px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-    z-index: 100;
-    transition: transform 0.3s ease;
-    overflow-y: auto;
-}
-
-    .ad-sidebar ul {
-        list-style: none;
-    }
-
-        .ad-sidebar ul li {
-            padding: 0;
-        }
-
-            .ad-sidebar ul li a {
-                color: #cbd5e1;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                padding: 20px;
-                border-radius: 8px;
-                transition: all 0.3s;
-                position: relative;
-                margin: 8px 16px;
-            }
-
-                .ad-sidebar ul li a::before {
-                    content: '';
-                    width: 24px;
-                    height: 24px;
-                    margin-right: 12px;
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                    opacity: 0.8;
-                }
-
-            .ad-sidebar ul li:nth-child(1) a::before {
-                content: '🏠';
-            }
-            /* Dashboard */
-            .ad-sidebar ul li:nth-child(2) a::before {
-                content: '👥';
-            }
-            /* User Management */
-            .ad-sidebar ul li:nth-child(3) a::before {
-                content: '🏪';
-            }
-            /* Seller Module */
-            .ad-sidebar ul li:nth-child(4) a::before {
-                content: '📦';
-            }
-            /* Product Management */
-            .ad-sidebar ul li:nth-child(5) a::before {
-                content: '💳';
-            }
-            /* Payment & Payout */
-            .ad-sidebar ul li:nth-child(6) a::before {
-                content: '🛒';
-            }
-            /* Cart & Order */
-            .ad-sidebar ul li:nth-child(7) a::before {
-                content: '📊';
-            }
-            /* Analytics */
-            .ad-sidebar ul li:nth-child(8) a::before {
-                content: '⚙️';
-            }
-            /* Settings */
-            .ad-sidebar ul li a:hover {
-                background: rgba(59, 130, 246, 0.2);
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-                color: #ffffff;
-            }
-
-                .ad-sidebar ul li a:hover::before {
-                    opacity: 1;
-                }
-
-            .ad-sidebar ul li:first-child a {
-                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3));
-                box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
-                color: #ffffff;
-            }
-
-.ad-main-content {
-    margin-left: 250px;
-    padding: 60px 40px;
-    background-color: #ffffff;
-    min-height: 100vh;
+    padding: 20px 15px;
+    z-index: 1100;
+    transition: transform 0.35s ease;
     display: flex;
-    justify-content: center;
     flex-direction: column;
 }
 
-.ad-dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
 
-.ad-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    text-align: center;
-    border: 1px solid #e5e7eb;
-    position: relative;
-    overflow: hidden;
-}
+    
 
-    .ad-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    .ad-sidebar ul {
+        list-style: none;
+        margin-top: 60px; /* Space for header */
+        flex: 1;
+        overflow-y: auto;
     }
 
-    .ad-card.sales::before {
-        background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    }
+        /* Custom Scrollbar for Sidebar Nav */
+        .ad-sidebar ul::-webkit-scrollbar {
+            width: 5px;
+        }
 
-    .ad-card.orders::before {
-        background: linear-gradient(90deg, #f59e0b, #fbbf24);
-    }
+        .ad-sidebar ul::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
 
-    .ad-card.customers::before {
-        background: linear-gradient(90deg, #10b981, #34d399);
-    }
+        .ad-sidebar ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
 
-    .ad-card.products::before {
-        background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    }
+            .ad-sidebar ul li a:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
 
-    .ad-card.sellers::before {
-        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
-    }
-
-    .ad-card.payments::before {
-        background: linear-gradient(90deg, #ef4444, #f87171);
-    }
-
-    .ad-card h3 {
-        margin-bottom: 0.5rem;
-        color: #6b7280;
-        font-weight: 500;
-    }
-
-    .ad-card p {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .ad-card.sales p {
-        color: #6366f1;
-    }
-
-    .ad-card.orders p {
-        color: #f59e0b;
-    }
-
-    .ad-card.customers p {
-        color: #10b981;
-    }
-
-    .ad-card.products p {
-        color: #3b82f6;
-    }
-
-    .ad-card.sellers p {
-        color: #8b5cf6;
-    }
-
-    .ad-card.payments p {
-        color: #ef4444;
-    }
+            .ad-sidebar ul li.active a,
+            .ad-sidebar ul li a:focus {
+                background: #ffffff;
+                color: var(--primary);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
 
 .ad-sparkline {
     width: 100%;
@@ -360,194 +212,367 @@
         height: 100%;
     }
 
+/* ===============================
+    MAIN CONTENT AREA
+================================ */
+
+.ad-main-content {
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.ad-section h2 {
+    margin-bottom: 1.5rem;
+    color: var(--secondary);
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* ===============================
+    DASHBOARD CARDS
+================================ */
+
+.ad-dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.ad-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--primary); /* Accent line from seller theme */
+    transition: transform 0.3s ease;
+}
+
+    .ad-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .ad-card h3 {
+        font-size: 0.9rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 10px;
+    }
+
+    .ad-card p {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--secondary);
+    }
+
+    /* Card variants */
+    .ad-card.sales {
+        border-left-color: var(--primary);
+    }
+
+    .ad-card.orders {
+        border-left-color: var(--warning);
+    }
+
+    .ad-card.customers {
+        border-left-color: var(--success);
+    }
+
+    .ad-card.payments {
+        border-left-color: var(--danger);
+    }
+
+/* ===============================
+    TABLES
+================================ */
+
 .ad-table-wrapper {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
     overflow-x: auto;
-    margin-bottom: 3rem;
 }
 
 .ad-table {
     width: 100%;
     border-collapse: collapse;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    min-width: 600px; /* Ensure minimum width for scrolling */
 }
-
-    .ad-table th, .ad-table td {
-        padding: 1.25rem;
-        text-align: left;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-    }
 
     .ad-table th {
-        background: rgba(15, 23, 42, 0.8);
-        color: #e2e8f0;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.1em;
+        background: #f8fafc;
+        padding: 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #475569;
+        font-size: 13px;
+        border-bottom: 2px solid #e2e8f0;
     }
 
-    .ad-table tbody tr {
-        transition: all 0.3s ease;
+    .ad-table td {
+        padding: 16px;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 14px;
+        color: var(--text-main);
     }
 
-        .ad-table tbody tr:hover {
-            background: rgba(59, 130, 246, 0.05);
-            transform: scale(1.01);
-        }
-
-.ad-status-badge {
-    display: inline-block;
-    padding: 0.375rem 0.875rem;
-    border-radius: 9999px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #ffffff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
-
-.ad-action-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-    .ad-action-btn.edit {
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        color: #ffffff;
+    .ad-table tbody tr:hover {
+        background: #f1f5f9;
     }
 
-        .ad-action-btn.edit:hover {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            transform: scale(1.1);
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
-        }
-
-        .ad-action-btn.edit::before {
-            content: '✏️';
-            font-size: 16px;
-        }
-
-    .ad-action-btn.delete {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: #ffffff;
-    }
-
-        .ad-action-btn.delete:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: scale(1.1);
-            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
-        }
-
-        .ad-action-btn.delete::before {
-            content: '🗑️';
-            font-size: 16px;
-        }
+/* ===============================
+    BUTTONS & BADGES
+================================ */
 
 .ad-btn {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: var(--primary);
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: 10px 20px;
+    margin-bottom: 10px;
     border: none;
     border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
     .ad-btn:hover {
-        background: linear-gradient(135deg, #2563eb, #1e40af);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+        background: #039196;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(4, 173, 177, 0.3);
     }
 
-.ad-btn-danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+.ad-status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #d1fae5;
+    color: #065f46;
 }
 
-    .ad-btn-danger:hover {
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
-    }
+/* ===============================
+    RESPONSIVE
+================================ */
 
-.ad-section {
-    margin-bottom: 4rem;
-}
-
-    .ad-section h2 {
-        margin-bottom: 1.5rem;
-        color: #1e293b;
-        font-size: 1.75rem;
-        font-weight: 700;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-.ad-toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-    .ad-toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-.ad-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-}
-
-    .ad-slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-input:checked + .ad-slider {
-    background-color: #3b82f6;
-}
-
-    input:checked + .ad-slider:before {
-        transform: translateX(26px);
-    }
-
-/* ===== Responsive cleanup ===== */
 @media (max-width: 1024px) {
+    .ad-sidebar {
+        width: 220px;
+    }
+
+    .ad-main-content {
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ad-sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+    }
+
+        .ad-sidebar.active {
+            transform: translateX(0);
+        }
+
+    .ad-main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .ad-header .ad-search-container {
+        display: none;
+    }
+
+    .ad-hamburger-btn {
+        display: block !important;
+    }
+}
+
+/* Sidebar Nav Styling */
+.ntx-admin-nav .ntx-nav-link {
+    display: flex;
+    align-items: center;
+    /*    gap: 15px;*/
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    /* Icons Animation */
+    .ntx-admin-nav .ntx-nav-link i {
+        font-size: 1.1rem;
+        width: 25px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hover State: Modern Lift & Glow */
+    .ntx-admin-nav .ntx-nav-link:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        padding-left: 25px; /* Slight push effect */
+    }
+
+        .ntx-admin-nav .ntx-nav-link:hover i {
+            transform: scale(1.2);
+        }
+
+    /* Active State: Jaise image mein Payment & Payout highlighted hai */
+    .ntx-admin-nav .ntx-nav-link.active {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+/* Sidebar scrollbar thin and clean */
+.ntx-admin-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ntx-admin-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+
+
+
+.ntx-topbar {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.ntx-topbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ntx-topbar-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ntx-topbar-search {
+    width: 260px;
+    padding: 10px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.ntx-topbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .ntx-topbar-profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+.ad-profile-img-wrapper img {
+    width: 40px; /* Aap size chota-bada kar sakte hain */
+    height: 40px;
+    object-fit: cover; /* Photo stretch nahi hogi */
+    transition: transform 0.2s;
+}
+
+.icon-hover {
+    cursor: pointer;
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+.ad-logout-btn {
+    width: 38px;
+    height: 38px;
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px; /* Rounded corners */
+    padding: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Icon ki styling */
+.logout-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    /* Agar image black hai aur aap theme color dena chahte hain: */
+    /* filter: invert(47%) sepia(90%) saturate(1500%) hue-rotate(145deg); */
+}
+
+/* Hover Effect */
+.ad-logout-btn:hover {
+    background-color: #fff5f5; /* Light red background on hover */
+    border-color: #ff4d4d; /* Red border */
+    transform: translateY(-2px); /* Halki si lift */
+}
+
+    /* Hover par icon ka color (agar filter use karna ho) */
+    .ad-logout-btn:hover .logout-icon {
+        filter: brightness(0) saturate(100%) invert(32%) sepia(87%) saturate(2258%) hue-rotate(346deg) brightness(101%) contrast(106%);
+    }
+/** ===================================================
+CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
+=================================================== */
+/* --- 1. Desktop Defaults (Laptops & Above) --- */
+@media (min-width: 992px) {
+    .ad-sidebar {
+        width: 260px;
+        transform: translateX(0);
+    }
+
+    .ad-main-content {
+        margin-left: 260px;
+        padding: 40px;
+    }
+
+    .ad-topbar-title {
+        padding-left: 260px; /* Sidebar ke liye gap */
+        font-size: 24px;
+        display: block;
+    }
+
+    .ad-hamburger-btn {
+        display: none; /* Desktop par zarurat nahi */
+    }
+}
+
+/* --- 2. Tablets & Small Laptops (1024px to 769px) --- */
+@media (max-width: 1024px) and (min-width: 769px) {
     .ad-sidebar {
         width: 220px;
     }
@@ -557,170 +582,155 @@ input:checked + .ad-slider {
         padding: 30px;
     }
 
-    .ad-dashboard-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .ad-topbar-title {
+        padding-left: 220px;
+        font-size: 20px;
     }
 }
 
-
+/* --- 3. Mobile Screens (768px and Below) --- */
 @media (max-width: 768px) {
+    /* Header Adjustments */
     .ad-header {
-        padding: 10px 12px;
-        flex-wrap: wrap;
-        gap: 10px;
+        padding: 10px 15px;
+        height: 60px;
+        flex-wrap: nowrap;
     }
 
-        .ad-header h1 {
-            font-size: 1rem;
-            white-space: nowrap;
-        }
+    .ad-topbar-title {
+        padding-left: 0 !important; /* Mobile par padding khatam */
+        font-size: 16px !important;
+        flex-grow: 1;
+        text-align: center;
+        white-space: nowrap;
+        font-weight: bold;
+    }
 
-        .ad-header .ad-hamburger-btn {
-            display: block;
-        }
-
-        .ad-header .ad-search-container {
-            display: none;
-            position: static;
-            transform: none;
-            width: 100%;
-        }
-
-            .ad-header .ad-search-container input {
-                width: 100%;
-            }
-
-        .ad-header .ad-search-btn {
-            display: block;
-        }
-
-        .ad-header .ad-user-profile span {
-            display: none;
-        }
-
-        .ad-header .ad-avatar {
-            width: 32px;
-            height: 32px;
-            font-size: 14px;
-        }
-
+    /* Sidebar Toggle Logic */
     .ad-sidebar {
-        transform: translateX(-100%);
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 260px !important;
+        height: 100vh !important;
+        background-color: #04ADB1 !important; /* Aapka Teal Color */
+        z-index: 99999 !important; /* Sabse upar dikhane ke liye */
+        transform: translateX(-100%) !important; /* Default chhupa hua */
+        transition: transform 0.3s ease-in-out !important;
+        display: flex !important; /* Ensure visibility */
+        flex-direction: column;
+
     }
 
         .ad-sidebar.open {
-            transform: translateX(0);
+            transform: translateX(0) !important;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5) !important;
+        }
+           .ad-sidebar.open {
+                transform: translateX(0); /* Click karne par andar */
+            }
+
+            .ad-hamburger-btn {
+                display: block !important;
+                background: transparent;
+                border: none;
+                font-size: 1.2rem;
+                color: var(--primary);
+                cursor: pointer;
+            }
+            /* Content Area */
+            .ad-main-content {
+                margin-left: 0 !important;
+                padding: 15px;
+            }
+            /* Elements Visibility */
+            .ad-search-container {
+                display: none; /* Mobile par search box hide */
+            }
+
+            .ad-search-btn {
+                display: block; /* Sirf icon dikhega */
+            }
+
+    .ad-header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 5px 15px !important;
+        height: 70px !important;
+    }
+
+                .ad-header .ad-user-profile span {
+                    display: none; /* Naam hide, sirf photo dikhegi */
+                }
+            /* Dashboard Cards */
+            .ad-dashboard-cards {
+                grid-template-columns: 1fr; /* Cards aik line mein */
+                gap: 15px;
+            }
+            /* Tables Handling */
+            .ad-table-wrapper {
+                overflow-x: auto; /* Table scrollable ho jayega */
+            }
+
+            .ad-table {
+                min-width: 600px;
+            }
+
+            .ad-user-actions {
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+
+    .ad-right-section, .ad-user-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .ad-topbar-title {
+        font-size: 1.1rem !important;
+        margin: 0 !important;
+        padding-left: 0 !important; /* Mobile par padding khatam */
+        flex-grow: 1;
+        text-align: center;
+    }
         }
 
-    .ad-main-content {
-        margin-left: 0;
-        padding: 16px;
-    }
-
-    .ad-dashboard-cards {
-        grid-template-columns: 1fr;
-    }
-
-    .ad-section > .ad-btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .ad-table-wrapper {
-        overflow-x: auto;
-    }
-
-    .ad-table {
-        min-width: 720px;
-        font-size: 13px;
-    }
-
-        .ad-table th, .ad-table td {
-            padding: 8px;
-            white-space: nowrap;
+    /* --- 4. Very Small Screens (480px and Below) --- */
+    @media (max-width: 480px) {
+        .ad-topbar-title {
+            font-weight: bold;
         }
 
-    .ad-table-wrapper .ad-btn {
-        width: auto;
-        margin-bottom: 0;
-        padding: 6px 10px;
-        font-size: 12px;
+        .ad-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+            /* Jab JS 'open' class lagaye toh sidebar andar aa jaye */
+            .ad-sidebar.open {
+                transform: translateX(0) !important;
+            }
+
+        .ad-card p {
+            font-size: 1.5rem;
+        }
+
+        /* Tables mein se kam zaroori columns hide karna */
+        .ad-table th:nth-child(3),
+        .ad-table td:nth-child(3) {
+            display: none;
+        }
     }
 
-    .ad-action-btn {
-        width: 30px;
-        height: 30px;
-    }
-
-    .ad-status-badge {
-        font-size: 10px;
-        padding: 4px 8px;
-    }
-}
-
-@media (max-width: 576px) {
-    .ad-header h1 {
-        font-size: 0.95rem;
-    }
-
-    .ad-card p {
-        font-size: 1.5rem;
-    }
-
-    .ad-table th:nth-child(3),
-    .ad-table td:nth-child(3),
-    .ad-table th:nth-child(4),
-    .ad-table td:nth-child(4) {
-        display: none;
-    }
-}
-/* Container for alignment in header */
-.ntx-header-right {
+.ad-hamburger-btn {
+    cursor: pointer;
+    z-index: 10001;
+    padding: 10px;
     display: flex;
     align-items: center;
-    padding: 5px;
-}
-
-/* Unique Class Name: Netrex Theme Button */
-.ntx-theme-btn--outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 18px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-    /* Theme Colors */
-    background-color: transparent;
-    color: #ffffff; /* White text for Teal background */
-    border: 1.5px solid rgba(255, 255, 255, 0.7); /* Subtle white border */
-}
-
-    /* Hover Effect */
-    .ntx-theme-btn--outline:hover {
-        background-color: #ffffff; /* Button fills white on hover */
-        color: #00a8a8; /* Text turns Teal on hover */
-        border-color: #ffffff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transform: translateY(-1px);
-    }
-
-    /* Icon size adjustment */
-    .ntx-theme-btn--outline i {
-        font-size: 15px;
-    }
-
-/* Responsive: Choti screen par sirf icon dikhega */
-@media (max-width: 768px) {
-    .ntx-theme-btn--outline span {
-        display: none; /* Mobile par text hide ho jayega */
-    }
-
-    .ntx-theme-btn--outline {
-        padding: 8px;
-        border-radius: 50%; /* Circle icon button on mobile */
-    }
+    justify-content: center;
 }

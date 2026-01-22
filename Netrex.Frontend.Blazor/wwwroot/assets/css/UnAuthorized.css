@@ -1,0 +1,107 @@
+﻿
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Pehle 0.85 tha, ab 0.45 kar diya takay background light ho jaye */
+    background: rgba(12, 41, 75, 0.45);
+    /* Mazeed deep blur takay "Frosted Glass" look aye */
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999 !important;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95); /* Card ko halka sa transparent rakha hai */
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    /* Card ko background se alag karne k liye shadow */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.error-code {
+    font-size: 72px;
+    font-weight: 900;
+    color: white;
+    background: #03ADAE;
+    margin: 0;
+    line-height: 1;
+}
+
+.lock-visual {
+    font-size: 80px;
+    margin: 25px 0;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.title {
+    color: #111827;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.message {
+    color: #6B7280;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Buttons */
+.card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-main {
+    background-color: #03ADAE;
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+    .btn-main:hover {
+        background-color: #0C294B;
+        transform: translateY(-2px);
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #D1D5DB;
+    color: #4B5563;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+    .btn-secondary:hover {
+        background-color: #F9FAFB;
+        color: #0C294B;
+    }
+
+/* Simple Animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}

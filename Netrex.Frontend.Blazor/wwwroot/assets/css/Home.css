@@ -48,12 +48,15 @@ header {
     height: 43px;
 }
 
-.contact-number h3 {
+.contact-number h3 a {
+    text-decoration:none;
+    color: black;
     font-weight: bold;
     font-size: 18px;
 }
 
-.contact-number p {
+.contact-number p a {
+    text-decoration:none;
     color: rgb(137, 137, 137);
     margin: 0;
 }
@@ -126,6 +129,9 @@ nav {
 
 .nav-icons ul li {
     list-style: none;
+}
+.nav-icons a img {
+    filter: brightness(0) invert(1);
 }
 
 /* Slider */
@@ -520,13 +526,15 @@ footer {
     }
 
         footer .address-content p,
+        footer .address-content a,
         footer .contact-info p,
         footer .contact-info a,
         footer .subscribe-info p {
             color: white;
             margin: 0;
+            text-decoration:none;
         }
-
+       
         footer .nav-items li {
             list-style: none;
             padding: 0;

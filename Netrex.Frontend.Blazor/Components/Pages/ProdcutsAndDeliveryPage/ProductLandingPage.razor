@@ -1,0 +1,182 @@
+﻿@page "/ProductlandingPage"
+@using Netrex.Frontend.Blazor.Components.Layout
+@rendermode InteractiveServer
+@layout MainLayout
+
+<PageTitle>ProductlandingPage</PageTitle>
+
+
+<div class="product-container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        Home > Cloths > Shirts & SleeveLessShirts > WhitesShirts > WhiteShirt With Red Sleeves
+    </div>
+
+    <!-- Main Product Section -->
+    <div class="main-card">
+        <!-- Left: Gallery -->
+        <div class="gallery-col">
+            <div class="main-img-container">
+                <img class="thumb active" src="/assets/product-images/13.jpg" width="200" alt="Product" onclick="changeImg(this.src, this)">
+            </div>
+            <div class="thumb-list">
+                <img class="thumb active" src="/assets/product-images/13.jpg" width="200" alt="Product" onclick="changeImg(this.src, this)">
+                <img class="thumb active" src="/assets/productsassets/images_products/images (3).jpg" width="200" alt="Product" onclick="changeImg(this.src, this)">
+                <img class="thumb active" src="/assets/productsassets/images_products/il_570xN.3309098038_sw88.webp" width="200" alt="Product" onclick="changeImg(this.src, this)">
+                <img class="thumb active" src="/assets/productsassets/images_products/images (4).jpg" width="200" alt="Product" onclick="changeImg(this.src, this)">
+
+            </div>
+        </div>
+
+        <!-- Middle: Details -->
+        <div class="details-col">
+            <h1 class="product-title">Men’s Premium White Crew Neck T-Shirt | Red Edge Design</h1>
+
+            <div class="ratings-row">
+                <div class="stars">★★★★★</div>
+                <a href="#">742 Ratings</a>
+                <span class="divider">|</span>
+                <a href="#">58 Answered Questions</a>
+            </div>
+            <div class="brand-row">
+                <span>Brand: <a href="#">No Brand</a></span>
+                <span class="divider">|</span>
+                <a href="#">More Audio from No Brand</a>
+            </div>
+            <hr>
+            <div class="price-box">
+                <div class="current-price">Rs. 720</div>
+                <div class="old-price">
+                    <span class="strike">Rs. 3,500</span>
+                    <span class="discount">-79%</span>
+                </div>
+            </div>
+            <div class="options-row">
+                <div class="option-label">Color Family</div>
+                <div class="color-selected">
+                    <span>White Crew Neck T-Shirt|Red Edge Design</span>
+                    <img src="/assets/productsassets/images_products/images (3).jpg" alt="White">
+                </div>
+            </div>
+            <div class="options-row">
+                <div class="option-label">Quantity</div>
+                <div class="qty-selector">
+                    <button onclick="updateQty(-1)">-</button>
+                    <input type="text" id="qty" value="1" readonly>
+                    <button onclick="updateQty(1)">+</button>
+                </div>
+            </div>
+
+            <div class="options-row">
+                <div class="option-label">Size</div>
+                <div class="size-selector">
+                    <button class="size-btn active" onclick="selectSize(this)">S</button>
+                    <button class="size-btn" onclick="selectSize(this)">M</button>
+                    <button class="size-btn" onclick="selectSize(this)">L</button>
+                    <button class="size-btn" onclick="selectSize(this)">XL</button>
+                    <button class="size-btn" onclick="selectSize(this)">XXL</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-buy">Buy Now</button>
+                <button class="btn-cart">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- Right: Delivery -->
+        <div class="delivery-col">
+            <div class="del-section">
+                <div class="del-header">
+                    <span>Delivery Options</span>
+                    <span class="info-icon">i</span>
+                </div>
+                <div class="del-item">
+                    <i class="icon">📍</i>
+                    <div>
+                        <div class="del-addr">Khyber Pakhtunkhwa, D.I.Khan, Maryali</div>
+                        <a href="DeliveryAddressPage" class="change-link">CHANGE</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="del-item">
+                    <i class="icon">🚚</i>
+                    <div class="del-info-wrap">
+                        <div class="del-type-price">
+                            <span>Standard Delivery</span>
+                            <span>Rs. 125</span>
+                        </div>
+                        <div class="del-date">Guaranteed by 25-27 Jan</div>
+                    </div>
+                </div>
+                <div class="del-item">
+                    <i class="icon">💵</i>
+                    <div>Cash on Delivery Available</div>
+                </div>
+            </div>
+            <div class="del-section">
+                <div class="del-header">
+                    <span>Return & Warranty</span>
+                    <span class="info-icon">i</span>
+                </div>
+                <div class="del-item">
+                    <i class="icon">🛡️</i>
+                    <div>14 days easy return</div>
+                </div>
+                <div class="del-item">
+                    <i class="icon">🚫</i>
+                    <div>Warranty not available</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="details-card">
+        <h2 class="card-header">Product details White Crew Neck T-Shirt|Red Edge</h2>
+        <div class="details-content">
+            <ul>
+                <li> Model: Classic White Cotton T-Shirt with Red Trim</li>
+                <li>Material: Premium quality soft cotton fabric</li>
+                <li>Color: White with red collar and sleeve piping</li>
+                <li>Fit: Regular fit – comfortable for daily wear</li>
+                <li>Sleeves: Short sleeves with red edge finish</li>
+                <li>Neck Type: Crew neck with contrast red detailing</li>
+                <li>Sizes Available: S, M, L, XL, XXL</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Ratings & Reviews Section -->
+    <div class="details-card">
+        <h2 class="card-header">Ratings & Reviews of White Crew Neck T-Shirt|Red Edge</h2>
+        <div class="details-content">
+            <div class="review-item">
+                <div class="review-header">
+                    <span class="reviewer-name">Muhammad A.</span>
+                    <span class="review-date">2 days ago</span>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-comment">“Excellent quality T-shirt! The cotton fabric feels very soft and comfortable. The red trim gives it a stylish look.”</p>
+            </div>
+            <div class="review-item">
+                <div class="review-header">
+                    <span class="reviewer-name">Saqib K.</span>
+                    <span class="review-date">1 week ago</span>
+                </div>
+                <div class="review-stars">★★★★☆</div>
+                <p class="review-comment">“Perfect fit and great stitching. I’ve washed it twice and the color is still the same. Highly recommended.”</p>
+            </div>
+            <div class="review-item">
+                <div class="review-header">
+                    <span class="reviewer-name">Zeeshan R.</span>
+                    <span class="review-date">2 weeks ago</span>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-comment">“Good value for money. Lightweight and breathable, ideal for summer wear.”</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+

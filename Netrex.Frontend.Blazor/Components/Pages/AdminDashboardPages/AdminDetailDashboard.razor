@@ -2,9 +2,17 @@
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
-    <div class="sidebar-header">
-        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto;">
+
+    <div class="sidebar-header" style="display: flex; display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;">
+        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto; padding-left:10px">
+
+        <i class="fa-solid fa-xmark close-icon  " style="padding-left:20px;"></i>
+
     </div>
+    
     <ul class="ntx-admin-nav list-unstyled">
         <li>
             <a href="#dashboard" class="ntx-nav-link active" onclick="showTab('dashboard', event)">
@@ -462,3 +470,15 @@
         </div>
     </section>
 </main>
+@code {
+    // Yahan hum JS ko call karte hain jab page render ho jaye
+    [Inject] IJSRuntime JSRuntime { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
+        }
+    }
+}

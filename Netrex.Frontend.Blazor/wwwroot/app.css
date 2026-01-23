@@ -1,4 +1,4 @@
-html, body {
+﻿html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -58,3 +58,18 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+/* Button ko navbar ke background se thoda alag aur saaf dikhane ke liye */
+.custom-sell-btn {
+    background-color: rgba(255, 255, 255, 0.1); /* Halka sa transparent white */
+    border: 1.5px solid white !important;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+    /* Jab mouse button par jaye (Hover effect) */
+    .custom-sell-btn:hover {
+        background-color: white !important;
+        color: #04ADB1 !important; /* Navbar ka teal color text ban jayega */
+        transform: translateY(-1px); /* Halka sa lift effect */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    }

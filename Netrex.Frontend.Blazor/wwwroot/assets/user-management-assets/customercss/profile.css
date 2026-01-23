@@ -92,6 +92,59 @@
         background-color: #026767;
     }
 
+
+.orders-card {
+    max-width: 950px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 30px;
+}
+
+/* Orders Title */
+.section-title {
+    font-weight: 600;
+    color: #026767;
+    margin-bottom: 20px;
+}
+
+/* Orders Table */
+.table thead {
+    background-color: #03ADAE;
+    color: white;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Order Status Badges */
+.badge-completed {
+    background-color: #198754;
+}
+
+.badge-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+}
+
+/* Orders Summary */
+.summary-box {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #026767;
+}
+
+/* Footer */
+
+
 .footer {
     text-align: center;
     font-size: 13px;

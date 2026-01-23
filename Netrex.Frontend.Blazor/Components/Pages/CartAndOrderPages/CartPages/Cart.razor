@@ -8,17 +8,14 @@
         <!-- Cart Items Section -->
         <section class="cart-items" aria-label="Shopping Cart Items">
 
-            @if (cartItems.Any())
+            @if (getcartItems.Any())
             {
-                @foreach (var item in cartItems)
+                @foreach (var item in getcartItems)
                 {
-                    <article class="cart-item" data-id="@item.Id">
-                        <img src="@item.ImageUrl"
-                             alt="@item.Name"
-                             width="100"
-                             height="120" />
+                    <article class="cart-item" data-id="@item.CartItemId">
+                        <img src="https://picsum.photos/id/1050/100/120" alt="@item.ProductName" width="100" height="120" />
                         <div class="item-info">
-                            <h2>@item.Name</h2>
+                            <h2>@item.ProductName</h2>
                             <p>@item.Description</p>
                         </div>
                         <div class="item-price">@($"Rs {item.Price:N0}")</div>
@@ -27,7 +24,7 @@
                             <span class="qty">@item.Quantity</span>
                             <button class="qty-increase" aria-label="Increase quantity" @onclick="() => IncreaseQuantity(item)">+</button>
                         </div>
-                        <div class="item-total">@($"Rs {item.LineTotal:N0}")</div>
+                        <div class="item-total">@($"Rs {item.Price*item.Quantity:N0}")</div>
                         <button class="remove" aria-label="Remove item" @onclick="() => RemoveItem(item)">Remove</button>
                     </article>
                 }
@@ -58,91 +55,9 @@
                 <span id="cart-total">@($"Rs {Total:N0}")</span>
             </div>
 
-            <button class="checkout-btn" disabled="@(!cartItems.Any())">Proceed to Checkout</button>
+            <button class="checkout-btn" disabled="@(!getcartItems.Any())">Proceed to Checkout</button>
             <a href="/shop" class="continue-btn">Continue Shopping</a>
         </aside>
 
     </section>
 </main>
-
-@code {
-    private List<CartItem> cartItems = new();
-
-    // Calculated properties for the order summary
-    private decimal Subtotal => cartItems.Sum(item => item.LineTotal);
-    private decimal Shipping { get; set; } = 500;
-    private decimal Total => Subtotal + Shipping;
-
-    /// <summary>
-    /// Represents a single item in the shopping cart.
-    /// </summary>
-    public class CartItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Description { get; set; } = "";
-        public string ImageUrl { get; set; } = "";
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-
-        // Calculated property for the total price of this line item
-        public decimal LineTotal => Price * Quantity;
-    }
-
-    /// <summary>
-    /// Initializes the component with sample data when it's first rendered.
-    /// In a real application, this data would come from a service or API.
-    /// </summary>
-    protected override void OnInitialized()
-    {
-        cartItems = new List<CartItem>
-        {
-            new CartItem
-            {
-                Id = 1011,
-                Name = "Men Denim Jacket",
-                Description = "Size: M",
-                ImageUrl = "https://picsum.photos/id/1011/100/120",
-                Price = 3500,
-                Quantity = 1
-            },
-            new CartItem
-            {
-                Id = 180,
-                Name = "Wireless Headphones",
-                Description = "Color: Black",
-                ImageUrl = "https://picsum.photos/id/180/100/120",
-                Price = 4200,
-                Quantity = 2
-            },
-            new CartItem
-            {
-                Id = 1050,
-                Name = "Smart Watch",
-                Description = "Color: Silver",
-                ImageUrl = "https://picsum.photos/id/1050/100/120",
-                Price = 5500,
-                Quantity = 1
-            }
-        };
-    }
-
-    private void IncreaseQuantity(CartItem item)
-    {
-        item.Quantity++;
-    }
-
-    private void DecreaseQuantity(CartItem item)
-    {
-        if (item.Quantity > 1)
-        {
-            item.Quantity--;
-        }
-    }
-
-    private void RemoveItem(CartItem item)
-    {
-        cartItems.Remove(item);
-    }
-}
-

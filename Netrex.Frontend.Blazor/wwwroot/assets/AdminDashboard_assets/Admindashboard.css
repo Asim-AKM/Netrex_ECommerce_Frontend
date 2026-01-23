@@ -367,6 +367,9 @@ body {
     .ad-main-content {
         margin-left: 220px;
     }
+    .close-icon {
+        display: block; /* <--- YAHAN SE SHOW HOGA (Mobile par nazar aayega) */
+    }
 }
 
 @media (max-width: 768px) {
@@ -545,6 +548,22 @@ body {
     .ad-logout-btn:hover .logout-icon {
         filter: brightness(0) saturate(100%) invert(32%) sepia(87%) saturate(2258%) hue-rotate(346deg) brightness(101%) contrast(106%);
     }
+
+
+
+
+
+.close-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    
+}
+
+    .close-icon:hover {
+        color: white; /* hover par red */
+    }
+
 /** ===================================================
 CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
 =================================================== */
@@ -569,6 +588,16 @@ CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
     .ad-hamburger-btn {
         display: none; /* Desktop par zarurat nahi */
     }
+    .close-icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+        display: none !important;
+    }
+
+    
+
+    
 }
 
 /* --- 2. Tablets & Small Laptops (1024px to 769px) --- */
@@ -586,11 +615,31 @@ CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
         padding-left: 220px;
         font-size: 20px;
     }
+    .close-icon {
+        display: block !important;
+    }
+    .close-icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+        display: none !important;
+    }
+
 }
 
 /* --- 3. Mobile Screens (768px and Below) --- */
 @media (max-width: 768px) {
+
+    .close-icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+       
+    }
+
     /* Header Adjustments */
+
+
     .ad-header {
         padding: 10px 15px;
         height: 60px;
@@ -697,6 +746,8 @@ CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
         flex-grow: 1;
         text-align: center;
     }
+
+  
         }
 
     /* --- 4. Very Small Screens (480px and Below) --- */
@@ -724,13 +775,6 @@ CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
         .ad-table td:nth-child(3) {
             display: none;
         }
+
     }
 
-.ad-hamburger-btn {
-    cursor: pointer;
-    z-index: 10001;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}

@@ -1,107 +1,253 @@
-﻿
-.auth-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    /* Pehle 0.85 tha, ab 0.45 kar diya takay background light ho jaye */
-    background: rgba(12, 41, 75, 0.45);
-    /* Mazeed deep blur takay "Frosted Glass" look aye */
-    backdrop-filter: blur(30px) saturate(150%);
-    -webkit-backdrop-filter: blur(30px) saturate(150%);
+﻿/* Container to act as body since it's a component */
+.cyber-body {
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 99999 !important;
+    padding: 15px;
+    overflow: hidden;
+    position: relative;
+    background: #021c1c;
 }
 
-.auth-card {
-    background: rgba(255, 255, 255, 0.95); /* Card ko halka sa transparent rakha hai */
-    padding: 40px;
-    border-radius: 24px;
+.cyber-bg {
+    position: fixed;
+    inset: -50px;
+    z-index: 1;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(3,173,174,0.4) 0%, transparent 60%), radial-gradient(circle at 20% 20%, rgba(3,173,174,0.3) 0%, transparent 50%), linear-gradient(135deg, #03ADAE 0%, #021c1c 100%);
+    filter: blur(40px);
+}
+
+.grid-lines {
+    position: fixed;
+    inset: -100px;
+    z-index: 2;
+    background-image: linear-gradient(rgba(3,173,174,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(3,173,174,0.1) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: 0.35;
+    transform: translate(calc(var(--grid-x) * 1px), calc(var(--grid-y) * 1px));
+    transition: transform 0.2s ease-out;
+    filter: blur(1px);
+}
+
+/* Card update: White line hatane ke liye border explicitly none aur box-shadow adjust kiya */
+.cyber-card {
+    width: 100%;
+    max-width: 450px;
+    background: rgba(10, 15, 25, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px 30px;
     text-align: center;
-    width: 90%;
-    max-width: 400px;
-    /* Card ko background se alag karne k liye shadow */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* In lines ko update kiya */
+    border: 0 !important;
+    outline: none !important;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
+    animation: cardEntrance 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.error-code {
-    font-size: 72px;
+/* Floating text update: White glow ya line hatane ke liye text-shadow reset kiya */
+.holographic-401 {
+    font-size: 110px;
     font-weight: 900;
-    color: white;
-    background: #03ADAE;
-    margin: 0;
-    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(45deg, #03ADAE 0%, #00f7ff 25%, #ff4b2b 50%, #ff416c 75%, #03ADAE 100%);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: hologram 8s ease infinite, float3d 4s ease-in-out infinite;
+    /* Text shadow ko soft kiya taake koi sharp white line na dikhe */
+    text-shadow: 0 0 15px rgba(3, 173, 174, 0.15);
+    position: relative;
+    border: none !important;
+    outline: none !important;
 }
 
-.lock-visual {
-    font-size: 80px;
-    margin: 25px 0;
-    animation: pulse 2s infinite ease-in-out;
-}
+    /* Hover glitch effect ko bhi clean kiya */
+    .holographic-401:hover {
+        animation: hologram 8s ease infinite, float3d 4s ease-in-out infinite, glitch 0.3s infinite;
+        cursor: default;
+        border: none !important;
+    }
 
-.title {
-    color: #111827;
-    font-size: 28px;
-    margin-bottom: 12px;
-}
-
-.message {
-    color: #6B7280;
-    font-size: 15px;
-    line-height: 1.6;
+.error-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
 }
 
-/* Buttons */
-.card-footer {
+    .error-subtitle::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #03ADAE, transparent);
+    }
+
+.scanner-container {
+    margin: 30px 0;
+    position: relative;
+    height: 100px;
+}
+
+.scanner-beam {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff416c, #ff4b2b, transparent);
+    transform: translateY(-50%);
+    animation: scanBeam 3s infinite;
+    box-shadow: 0 0 15px #ff4b2b;
+}
+
+.scanner-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 75, 43, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #ff4b2b;
+}
+
+.status-terminal {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #ff4b2b;
+    margin-top: 10px;
+    opacity: 0.8;
+    height: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 25px 0;
+    font-weight: 300;
+    padding: 0 15px;
+}
+
+.cyber-buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
+    margin-top: 30px;
 }
 
-.btn-main {
-    background-color: #03ADAE;
-    color: white;
-    padding: 14px;
+.cyber-btn {
+    padding: 16px 25px;
     border-radius: 10px;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
-    .btn-main:hover {
-        background-color: #0C294B;
-        transform: translateY(-2px);
-    }
-
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid #D1D5DB;
-    color: #4B5563;
-    padding: 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 14px;
-    transition: 0.3s;
+.cyber-btn-primary {
+    background: linear-gradient(135deg, #03ADAE 0%, #0C294B 100%);
+    color: white;
+    box-shadow: 0 8px 25px rgba(3, 173, 174, 0.3);
 }
 
-    .btn-secondary:hover {
-        background-color: #F9FAFB;
-        color: #0C294B;
-    }
+.cyber-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
 
-/* Simple Animation */
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
+/* Animations (Fixed for Blazor with double @@) */
+@@keyframes glitch {
+    0% {
+        text-shadow: 2px 2px #ff00c1, -2px -2px #00fff9;
     }
 
     50% {
-        transform: scale(1.1);
+        text-shadow: -2px 2px #ff00c1, 2px -2px #00fff9;
+    }
+
+    100% {
+        text-shadow: 2px 2px #ff00c1, -2px -2px #00fff9;
+    }
+}
+
+@@keyframes hologram {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@@keyframes float3d {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@@keyframes scanBeam {
+    0%, 100% {
+        transform: translateY(-50%) translateX(-100%);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translateY(-50%) translateX(100%);
+        opacity: 1;
+    }
+}
+
+@@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (min-width: 768px) {
+    .cyber-buttons {
+        flex-direction: row;
+    }
+
+    .cyber-btn {
+        flex: 1;
     }
 }

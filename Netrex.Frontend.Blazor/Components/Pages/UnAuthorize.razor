@@ -1,25 +1,89 @@
 ﻿@page "/unauthorized"
+@layout Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.EmptyLayout
+@implements IDisposable
 
-<div class="auth-overlay">
-    <div class="auth-card">
-        <div class="card-header">
-            <h1 class="error-code">401</h1>
-        </div>
+<div class="cyber-body" @onmousemove="HandleMouseMove">
+    <div class="cyber-bg" style="--mouse-x: @(_mouseX)%; --mouse-y: @(_mouseY)%;"></div>
+    <div class="grid-lines" style="--grid-x: @(_gridX)px; --grid-y: @(_gridY)px;"></div>
 
-        <div class="card-body">
-            <div class="icon-wrapper">
-                <div class="lock-visual">🔒</div>
+    <div class="cyber-card">
+        <h1 class="holographic-401">401</h1>
+        <div class="error-subtitle">SECURITY CLEARANCE REQUIRED</div>
+
+        <div class="scanner-container">
+            <div class="scanner-circle">
+                <i class="fas fa-user-shield"></i>
             </div>
-            <h2 class="title">Access Denied!</h2>
-            <p class="message">
-                Please sign in to your account to access this page.
-                Kindly login to continue exploring Netrex.
-            </p>
+            <div class="scanner-beam"></div>
         </div>
 
-        <div class="card-footer">
-            <a href="/login" class="btn-main">Login</a>
-            <a href="/" class="btn-secondary">Back Home</a>
+        <div class="status-terminal">@_currentStatus</div>
+
+        <p class="error-message">
+            Unauthorized access detected.<br>
+            Your digital signature is not recognized in this sector.
+        </p>
+
+        <div class="cyber-buttons">
+            <a href="/login" class="cyber-btn cyber-btn-primary">
+                <i class="fas fa-key"></i> Authenticate
+            </a>
+            <a href="/" class="cyber-btn cyber-btn-secondary">
+                <i class="fas fa-home"></i> Safe Zone
+            </a>
         </div>
     </div>
 </div>
+
+@code {
+    private string _currentStatus = "Access Denied...";
+    private double _mouseX = 50, _mouseY = 50, _gridX = 0, _gridY = 0;
+    private int _phraseIndex = 0;
+    private bool _isDisposed = false;
+
+    private readonly string[] _statusPhrases = {
+        "Verifying Credentials...",
+        "Firewall Active",
+        "Access: Forbidden",
+        "Identity Mismatch",
+        "Relocating to Login..."
+    };
+
+    protected override void OnInitialized()
+    {
+        StartStatusLoop();
+    }
+
+    private async void StartStatusLoop()
+    {
+        while (!_isDisposed)
+        {
+            try
+            {
+                await Task.Delay(3000);
+                if (_isDisposed) break;
+
+                _phraseIndex = (_phraseIndex + 1) % _statusPhrases.Length;
+                _currentStatus = _statusPhrases[_phraseIndex];
+                StateHasChanged();
+            }
+            catch { break; }
+        }
+    }
+
+    private void HandleMouseMove(MouseEventArgs e)
+    {
+        // Mouse position for background gradient
+        _mouseX = (e.ClientX / 1920.0) * 100;
+        _mouseY = (e.ClientY / 1080.0) * 100;
+
+        // Grid movement logic
+        _gridX = (e.ClientX - 960) / 60.0;
+        _gridY = (e.ClientY - 540) / 60.0;
+    }
+
+    public void Dispose()
+    {
+        _isDisposed = true;
+    }
+}

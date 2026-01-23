@@ -1,101 +1,260 @@
-﻿/* Background Overlay with Deep Blur */
-.netrex-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(12, 41, 75, 0.45); /* Light Dark Blue */
-    backdrop-filter: blur(30px) saturate(150%);
-    -webkit-backdrop-filter: blur(30px) saturate(150%);
+﻿/* Container to act as body since it's a component */
+.cyber-body {
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 99999;
+    padding: 15px;
+    overflow: hidden;
+    position: relative;
+    background: #021c1c;
 }
 
-/* Central Card Style */
-.netrex-card {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 40px;
-    border-radius: 24px;
+.cyber-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(circle at var(--mouse-x, 20%) var(--mouse-y, 20%), rgba(3,173,174,0.85) 0%, transparent 55%),
+                radial-gradient(circle at 80% 80%, rgba(3,173,174,0.75) 0%, transparent 60%),
+                linear-gradient(135deg, #03ADAE 0%, #028a8b 70%, #021c1c 100%);
+}
+
+.grid-lines {
+    position: fixed;
+    inset: -100px;
+    z-index: 2;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: 0.35;
+    transform: translate(var(--grid-x, 0), var(--grid-y, 0));
+    transition: transform 0.2s ease-out;
+}
+
+.cyber-card {
+    width: 100%;
+    max-width: 450px;
+    background: rgba(20, 20, 30, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px 30px;
     text-align: center;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: none;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: cardEntrance 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.error-code {
-    font-size: 72px;
+/* ===== FIXED 404 TEXT (NO WHITE BORDER) ===== */
+.holographic-404 {
+    font-size: 110px;
     font-weight: 900;
-    color: #0C294B; /* Netrex Dark Blue */
-    margin: 0;
+    margin-bottom: 8px;
+
+    background: linear-gradient(
+        45deg,
+        #03ADAE 0%,
+        #00f7ff 25%,
+        #6d28d9 50%,
+        #8b5cf6 75%,
+        #03ADAE 100%
+    );
+    background-size: 400% 400%;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    /* 🔥 WHITE BORDER KILL FIX */
+    -webkit-text-stroke: 0 transparent;
+    filter: none;
+    outline: none;
+
+    /* sirf dark shadow — no white glow */
+    text-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+
+    animation: hologram 8s ease infinite, float3d 4s ease-in-out infinite;
 }
 
-.visual-animation {
-    font-size: 80px;
-    margin: 20px 0;
-    animation: floatAnim 3s infinite ease-in-out;
+.holographic-404:hover {
+    animation: hologram 8s ease infinite, float3d 4s ease-in-out infinite, glitch 0.3s infinite;
 }
 
-.title {
-    color: #111827;
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.message {
-    color: #6B7280;
-    font-size: 15px;
-    line-height: 1.5;
+.error-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     margin-bottom: 30px;
+    display: inline-block;
+    position: relative;
 }
 
-/* Buttons matching Netrex Theme */
-.card-footer {
+.error-subtitle::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: #03ADAE;
+}
+
+.scanner-container {
+    margin: 30px 0;
+    position: relative;
+    height: 100px;
+}
+
+.scanner-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid rgba(3, 173, 174, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.scanner-circle::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent,
+        #03ADAE,
+        transparent 30%,
+        transparent 70%,
+        #6d28d9,
+        transparent
+    );
+    animation: rotateScan 4s linear infinite;
+}
+
+.scanner-beam {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #03ADAE, transparent);
+    animation: scanBeam 3s infinite;
+    box-shadow: 0 0 15px #03ADAE;
+}
+
+.status-terminal {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #00f7ff;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    margin: 25px 0;
+}
+/* ===== NEW BEAUTIFUL BUTTONS ===== */
+.cyber-buttons {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-top: 15px;
 }
 
-.btn-main {
-    background-color: #03ADAE; /* Netrex Teal */
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
+.cyber-btn {
+    padding: 10px 20px; /* Height kam karne ke liye padding 14px se 10px kar di */
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s ease;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-    .btn-main:hover {
-        background-color: #0C294B;
+/* Primary Button: Neon Solid */
+.cyber-btn-primary {
+    background: #03ADAE;
+    color: #021c1c;
+    box-shadow: 0 4px 15px rgba(3, 173, 174, 0.3);
+}
+
+    .cyber-btn-primary:hover {
+        background: #00f7ff;
+        box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
         transform: translateY(-2px);
     }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid #D1D5DB;
-    color: #4B5563;
-    padding: 12px;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: 0.3s;
+/* Secondary Button: Glassy Outline */
+.cyber-btn-secondary {
+    background: rgba(255, 255, 255, 0.03);
+    color: #03ADAE;
+    border: 1px solid rgba(3, 173, 174, 0.5);
+    backdrop-filter: blur(5px);
 }
 
-    .btn-secondary:hover {
-        background-color: #f9fafb;
+    .cyber-btn-secondary:hover {
+        background: rgba(3, 173, 174, 0.1);
+        border-color: #00f7ff;
+        color: #00f7ff;
+        box-shadow: 0 0 15px rgba(3, 173, 174, 0.2);
+        transform: translateY(-2px);
     }
 
-/* Floating Animation */
-@keyframes floatAnim {
-    0%, 100% {
-        transform: translateY(0);
-    }
+/* Active State */
+.cyber-btn:active {
+    transform: translateY(1px);
+}
+/* Animations */
+@keyframes hologram {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 
-    50% {
-        transform: translateY(-12px);
-    }
+@keyframes rotateScan {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes scanBeam {
+    0%,100% { transform: translateX(-100%); opacity: 0; }
+    50% { transform: translateX(100%); opacity: 1; }
+}
+
+@keyframes float3d {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: scale(0.9) translateY(30px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 2px #ff00c1, -2px -2px #00fff9; }
+    50% { text-shadow: -2px 2px #ff00c1, 2px -2px #00fff9; }
+    100% { text-shadow: 2px 2px #ff00c1, -2px -2px #00fff9; }
+}
+
+@media (min-width: 768px) {
+    .cyber-buttons { flex-direction: row; }
+    .cyber-btn { flex: 1; }
 }

@@ -1,25 +1,86 @@
 ﻿@page "/404"
+@* Folder structure ke mutabiq layout ka poora rasta *@
+@layout Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.EmptyLayout
+@implements IDisposable
+@inject IJSRuntime JS
 
-<div class="netrex-overlay">
-    <div class="netrex-card">
-        <div class="card-header">
-            <h1 class="error-code">404</h1>
+<div class="cyber-body" @onmousemove="HandleMouseMove">
+    <div class="cyber-bg" style="--mouse-x: @(_mouseX)%; --mouse-y: @(_mouseY)%;"></div>
+    <div class="grid-lines" style="--grid-x: @(_gridX)px; --grid-y: @(_gridY)px;"></div>
+
+    <div class="cyber-card">
+        <h1 class="holographic-404">404</h1>
+        <div class="error-subtitle">CYBERSPACE NAVIGATION FAILURE</div>
+
+        <div class="scanner-container">
+            <div class="scanner-circle"></div>
+            <div class="scanner-beam"></div>
         </div>
 
-        <div class="card-body">
-            <div class="icon-wrapper">
-                <div class="visual-animation">🔍</div>
-            </div>
-            <h2 class="title">Page Not Found</h2>
-            <p class="message">
-                The page you are looking for might have been removed,
-                had its name changed, or is temporarily unavailable.
-            </p>
-        </div>
+        <div class="status-terminal">@_currentStatus</div>
 
-        <div class="card-footer">
-            <a href="/" class="btn-main">Back to Home</a>
-            <a href="/shop" class="btn-secondary">Browse Shop</a>
+        <p class="error-message">
+            Target page not found in the digital matrix.<br>
+            The coordinates you entered lead to uncharted territory.
+        </p>
+
+        <div class="cyber-buttons">
+            <a href="/" class="cyber-btn cyber-btn-primary">
+                <i class="fas fa-satellite-dish"></i> Return to Hub
+            </a>
+            <a href="/shop" class="cyber-btn cyber-btn-secondary">
+                <i class="fas fa-globe"></i> Explore Network
+            </a>
         </div>
     </div>
 </div>
+
+@code {
+    private string _currentStatus = "System Initializing...";
+    private double _mouseX = 50, _mouseY = 50, _gridX = 0, _gridY = 0;
+    private int _phraseIndex = 0;
+    private bool _isDisposed = false;
+
+    private readonly string[] _statusPhrases = {
+        "Scanning sectors...",
+        "Decrypting coordinates...",
+        "404 Error: Path Redacted",
+        "Matrix link severed",
+        "Locating backup nodes..."
+    };
+
+    protected override void OnInitialized()
+    {
+        StartStatusLoop();
+    }
+
+    private async void StartStatusLoop()
+    {
+        while (!_isDisposed)
+        {
+            try
+            {
+                await Task.Delay(3000);
+                if (_isDisposed) break;
+
+                _phraseIndex = (_phraseIndex + 1) % _statusPhrases.Length;
+                _currentStatus = _statusPhrases[_phraseIndex];
+                StateHasChanged();
+            }
+            catch { break; }
+        }
+    }
+
+    private void HandleMouseMove(MouseEventArgs e)
+    {
+        _mouseX = (e.ClientX / 1920.0) * 100;
+        _mouseY = (e.ClientY / 1080.0) * 100;
+        _gridX = (e.ClientX - 960) / 50.0;
+        _gridY = (e.ClientY - 540) / 50.0;
+    }
+
+    public void Dispose()
+    {
+        _isDisposed = true;
+    }
+}

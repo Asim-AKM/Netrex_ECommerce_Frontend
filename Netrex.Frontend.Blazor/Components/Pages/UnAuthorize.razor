@@ -1,25 +1,52 @@
 ﻿@page "/unauthorized"
+@using Netrex.Frontend.Blazor.Components.Layout
+@layout EmptyLayout
+@inject NavigationManager NavigationManager
 
-<div class="auth-overlay">
-    <div class="auth-card">
-        <div class="card-header">
-            <h1 class="error-code">401</h1>
-        </div>
+<!-- SAME decorations -->
+<div class="halloween-decoration decoration-1"></div>
+<div class="halloween-decoration decoration-2"></div>
 
-        <div class="card-body">
-            <div class="icon-wrapper">
-                <div class="lock-visual">🔒</div>
-            </div>
-            <h2 class="title">Access Denied!</h2>
-            <p class="message">
-                Please sign in to your account to access this page.
-                Kindly login to continue exploring Netrex.
-            </p>
-        </div>
+<!-- SAME container (no extra wrapper) -->
+<div class="container">
+    <div class="error-number">
+        <div class="error-digit first-4">4</div>
+        <div class="error-digit zero-0">0</div>
+        <div class="error-digit first-1">1</div>
+    </div>
 
-        <div class="card-footer">
-            <a href="/login" class="btn-main">Login</a>
-            <a href="/" class="btn-secondary">Back Home</a>
+    <div class="zombie-icon-container">
+        <div class="zombie-aura"></div>
+        <div class="zombie-icon">
+            <i class="fas fa-lock"></i>
         </div>
     </div>
+
+    <h2 class="error-title">Access Denied</h2>
+
+    <p class="error-description">
+        This area is guarded by digital zombies! 🧟‍♂️
+        You must log in to survive and continue.
+    </p>
+
+    <div class="buttons-container">
+        <a href="/login" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Login to Continue
+        </a>
+
+        <button type="button" class="btn btn-secondary" @onclick="GoHome">
+            <i class="fas fa-home"></i> Escape Home
+        </button>
+    </div>
+
+    <p class="help-text">
+        <a href="/help">Visit the survival guide</a>
+    </p>
 </div>
+
+@code {
+    void GoHome()
+    {
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}

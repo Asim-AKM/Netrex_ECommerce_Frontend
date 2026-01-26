@@ -11,7 +11,7 @@ namespace Netrex.Frontend.Application.DIs
     {
         public static IServiceCollection AddApplicationDIs(this IServiceCollection services) => services
                                                                  .AddScoped<IAuthManager, AuthManager>()
-                                                                 .AddScoped<ToastManager>()
+                                                                 .AddScoped<ToastService>()
                                                                  .AddScoped<ICartItemManager, CartItemManager>();
     }
 }

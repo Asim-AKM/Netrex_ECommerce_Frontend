@@ -1,0 +1,158 @@
+﻿@page "/Customer_profilepage"
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+
+<div class="container-custom">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="profile-box">
+            <div class="avatar">@Initials</div>
+            <div>
+                <strong>@User.FirstName @User.LastName</strong>
+                <div class="time">
+                    <i class="fa fa-clock"></i> @CurrentTime
+                </div>
+            </div>
+        </div>
+
+        <a class="active">
+            <span><i class="fa fa-user"></i> My Profile</span>
+        </a>
+        <a>
+            <span><i class="fa fa-map-marker-alt"></i> Delivery Address</span>
+            <span class="badge-custom">0</span>
+        </a>
+        <a>
+            <span><i class="fa fa-shopping-bag"></i> My Orders</span>
+            <span class="badge-custom">0</span>
+        </a>
+        <a><span><i class="fa fa-eye"></i> Recently Viewed</span></a>
+        <a><span><i class="fa fa-graduation-cap"></i> Learning</span></a>
+
+        <hr />
+
+        <a><span><i class="fa fa-lock"></i> Change Password</span></a>
+        <a><span><i class="fa fa-sign-out-alt"></i> Log Out</span></a>
+    </aside>
+
+    <!-- Content -->
+    <section class="content">
+        <h1>Good Afternoon! @User.FirstName</h1>
+
+        <div class="card-custom">
+            <div class="edit-btn" @onclick="ToggleEdit">
+                <i class="fa fa-edit"></i>
+            </div>
+
+            <form class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    <input type="text"
+                           class="form-control form-control-custom"
+                           @bind="User.FirstName"
+                           disabled="@(!IsEditing)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    <input type="text"
+                           class="form-control form-control-custom"
+                           @bind="User.LastName"
+                           disabled="@(!IsEditing)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email"
+                           class="form-control form-control-custom"
+                           @bind="User.Email"
+                           disabled="@(!IsEditing)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Contact Number</label>
+                    <input type="text"
+                           class="form-control form-control-custom"
+                           @bind="User.Phone"
+                           disabled="@(!IsEditing)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Address</label>
+                    <input type="text"
+                           class="form-control form-control-custom"
+                           @bind="User.Address"
+                           disabled="@(!IsEditing)" />
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Gender</label><br />
+                    <input type="radio" name="gender"
+                           @bind="User.Gender"
+                           disabled="@(!IsEditing)" /> Male
+                    &nbsp;&nbsp;
+                    <input type="radio" name="gender"
+                           @bind="User.Gender"
+                           disabled="@(!IsEditing)" /> Female
+                    &nbsp;&nbsp;
+                    <input type="radio" name="gender"
+                           @bind="User.Gender"
+                           disabled="@(!IsEditing)" /> Other
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+</div>
+
+
+@code {
+
+    bool IsEditing = false;
+
+    UserModel User = new();
+
+    string CurrentTime = DateTime.Now.ToString("hh:mm:ss tt");
+
+    string Initials
+    {
+        get
+        {
+            var f = string.IsNullOrWhiteSpace(User.FirstName) ? "" : User.FirstName[0].ToString();
+            var l = string.IsNullOrWhiteSpace(User.LastName) ? "" : User.LastName[0].ToString();
+            return f + l;
+        }
+    }
+
+    void ToggleEdit()
+    {
+        IsEditing = !IsEditing;
+    }
+
+    protected override void OnInitialized()
+    {
+        User = new UserModel
+        {
+            FirstName = "R",
+            LastName = "S",
+            Email = "example@mail.com",
+            Phone = "91XXXXXXXX",
+            Address = "D I Khan",
+            Gender = "Male"
+        };
+    }
+
+    class UserModel
+    {
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Address { get; set; } = "";
+        public string Gender { get; set; } = "";
+    }
+}

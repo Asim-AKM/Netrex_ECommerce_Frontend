@@ -3,6 +3,7 @@ using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
 using Netrex.Frontend.Application.Services.Common;
 using Netrex.Frontend.Blazor.Services;
+using Netrex.Frontend.Application.Commons.Enums;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -16,7 +17,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         [Inject]
         public IAuthManager? _authManager { get; set; }
         [Inject]
-        public ToastManager _toastMan { get; set; }
+        public ToastService _toastService { get; set; }
         VmLogin _model = new VmLogin();
         public async Task HandleLogin()
         {
@@ -30,11 +31,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
                 // Sirf demonstration ke liye delay (taki aap loader dekh sakein)
                 await Task.Delay(2000);
 
-                _toastMan.Success("Login Successfully!", "Success");
+               // _toastService.Success("Login Successfully!", "Success");
+               // _toastService.Notify().WithType(ToastType.Payment).WithMessage("Payment Sent To Saad The Great").WithTitle("Payment Succeed").Show();
+                _toastService.CardUpdated("Hp Leptop 8 256 is Added to Cart");
             }
             catch (Exception ex)
             {
-                _toastMan.Error("Login failed: " + ex.Message, "Error");
+                _toastService.Error("Login failed: " + ex.Message, "Error");
             }
             finally
             {

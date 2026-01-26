@@ -4,16 +4,16 @@
 @rendermode InteractiveServer
 @layout MainLayout
 
-<div id="delivery-address-page">
+<div class="delivery-page">
     <div class="delivery-container">
-        <!-- Breadcrumb (Optional) -->
+        <!-- Breadcrumb -->
         <div class="breadcrumb">
             <span>Home</span> &gt; <span>Checkout</span> &gt; <span>Delivery Address</span>
         </div>
 
         <div class="delivery-card">
             <div class="card-header">
-                <h1>Add new shipping Address</h1>
+                <h3>Add New Shipping Address</h3>
                 <button id="close-btn" @onclick="GoBack" title="Close">✕</button>
             </div>
 
@@ -21,7 +21,7 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Full name</label>
-                        <input type="text" placeholder="Enter your first and last name">
+                        <input type="text" placeholder="Enter your first and last name" />
                     </div>
                     <div class="form-group">
                         <label>Province</label>
@@ -32,12 +32,11 @@
                             <option>BALOCESTAN</option>
                             <option>PUNJAB</option>
                             <option>AZAD KASHMIR</option>
-
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" placeholder="Please enter your phone number">
+                        <input type="tel" placeholder="Please enter your phone number" />
                     </div>
                     <div class="form-group">
                         <label>City</label>
@@ -47,12 +46,11 @@
                             <option>PESHAWER</option>
                             <option>KARACHI</option>
                             <option>QUETTA</option>
-
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Building / House No / Floor / Street</label>
-                        <input type="text" placeholder="Please enter">
+                        <input type="text" placeholder="Please enter" />
                     </div>
                     <div class="form-group">
                         <label>Area</label>
@@ -64,36 +62,50 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Colony / Suburb / Locality / Landmark</label>
-                        <input type="text" placeholder="Please enter">
+                        <label>Colony / Suburb</label>
+                        <input type="text" placeholder="Please enter" />
                     </div>
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" placeholder="For Example: House# 123, Street# 123, ABC Road">
+                        <input type="text" placeholder="For Example: House# 123, Street# 123, ABC Road" />
                     </div>
                     <div class="form-group full-width">
                         <label>Select a label for effective delivery:</label>
+
                         <div class="radio-group">
-                            <input type="radio" id="office" name="address_type" value="office" checked>
-                            <label for="office">OFFICE</label>
-                            <input type="radio" id="home" name="address_type" value="home">
-                            <label for="home">HOME</label>
+                            <input type="radio" id="office" name="address_type" value="office" checked />
+                            <label for="office">
+                                <i class="bi bi-building"></i>
+                                OFFICE
+                            </label>
+
+                            <input type="radio" id="home" name="address_type" value="home" />
+                            <label for="home">
+                                <i class="bi bi-house-door"></i>
+                                HOME
+                            </label>
                         </div>
                     </div>
+
                 </div>
 
                 <hr />
 
                 <div class="form-actions">
-                    <button type="button" id="cancel-btn" @onclick="GoBack">CANCEL</button>
-                    <button type="submit">SAVE ADDRESS</button>
+                    <NavLink id="cancel-btn" class="btn-cancel" @onclick="GoBack">CANCEL</NavLink>
+                    <NavLink class="btn-save" @onclick="SaveAddress">SAVE ADDRESS</NavLink>
                 </div>
+
             </form>
+
+            <div class="card-footer-info">
+                <i class="bi bi-shield-check"></i>
+                Your address is safe & will only be used for delivery purposes
+            </div>
+
         </div>
     </div>
 </div>
-
-
 
 @code {
     private void GoBack()
@@ -103,9 +115,7 @@
 
     private void SaveAddress()
     {
+        Navigation.NavigateTo("/PaymentMethodPage");
         // Save logic here
-
-        // After saving, redirect
-        // Navigation.NavigateTo("/CheckoutPage");
     }
 }

@@ -104,5 +104,11 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
                 _Toast.Error("Failed to remove item");
             }
         }
+
+        private async Task ProceedToCheckOut()
+        {
+            navigationManager.NavigateTo("/DeliveryAddressPage");
+        }
+
     }
 }

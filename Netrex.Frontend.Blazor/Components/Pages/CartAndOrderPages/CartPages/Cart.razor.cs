@@ -10,7 +10,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
         [Inject]
         private ICartItemManager CartItemManager { get; set; } = default!;
         [Inject]
-        private ToastManager _Toast { get; set; } = default!;
+        private ToastService _Toast { get; set; } = default!;
 
         private List<VmGetCartItem> getcartItems = new();
 
@@ -104,5 +104,11 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
                 _Toast.Error("Failed to remove item");
             }
         }
+
+        private async Task ProceedToCheckOut()
+        {
+            navigationManager.NavigateTo("/DeliveryAddressPage");
+        }
+
     }
 }

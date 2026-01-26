@@ -1,52 +1,96 @@
-﻿:root {
-    --toast-success: #00b894;
-    --toast-error: #d63031;
-    --toast-info: #0984e3;
-    --toast-warning: #f1c40f;
+﻿/* ============================================
+   Premium eCommerce Toast Notification System
+   Designed for high-end shopping experiences
+   ============================================ */
+
+:root {
+    /* Premium Color Palette - Amazon/Noon inspired */
+    --toast-success: #00a859;
+    --toast-success-light: #e8f5e9;
+    --toast-error: #d32f2f;
+    --toast-error-light: #ffebee;
+    --toast-info: #1976d2;
+    --toast-info-light: #e3f2fd;
+    --toast-warning: #f57c00;
+    --toast-warning-light: #fff3e0;
+    /* Premium Background & Shadows */
     --toast-bg: #ffffff;
+    --toast-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --toast-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --toast-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+    --toast-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.2);
+    /* Typography */
+    --toast-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    --toast-title-color: #1a1a1a;
+    --toast-text-color: #4a4a4a;
+    --toast-border-radius: 8px;
+    /* Spacing */
+    --toast-spacing-xs: 8px;
+    --toast-spacing-sm: 12px;
+    --toast-spacing-md: 16px;
+    --toast-spacing-lg: 20px;
 }
 
+/* Toast Wrapper - Mobile First Approach */
 .toast-wrapper {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: var(--toast-spacing-md);
+    right: var(--toast-spacing-md);
+    left: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--toast-spacing-sm);
     z-index: 10000;
     pointer-events: none;
+    max-width: 100%;
+    padding: 0;
 }
 
+/* Toast Container - Premium Design */
 .toast-container {
     pointer-events: auto;
-    min-width: 320px;
-    max-width: 400px;
+    min-width: 300px;
+    max-width: 420px;
+    width: 100%;
     background: var(--toast-bg);
     display: flex;
     align-items: flex-start;
-    padding: 16px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    padding: var(--toast-spacing-md);
+    border-radius: var(--toast-border-radius);
+    box-shadow: var(--toast-shadow-md);
+    font-family: var(--toast-font-family);
     position: relative;
     overflow: hidden;
-    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    cursor: pointer;
+    animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    cursor: default;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
+
+    .toast-container:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--toast-shadow-hover);
+    }
+
+    .toast-container:focus {
+        outline: 2px solid var(--toast-info);
+        outline-offset: 2px;
+    }
 
     /* Pause animation when hovering */
     .toast-container:hover .toast-progress-bar {
         animation-play-state: paused;
     }
 
-    /* Left Accent Line */
+    /* Left Accent Line - Premium Thickness */
     .toast-container::before {
         content: '';
         position: absolute;
         left: 0;
         top: 0;
         height: 100%;
-        width: 5px;
+        width: 4px;
+        border-radius: var(--toast-border-radius) 0 0 var(--toast-border-radius);
     }
 
     .toast-container.success::before {
@@ -65,79 +109,216 @@
         background: var(--toast-warning);
     }
 
+    /* E-Commerce specific accent colors */
+    .toast-container.cart::before {
+        background: #ff6b35;
+    }
+
+    .toast-container.payment::before {
+        background: #4caf50;
+    }
+
+    .toast-container.order::before {
+        background: #2196f3;
+    }
+
+    .toast-container.shipping::before {
+        background: #ff9800;
+    }
+
+    .toast-container.wishlist::before {
+        background: #e91e63;
+    }
+
+    .toast-container.review::before {
+        background: #ffc107;
+    }
+
+    .toast-container.discount::before {
+        background: #9c27b0;
+    }
+
+    .toast-container.stock::before {
+        background: #f44336;
+    }
+
+    .toast-container.notification::before {
+        background: #607d8b;
+    }
+
+/* Icon Styling - Premium Look */
 .toast-icon {
-    margin-right: 12px;
-    font-size: 22px;
+    margin-right: var(--toast-spacing-sm);
+    font-size: 20px;
     line-height: 1;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 600;
 }
 
+    /* Bootstrap Icons support */
+    .toast-icon i {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+.toast-container.success .toast-icon {
+    color: var(--toast-success);
+    background: var(--toast-success-light);
+}
+
+.toast-container.error .toast-icon {
+    color: var(--toast-error);
+    background: var(--toast-error-light);
+}
+
+.toast-container.info .toast-icon {
+    color: var(--toast-info);
+    background: var(--toast-info-light);
+}
+
+.toast-container.warning .toast-icon {
+    color: var(--toast-warning);
+    background: var(--toast-warning-light);
+}
+
+/* Content Area */
 .toast-content {
     flex: 1;
-    padding-right: 10px;
+    padding-right: var(--toast-spacing-sm);
+    min-width: 0; /* Prevents flex item from overflowing */
 }
 
 .toast-title {
     display: block;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 3px;
-    color: #2d3436;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--toast-title-color);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
 }
 
 .toast-content p {
     margin: 0;
-    font-size: 13px;
-    color: #636e72;
-    line-height: 1.4;
+    font-size: 14px;
+    color: var(--toast-text-color);
+    line-height: 1.5;
+    letter-spacing: 0;
 }
 
+/* Close Button - Premium Styling */
 .toast-close {
     cursor: pointer;
-    font-size: 20px;
-    color: #b2bec3;
-    transition: 0.2s;
+    font-size: 22px;
+    color: #9e9e9e;
+    transition: color 0.2s ease, transform 0.2s ease;
     line-height: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-left: var(--toast-spacing-xs);
 }
 
-    .toast-close:hover {
-        color: #2d3436;
+    .toast-close:hover,
+    .toast-close:focus {
+        color: var(--toast-title-color);
+        background: rgba(0, 0, 0, 0.05);
+        transform: scale(1.1);
+        outline: none;
     }
 
-/* Progress Bar Styling */
+    .toast-close:active {
+        transform: scale(0.95);
+    }
+
+/* Progress Bar - Premium Styling */
 .toast-progress-container {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: rgba(0,0,0,0.03);
+    height: 3px;
+    background: rgba(0, 0, 0, 0.04);
+    overflow: hidden;
 }
 
 .toast-progress-bar {
     height: 100%;
     width: 100%;
-    animation: progress linear forwards;
+    animation: progressShrink linear forwards;
+    border-radius: 0 0 var(--toast-border-radius) var(--toast-border-radius);
 }
 
 .toast-container.success .toast-progress-bar {
-    background: var(--toast-success);
+    background: linear-gradient(90deg, var(--toast-success), #00c96a);
 }
 
 .toast-container.error .toast-progress-bar {
-    background: var(--toast-error);
+    background: linear-gradient(90deg, var(--toast-error), #e53935);
 }
 
 .toast-container.info .toast-progress-bar {
-    background: var(--toast-info);
+    background: linear-gradient(90deg, var(--toast-info), #1e88e5);
 }
 
 .toast-container.warning .toast-progress-bar {
-    background: var(--toast-warning);
+    background: linear-gradient(90deg, var(--toast-warning), #fb8c00);
 }
 
-@keyframes slideIn {
+/* E-Commerce specific progress bar colors */
+.toast-container.cart .toast-progress-bar {
+    background: linear-gradient(90deg, #ff6b35, #ff8c5a);
+}
+
+.toast-container.payment .toast-progress-bar {
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+}
+
+.toast-container.order .toast-progress-bar {
+    background: linear-gradient(90deg, #2196f3, #42a5f5);
+}
+
+.toast-container.shipping .toast-progress-bar {
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
+}
+
+.toast-container.wishlist .toast-progress-bar {
+    background: linear-gradient(90deg, #e91e63, #ec407a);
+}
+
+.toast-container.review .toast-progress-bar {
+    background: linear-gradient(90deg, #ffc107, #ffca28);
+}
+
+.toast-container.discount .toast-progress-bar {
+    background: linear-gradient(90deg, #9c27b0, #ab47bc);
+}
+
+.toast-container.stock .toast-progress-bar {
+    background: linear-gradient(90deg, #f44336, #ef5350);
+}
+
+.toast-container.notification .toast-progress-bar {
+    background: linear-gradient(90deg, #607d8b, #78909c);
+}
+
+/* Premium Animations */
+@keyframes slideInRight {
     from {
-        transform: translateX(110%);
+        transform: translateX(calc(100% + var(--toast-spacing-md)));
         opacity: 0;
     }
 
@@ -147,7 +328,19 @@
     }
 }
 
-@keyframes progress {
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(calc(100% + var(--toast-spacing-md)));
+        opacity: 0;
+    }
+}
+
+@keyframes progressShrink {
     from {
         width: 100%;
     }
@@ -157,15 +350,117 @@
     }
 }
 
-/* Responsive */
+/* ============================================
+   Mobile First Responsive Design
+   ============================================ */
+
+/* Small Mobile Devices (320px - 480px) */
 @media (max-width: 480px) {
     .toast-wrapper {
-        right: 10px;
-        left: 10px;
+        top: var(--toast-spacing-sm);
+        right: var(--toast-spacing-sm);
+        left: var(--toast-spacing-sm);
+        max-width: calc(100% - (var(--toast-spacing-sm) * 2));
     }
 
     .toast-container {
         min-width: auto;
         width: 100%;
+        max-width: 100%;
+        padding: var(--toast-spacing-sm);
+        border-radius: 6px;
+    }
+
+    .toast-title {
+        font-size: 14px;
+    }
+
+    .toast-content p {
+        font-size: 13px;
+    }
+
+    .toast-icon {
+        font-size: 18px;
+        width: 20px;
+        height: 20px;
+        margin-right: var(--toast-spacing-xs);
+    }
+}
+
+/* Medium Mobile Devices (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .toast-wrapper {
+        right: var(--toast-spacing-md);
+        left: auto;
+        max-width: calc(100% - (var(--toast-spacing-md) * 2));
+    }
+
+    .toast-container {
+        min-width: 280px;
+        max-width: 380px;
+    }
+}
+
+/* Tablet Devices (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .toast-container {
+        min-width: 320px;
+        max-width: 400px;
+    }
+}
+
+/* Desktop and Large Screens (1025px+) */
+@media (min-width: 1025px) {
+    .toast-wrapper {
+        top: var(--toast-spacing-lg);
+        right: var(--toast-spacing-lg);
+    }
+
+    .toast-container {
+        min-width: 340px;
+        max-width: 420px;
+    }
+}
+
+/* High DPI / Retina Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .toast-container {
+        border-width: 0.5px;
+    }
+}
+
+/* Reduced Motion - Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .toast-container {
+        animation: none;
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .toast-progress-bar {
+        animation: none;
+    }
+
+    .toast-container:hover {
+        transform: none;
+    }
+}
+
+/* Dark Mode Support (Future Enhancement) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --toast-bg: #1e1e1e;
+        --toast-title-color: #ffffff;
+        --toast-text-color: #b0b0b0;
+        --toast-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+        --toast-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .toast-container {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .toast-progress-container {
+        background: rgba(255, 255, 255, 0.1);
     }
 }

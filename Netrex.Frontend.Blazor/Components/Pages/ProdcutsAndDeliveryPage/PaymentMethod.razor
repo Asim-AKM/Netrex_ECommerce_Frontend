@@ -1,0 +1,245 @@
+﻿@page "/PaymentMethodPage"
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager nav;
+
+<div class="payment-page my-5">
+    <div class="custom-card payment-method-card">
+        <!-- Header -->
+        <div class="card-header-custom">
+            <i class="bi bi-credit-card-fill"></i> Select Payment Method
+        </div>
+
+        <!-- Payment Options -->
+        <div class="payment-options">
+            <!-- Online Payment -->
+            <div class="payment-flow-payment-option @(SelectedMethod == "online" ? "selected" : "")"
+                 @onclick="SelectPaymentOnline">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-credit-card-fill text-primary-custom"></i>
+                    <div>
+                        <h5 class="mb-1">Online Payment</h5>
+                        <p class="mb-0 text-muted">
+                            Pay securely with card, bank transfer, or mobile wallets
+                        </p>
+                    </div>
+                    <i class="bi bi-chevron-right ms-auto"></i>
+                </div>
+            </div>
+
+            <!-- Cash on Delivery -->
+            <div class="payment-flow-payment-option @(SelectedMethod == "cod" ? "selected" : "")"
+                 @onclick="SelectCashOnDelivery">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-cash-coin text-success-custom"></i>
+                    <div>
+                        <h5 class="mb-1">Cash on Delivery</h5>
+                        <p class="mb-0 text-muted">Pay in cash when your order is delivered</p>
+                    </div>
+                    <i class="bi bi-chevron-right ms-auto"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Online Payment Sub-Options -->
+        @if (SelectedMethod == "online")
+        {
+            <div class="payment-flow-payment-form show mt-3">
+                <h6 class="mb-3">Choose Online Payment Type</h6>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="payment-flow-payment-option payment-sub-option @(OnlineOption == "card" ? "selected" : "")"
+                             @onclick="@(() => SelectOnlineOption("card"))">
+                            <div class="text-center">
+                                <i class="bi bi-credit-card-fill text-primary-custom" style="font-size: 2rem;"></i>
+                                <h6 class="mt-2">Credit/Debit Card</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="payment-flow-payment-option payment-sub-option @(OnlineOption == "bank" ? "selected" : "")"
+                             @onclick="@(() => SelectOnlineOption("bank"))">
+                            <div class="text-center">
+                                <i class="bi bi-bank text-info-custom" style="font-size: 2rem;"></i>
+                                <h6 class="mt-2">Bank Transfer</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="payment-flow-payment-option payment-sub-option @(OnlineOption == "wallet" ? "selected" : "")"
+                             @onclick="@(() => SelectOnlineOption("wallet"))">
+                            <div class="text-center">
+                                <i class="bi bi-phone text-success-custom" style="font-size: 2rem;"></i>
+                                <h6 class="mt-2">Mobile Wallets</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditional Forms -->
+                @if (OnlineOption == "card")
+                {
+                    <div class="row mt-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Card Number *</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="1234 5678 9012 3456" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Cardholder Name *</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="John Doe" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Expiry Date *</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="MM/YY" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">CVV *</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="123" />
+                        </div>
+                    </div>
+                }
+                else if (OnlineOption == "bank")
+                {
+                    <div class="mt-3">
+                        <h6>Bank Transfer Details</h6>
+                        <div class="alert alert-info-custom">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Select your bank and transfer the amount to the displayed account details, then upload the receipt.
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Select Your Bank *</label>
+                                <select class="form-select form-select-custom" @bind="SelectedBank">
+                                    <option value="">Choose Bank</option>
+                                    <option value="hbl">Habib Bank Limited (HBL)</option>
+                                    <option value="ubl">United Bank Limited (UBL)</option>
+                                    <option value="mcb">MCB Bank</option>
+                                    <option value="abl">Allied Bank Limited (ABL)</option>
+                                    <option value="nbp">National Bank of Pakistan (NBP)</option>
+                                    <option value="meezan">Meezan Bank</option>
+                                    <option value="faysal">Faysal Bank</option>
+                                    <option value="js">JS Bank</option>
+                                    <option value="bankalfalah">Bank Alfalah</option>
+                                    <option value="other">Other Bank</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Account Title</label>
+                                <input type="text" class="form-control form-control-custom" value="Netrex E-Commerce" readonly />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Account Number</label>
+                                <input type="text" class="form-control form-control-custom" value="1234-5678-9012-3456" readonly />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">IBAN</label>
+                                <input type="text" class="form-control form-control-custom" value="PK36SCBL0000001234567801" readonly />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label-custom">Upload Payment Receipt *</label>
+                                <input type="file" class="form-control form-control-custom" accept="image/*,.pdf" />
+                                <small class="text-muted">Upload screenshot or PDF of your bank transfer receipt</small>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (OnlineOption == "wallet")
+                {
+                    <div class="mt-3">
+                        <h6>Mobile Wallet Details</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Select Wallet *</label>
+                                <select class="form-select form-select-custom" @bind="SelectedWallet">
+                                    <option value="">Choose Wallet</option>
+                                    <option value="easypaisa">EasyPaisa</option>
+                                    <option value="jazzcash">JazzCash</option>
+                                    <option value="upaisa">UPaisa</option>
+                                    <option value="nayapay">NayaPay</option>
+                                    <option value="sadapay">SadaPay</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Mobile Number *</label>
+                                <input type="tel" class="form-control form-control-custom" placeholder="03XX-XXXXXXX" />
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(SelectedWallet))
+                        {
+                            <div class="alert alert-info-custom">
+                                <i class="bi bi-info-circle me-2"></i>
+                                @WalletInstruction
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Cash on Delivery Info -->
+        @if (SelectedMethod == "cod")
+        {
+            <div class="payment-flow-payment-form show mt-3">
+                <div class="alert alert-info-custom">
+                    <i class="bi bi-info-circle me-2"></i>
+                    You will pay in cash when the delivery person arrives at your doorstep. No online payment required.
+                </div>
+            </div>
+        }
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4 flex-wrap gap-2">
+            <button class="btn btn-secondary-custom" @onclick="Back">
+                <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-primary-custom" disabled="@IsConfirmDisabled" @onclick="ConfirmOrder">
+                Confirm Order <i class="bi bi-check-circle"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string SelectedMethod { get; set; } = string.Empty;
+    private string OnlineOption { get; set; } = string.Empty;
+    private string SelectedWallet { get; set; } = string.Empty;
+    private string SelectedBank { get; set; } = string.Empty;
+
+    private bool IsConfirmDisabled =>
+        string.IsNullOrEmpty(SelectedMethod) ||
+        (SelectedMethod == "online" && string.IsNullOrEmpty(OnlineOption)) ||
+        (OnlineOption == "wallet" && string.IsNullOrEmpty(SelectedWallet));
+
+    private void SelectPaymentOnline()
+    {
+        SelectedMethod = "online";
+        OnlineOption = string.Empty;
+        SelectedWallet = string.Empty;
+    }
+
+    private void SelectCashOnDelivery()
+    {
+        SelectedMethod = "cod";
+        OnlineOption = string.Empty;
+        SelectedWallet = string.Empty;
+    }
+
+    private void SelectOnlineOption(string option)
+    {
+        OnlineOption = option;
+        SelectedWallet = string.Empty;
+    }
+
+    private void Back() => nav.NavigateTo("/DeliveryAddressPage");
+
+    private void ConfirmOrder() => nav.NavigateTo("/invoice");
+
+    private string WalletInstruction => SelectedWallet switch
+    {
+        "easypaisa" => "Send payment to EasyPaisa account 0345-1234567 or use EasyPaisa app.",
+        "jazzcash" => "Send payment to JazzCash account 0300-1234567 or use JazzCash app.",
+        "upaisa" => "Send payment to UPaisa account 0333-1234567 or use UPaisa app.",
+        "nayapay" => "Send payment to NayaPay account 0321-1234567 or use NayaPay app.",
+        "sadapay" => "Send payment to SadaPay account 0311-1234567 or use SadaPay app.",
+        _ => string.Empty
+    };
+}

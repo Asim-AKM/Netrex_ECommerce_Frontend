@@ -1,4 +1,5 @@
 ﻿@page "/cart"
+@inject NavigationManager navigationManager;
 
 <main class="container cart-container">
     <h1 class="cart-title">Shopping Cart</h1>
@@ -55,7 +56,11 @@
                 <span id="cart-total">@($"Rs {Total:N0}")</span>
             </div>
 
-            <button class="checkout-btn" disabled="@(!getcartItems.Any())">Proceed to Checkout</button>
+            <button class="checkout-btn"
+                    @onclick="ProceedToCheckOut"
+                    disabled="@(!getcartItems.Any())">
+                Proceed to Checkout
+            </button>
             <a href="/shop" class="continue-btn">Continue Shopping</a>
         </aside>
 

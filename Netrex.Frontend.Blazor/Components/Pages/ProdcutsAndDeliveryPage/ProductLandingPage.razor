@@ -2,6 +2,7 @@
 @using Netrex.Frontend.Blazor.Components.Layout
 @rendermode InteractiveServer
 @layout MainLayout
+@inject NavigationManager navigationManager
 
 <PageTitle>ProductlandingPage</PageTitle>
 
@@ -79,7 +80,7 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn-buy">Buy Now</button>
+                <button @onclick="ProceedToCheckOut" class="btn-buy">Buy Now</button>
                 <button class="btn-cart">Add to Cart</button>
             </div>
         </div>
@@ -179,4 +180,11 @@
     </div>
 </div>
 
+
+@code{
+    private void ProceedToCheckOut()
+    {
+        navigationManager.NavigateTo("/DeliveryAddressPage");
+    }
+}
 

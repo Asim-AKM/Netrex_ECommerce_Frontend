@@ -1,0 +1,630 @@
+﻿/* ==================================================
+   CENTRALIZED CSS FOR DELIVERY, PAYMENT, AND INVOICE
+   ================================================== */
+
+/* --------------------------------------------------
+   COMMON VARIABLES & GLOBAL STYLES
+   -------------------------------------------------- */
+:root {
+    --primary-teal: #03adae;
+    --primary-teal-dark: #028a8b;
+    --success-green: #27ae60;
+    --danger-red: #e74c3c;
+    --warning-yellow: #f39c12;
+    --info-blue: #3498db;
+    --text-dark: #34495e;
+    --text-muted: #7f8c8d;
+    --bg-light: #f4f6f8;
+    --white: #ffffff;
+    --border-light: #e0e0e0;
+}
+
+
+
+/* Utility classes */
+.text-primary {
+    color: var(--primary-teal);
+}
+
+.text-success {
+    color: var(--success-green);
+}
+
+.text-danger {
+    color: var(--danger-red);
+}
+
+.text-warning {
+    color: var(--warning-yellow);
+}
+
+.text-info {
+    color: var(--info-blue);
+}
+
+.bg-white {
+    background-color: var(--white);
+}
+
+.border-light {
+    border-color: var(--border-light);
+}
+
+/* ==================================================
+   DELIVERY PAGE FIXED CSS (Improved)
+   ================================================== */
+.delivery-page {
+    padding: 20px;
+    background-color: var(--bg-light);
+    min-height: 100vh; /* full page height */
+}
+
+    .delivery-page .breadcrumb {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        color: var(--text-muted);
+    }
+
+    .delivery-page .delivery-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .delivery-page .delivery-card {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .delivery-page .delivery-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+    .delivery-page .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--primary-teal);
+        color: var(--white);
+        padding: 10px 20px;
+        font-size: 1.05rem; 
+        font-weight: 600;
+        border-radius: 8px 8px 0 0;
+        margin: -25px -25px 18px -25px;
+    }
+
+
+    .delivery-page #close-btn {
+        background: transparent;
+        border: none;
+        color: var(--white);
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    /* Form layout */
+    .delivery-page form .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px 15px; /* vertical gap 20px, horizontal 15px */
+    }
+
+    .delivery-page .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .delivery-page .form-group label {
+            margin-bottom: 8px; /* more breathing room */
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .delivery-page .form-group input,
+        .delivery-page .form-group select {
+            padding: 12px 12px;
+            border-radius: 6px;
+            border: 2px solid var(--border-light);
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            outline: none;
+            position: relative;
+            background-color: var(--white);
+        }
+
+            /* Bottom border accent effect */
+            .delivery-page .form-group input:focus,
+            .delivery-page .form-group select:focus {
+                border-color: var(--primary-teal);
+                box-shadow: 0 0 0 2px rgba(3,173,174,0.2);
+            }
+
+    /* Radio buttons as soft eCommerce buttons */
+    .delivery-page .radio-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 5px;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .delivery-page .radio-group input[type="radio"] {
+            display: none; /* hide default radio */
+        }
+
+        .delivery-page .radio-group label {
+            padding: 8px 20px;
+            border-radius: 25px; /* pill shape */
+            border: 2px solid var(--border-light);
+            background-color: var(--bg-light);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .delivery-page .radio-group input[type="radio"]:checked + label {
+            background-color: var(--primary-teal);
+            color: var(--white);
+            border-color: var(--primary-teal);
+            box-shadow: 0 3px 8px rgba(3, 173, 174, 0.3);
+        }
+
+        .delivery-page .radio-group label:hover {
+            background-color: rgba(3, 173, 174, 0.1);
+        }
+
+
+    /* Buttons */
+    .delivery-page .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+        .delivery-page .form-actions .btn-cancel {
+            background-color: var(--danger-red);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+            .delivery-page .form-actions .btn-cancel:hover {
+                opacity: 0.9;
+                text-decoration:none;
+            }
+
+        .delivery-page .form-actions .btn-save {
+            background-color: var(--primary-teal);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+            .delivery-page .form-actions .btn-save:hover {
+                opacity: 0.9;
+                text-decoration:none;
+            }
+
+    .delivery-page .card-footer-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(3, 173, 174, 0.08);
+        color: var(--primary-teal);
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 12px 20px;
+        border-top: 1.5px solid rgba(3, 173, 174, 0.3);
+        margin: 25px -25px -25px -25px; /* same trick as header */
+        border-radius: 0 0 12px 12px;
+    }
+
+
+/* Responsive fixes */
+@media (max-width: 576px) {
+    .delivery-page .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-page .form-actions {
+        justify-content: center;
+    }
+}
+
+
+
+/* ==================================================
+   PAYMENT METHOD PAGE CSS (FIXED)
+   ================================================== */
+.payment-page {
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-light) 0%, #e9ecef 100%);
+}
+
+    /* Card wrapper */
+    .payment-page .payment-method-card {
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+
+        .payment-page .payment-method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+    /* Card header */
+    .payment-page .card-header-custom {
+        background-color: var(--primary-teal);
+        color: var(--white);
+        padding: 15px 20px;
+        border-radius: 8px 8px 0 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: -25px -25px 20px -25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* --------------------------------------------------
+   Main Payment Options (Online / COD)
+   -------------------------------------------------- */
+    .payment-page .payment-flow-payment-option {
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        background-color: var(--white);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .payment-page .payment-flow-payment-option i {
+            font-size: 2rem;
+        }
+
+        .payment-page .payment-flow-payment-option h5 {
+            font-weight: 600;
+        }
+
+        .payment-page .payment-flow-payment-option p {
+            color: var(--text-muted);
+        }
+
+        /* Hover */
+        .payment-page .payment-flow-payment-option:hover {
+            border-color: var(--primary-teal);
+            box-shadow: 0 5px 15px rgba(3,173,174,0.1);
+        }
+
+        /* Selected */
+        .payment-page .payment-flow-payment-option.selected {
+            border-color: var(--primary-teal);
+            background-color: rgba(3,173,174,0.05);
+        }
+
+            .payment-page .payment-flow-payment-option.selected::after {
+                content: '✔';
+                color: var(--primary-teal);
+                font-weight: bold;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.2rem;
+            }
+
+    /* --------------------------------------------------
+   Sub Payment Options (Card / Bank / Wallet)
+   -------------------------------------------------- */
+    .payment-page .payment-sub-option {
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: var(--white);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .payment-page .payment-sub-option i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* Hover */
+        .payment-page .payment-sub-option:hover {
+            border-color: var(--primary-teal);
+            box-shadow: 0 5px 15px rgba(3,173,174,0.1);
+        }
+
+        /* Selected */
+        .payment-page .payment-sub-option.selected {
+            border-color: var(--primary-teal);
+            background-color: rgba(3,173,174,0.05);
+        }
+
+    /* --------------------------------------------------
+   Payment Forms (Card / Bank / Wallet)
+   -------------------------------------------------- */
+    .payment-page .payment-flow-payment-form {
+        display: none;
+        margin-top: 20px;
+        animation: slideDown 0.3s ease forwards;
+    }
+
+        .payment-page .payment-flow-payment-form.show {
+            display: block;
+        }
+
+    .payment-page .form-label-custom {
+        color: var(--primary-teal-dark);
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .payment-page .form-control-custom,
+    .payment-page .form-select-custom {
+        border: 2px solid var(--border-light);
+        border-radius: 6px;
+        padding: 10px 12px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        background-color: #fff;
+    }
+
+        .payment-page .form-control-custom:focus,
+        .payment-page .form-select-custom:focus {
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 0.2rem rgba(3,173,174,0.25);
+            outline: none;
+        }
+
+    /* Alerts */
+    .payment-page .alert-info-custom {
+        background-color: #e7f6f8;
+        border-left: 4px solid var(--info-blue);
+        color: #0c5460;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    /* Buttons */
+    .payment-page .btn-primary-custom {
+        background-color: var(--primary-teal);
+        border: none;
+        color: var(--white);
+        padding: 10px 25px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .payment-page .btn-primary-custom:hover {
+            background-color: var(--primary-teal-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3,173,174,0.3);
+        }
+
+    .payment-page .btn-secondary-custom {
+        background-color: var(--text-dark);
+        border: none;
+        color: var(--white);
+        padding: 10px 25px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+        .payment-page .btn-secondary-custom:hover {
+            background-color: #1a252f;
+        }
+
+/* Animation */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .payment-page .payment-flow-payment-option,
+    .payment-page .payment-sub-option {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .payment-page .payment-flow-payment-option i,
+        .payment-page .payment-sub-option i {
+            margin-bottom: 10px;
+        }
+
+    .payment-page .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+
+
+
+
+/* ==================================================
+   INVOICE PAGE CSS (UPDATED)
+   Parent wrapper: .invoice-page
+   ================================================== */
+.invoice-page {
+    padding: 20px;
+    background-color: var(--bg-light);
+    min-height: 100vh;
+}
+
+    .invoice-page .alert-success-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #e7f6f8;
+        border-left: 4px solid var(--success-green);
+        color: #0c5460;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin: 0px 10px;
+        width: 100%;
+    }
+
+
+.alert-success-box i {
+    font-size: 1.5rem; /* smaller icon */
+}
+
+
+.invoice-page .invoice-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.invoice-page .invoice-card {
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .invoice-page .invoice-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+.invoice-page .card-header {
+    background-color: var(--primary-teal);
+    color: var(--white);
+    padding: 15px 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invoice-page .card-body {
+    padding: 25px;
+}
+
+.invoice-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-light);
+}
+
+    .invoice-page table th,
+    .invoice-page table td {
+        padding: 12px 15px;
+        border: 1px solid var(--border-light);
+        text-align: left;
+    }
+
+    .invoice-page table thead th {
+        background-color: var(--primary-teal);
+        color: var(--white);
+        font-weight: 600;
+    }
+
+    .invoice-page table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+.invoice-page .total-row td {
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-top: 2px solid #eee;
+}
+
+.invoice-page .card-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 20px;
+    background-color: #f7f7f7;
+    border-top: 1px solid var(--border-light);
+}
+
+
+/* Print styles */
+@media print {
+    .invoice-page .step-indicator,
+    .invoice-page button {
+        display: none !important;
+    }
+
+    .invoice-page .invoice-card {
+        box-shadow: none !important;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    body {
+        background: var(--white) !important;
+    }
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .invoice-page .invoice-card {
+        padding: 15px;
+    }
+
+    .invoice-page table th,
+    .invoice-page table td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}

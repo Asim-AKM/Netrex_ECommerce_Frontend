@@ -13,7 +13,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         [Inject]
         private IAuthManager _authManager { get; set; }
         [Inject]
-        public ToastManager _toastManager { get; set; }
+        public ToastService _toastManager { get; set; }
         VmRegister _model = new VmRegister();
         string? generalMessage;
         Dictionary<string, string> fieldErrors = new Dictionary<string, string>();

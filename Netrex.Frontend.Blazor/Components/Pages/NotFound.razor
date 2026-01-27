@@ -1,25 +1,52 @@
 ﻿@page "/404"
+@using Netrex.Frontend.Blazor.Components.Layout
+@layout EmptyLayout
+@inject NavigationManager NavigationManager
 
-<div class="netrex-overlay">
-    <div class="netrex-card">
-        <div class="card-header">
-            <h1 class="error-code">404</h1>
-        </div>
+<div class="halloween-decoration decoration-1"></div>
+<div class="halloween-decoration decoration-2"></div>
 
-        <div class="card-body">
-            <div class="icon-wrapper">
-                <div class="visual-animation">🔍</div>
-            </div>
-            <h2 class="title">Page Not Found</h2>
-            <p class="message">
-                The page you are looking for might have been removed,
-                had its name changed, or is temporarily unavailable.
-            </p>
-        </div>
+<div class="containerr">
+    <div class="error-number">
+        <div class="error-digit first-4">4</div>
+        <div class="error-digit zero">0</div>
+        <div class="error-digit second-4">4</div>
+    </div>
 
-        <div class="card-footer">
-            <a href="/" class="btn-main">Back to Home</a>
-            <a href="/shop" class="btn-secondary">Browse Shop</a>
+    <div class="zombie-icon-container">
+        <div class="zombie-aura"></div>
+        <div class="zombie-icon">
+            <i class="fas fa-skull-crossbones"></i>
         </div>
     </div>
+
+    <h2 class="error-title">Page Not Found</h2>
+
+    <p class="error-description">
+        This page has been consumed by digital zombies! It doesn't exist anymore.
+    </p>
+
+    <div class="buttons-container">
+        <a href="/" class="btn btn-primary">
+            <i class="fas fa-home"></i> Escape to Homepage
+        </a>
+
+        <button type="button" class="btn btn-secondary" @onclick="GoBack">
+            <i class="fas fa-arrow-left"></i> Run Back
+        </button>
+    </div>
+
+    <p class="help-text">
+        <a href="/help">Visit our survival guide</a>
+    </p>
 </div>
+
+
+
+@code {
+    void GoBack()
+    {
+        // Safe fallback (browser history not available in pure Blazor)
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}

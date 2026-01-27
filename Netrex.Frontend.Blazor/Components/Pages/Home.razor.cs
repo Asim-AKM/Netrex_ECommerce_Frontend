@@ -10,7 +10,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         [Inject]
         private ICartItemManager CartItemManager { get; set; } = default!;
         [Inject]
-        private ToastManager _Toast { get; set; } = default!;
+        private ToastService _Toast { get; set; } = default!;
         VmAddCartItem model = new VmAddCartItem();
         public async Task AddToCart()
         {

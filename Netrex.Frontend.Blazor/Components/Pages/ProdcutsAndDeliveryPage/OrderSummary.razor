@@ -1,0 +1,119 @@
+﻿@page "/OrderSummaryPage"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+
+<div id="order-summary-page">
+
+    <div class="order-container">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            Home &gt; Checkout &gt; Order Summary
+        </div>
+
+        <div class="order-card">
+
+            <!-- Header -->
+            <div class="card-header">
+                Review Your Order
+            </div>
+
+            <div class="card-body">
+
+                <!-- Delivery Address -->
+                <div class="section-card">
+
+                    <div class="section-title">
+                        <div>
+                            <i class="bi bi-geo-alt"></i>
+                            Delivery Address
+                        </div>
+
+                        <button class="edit-btn">
+                            Change
+                        </button>
+                    </div>
+
+                    <div class="address-box">
+                        <strong>Ahmed Khan</strong><br />
+                        House #123, Street #45<br />
+                        DHA Phase 6, Lahore<br />
+                        Punjab, Pakistan<br />
+                        Phone: +92 300 1234567
+                    </div>
+
+                </div>
+
+                <!-- Order Items -->
+                <div class="section-card">
+
+                    <div class="section-title">
+                        <i class="bi bi-bag-check"></i>
+                        Order Items
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Wireless Headphones</td>
+                                <td>1</td>
+                                <td>Rs. 5,000</td>
+                                <td>Rs. 5,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!-- Total -->
+                <div class="section-card total-box">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>Rs. 5,000</span>
+                    </div>
+
+                    <div class="total-row grand-total">
+                        <span>Total Payable</span>
+                        <span>Rs. 5,000</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <button class="btn btn-danger" @onclick="GoBack">
+                    Back
+                </button>
+
+                <button class="btn btn-primary" @onclick="PlaceOrder">
+                    Place Order
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/PaymentMethodPage");
+    }
+
+    private void PlaceOrder()
+    {
+        Navigation.NavigateTo("/PaymentMethodPage");
+    }
+}

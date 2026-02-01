@@ -4,6 +4,8 @@ using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
 using Netrex.Frontend.Application.Services.Common;
 using Netrex.Frontend.Application.Services.ProductManagement.Implementations;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
+using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
+using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Implementations;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 

@@ -15,6 +15,7 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<IAuthManager, AuthManager>()
                                                                  .AddScoped<ToastService>()
                                                                  .AddScoped<ICartItemManager, CartItemManager>()
-                                                                 .AddScoped<IProductManager, ProductManager>();
+                                                                 .AddScoped<IProductManager, ProductManager>()
+                                                                 .AddScoped<ICloudnaryManager, CloudnaryManager>();
     }
 }

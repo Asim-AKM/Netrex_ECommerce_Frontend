@@ -1,6 +1,4 @@
 ﻿@page "/cart"
-@inject NavigationManager navigationManager;
-
 <main class="container cart-container">
     <h1 class="cart-title">Shopping Cart</h1>
 
@@ -9,24 +7,31 @@
         <!-- Cart Items Section -->
         <section class="cart-items" aria-label="Shopping Cart Items">
 
-            @if (getcartItems.Any())
+            @if (cartState.Items.Any())
             {
-                @foreach (var item in getcartItems)
+                @foreach (var item in cartState.Items)
                 {
-                    <article class="cart-item" data-id="@item.CartItemId">
-                        <img src="https://picsum.photos/id/1050/100/120" alt="@item.ProductName" width="100" height="120" />
+                    <article class="cart-item" data-id="@item.ProductId">
+                        <img src="@(!string.IsNullOrEmpty(item.ImageUrl) ? item.ImageUrl : "https://picsum.photos/100/120")"
+                             alt="@item.ProductName" width="100" height="120" />
                         <div class="item-info">
                             <h2>@item.ProductName</h2>
-                            <p>@item.Description</p>
                         </div>
                         <div class="item-price">@($"Rs {item.Price:N0}")</div>
                         <div class="qty-box">
-                            <button class="qty-decrease" aria-label="Decrease quantity" @onclick="() => DecreaseQuantity(item)" disabled="@(item.Quantity <= 1)">-</button>
+                            <button class="qty-decrease"
+                                    @onclick="() => DecreaseQuantity(item)"
+                                    disabled="@(item.Quantity <= 1)">
+                                -
+                            </button>
                             <span class="qty">@item.Quantity</span>
-                            <button class="qty-increase" aria-label="Increase quantity" @onclick="() => IncreaseQuantity(item)">+</button>
+                            <button class="qty-increase"
+                                    @onclick="() => IncreaseQuantity(item)">
+                                +
+                            </button>
                         </div>
-                        <div class="item-total">@($"Rs {item.Price*item.Quantity:N0}")</div>
-                        <button class="remove" aria-label="Remove item" @onclick="() => RemoveItem(item)">Remove</button>
+                        <div class="item-total">@($"Rs {item.SubTotal:N0}")</div>
+                        <button class="remove" @onclick="() => RemoveItem(item)">Remove</button>
                     </article>
                 }
             }
@@ -43,22 +48,22 @@
 
             <div class="summary-row">
                 <span>Subtotal</span>
-                <span id="cart-subtotal">@($"Rs {Subtotal:N0}")</span>
+                <span>@($"Rs {Subtotal:N0}")</span>
             </div>
 
             <div class="summary-row">
                 <span>Shipping</span>
-                <span id="cart-shipping">@($"Rs {Shipping:N0}")</span>
+                <span>@($"Rs {Shipping:N0}")</span>
             </div>
 
             <div class="summary-row total">
                 <span>Total</span>
-                <span id="cart-total">@($"Rs {Total:N0}")</span>
+                <span>@($"Rs {Total:N0}")</span>
             </div>
 
             <button class="checkout-btn"
                     @onclick="ProceedToCheckOut"
-                    disabled="@(!getcartItems.Any())">
+                    disabled="@(!cartState.Items.Any())">
                 Proceed to Checkout
             </button>
             <a href="/shop" class="continue-btn">Continue Shopping</a>

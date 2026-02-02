@@ -4,6 +4,8 @@ using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
 using Netrex.Frontend.Application.Services.Common;
 using Netrex.Frontend.Application.Services.ProductManagement.Implementations;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
+using Netrex.Frontend.Application.Services.Storage.Implementation;
+using Netrex.Frontend.Application.Services.Storage.Interface;
 using Netrex.Frontend.Application.Services.UserManagement.Implementations;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 
@@ -15,6 +17,7 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<IAuthManager, AuthManager>()
                                                                  .AddScoped<ToastService>()
                                                                  .AddScoped<ICartItemManager, CartItemManager>()
-                                                                 .AddScoped<IProductManager, ProductManager>();
+                                                                 .AddScoped<IProductManager, ProductManager>()
+                                                                 .AddScoped<ILocalStorageManager,LocalStorageManager>();
     }
 }

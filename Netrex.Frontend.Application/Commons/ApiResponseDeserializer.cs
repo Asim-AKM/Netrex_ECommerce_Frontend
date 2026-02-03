@@ -32,7 +32,7 @@ namespace Netrex.Frontend.Application.Commons
             }
         }
 
-        private static ApiResponse<T> FailResponse<T>(string message)
+        public static ApiResponse<T> FailResponse<T>(string message)
         {
             return new ApiResponse<T>
             {

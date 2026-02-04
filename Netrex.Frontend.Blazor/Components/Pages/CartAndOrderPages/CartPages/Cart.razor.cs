@@ -17,12 +17,12 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
         private decimal Subtotal => (decimal)cartState.TotalAmount;
         private decimal Shipping { get; set; } = 500;
         private decimal Total => Subtotal + Shipping;
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            // Seed local storage with static cart items
             await CartInitializer.SeedLocalStorageAsync(CartItemManager);
             await LoadCartAsync();
         }
+
         private async Task LoadCartAsync()
         {
             cartState = await CartItemManager.GetCartAsync();

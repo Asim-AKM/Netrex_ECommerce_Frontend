@@ -1,61 +1,58 @@
 ﻿@page "/sellerregister"
 @rendermode InteractiveServer
+
 <div class="ntx-reg-container">
     <div class="ntx-reg-card">
         <h2 class="ntx-reg-title">Become a Seller</h2>
-        <p class="ntx-reg-subtitle">Create your store and start selling</p>
 
-        <EditForm Model="@seller" OnValidSubmit="CreateStore">
+        <EditForm Model="@seller" OnValidSubmit="HandleRegistration" FormName="SellerRegForm">
+            <DataAnnotationsValidator />
 
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Name</label>
                 <InputText class="ntx-reg-input"
                            @bind-Value="seller.StoreName"
+                           @bind-Value:event="oninput"
                            placeholder="Enter store name" />
+                @* <ValidationMessage For="@(() => seller.StoreName)" class="text-danger" /> *@
             </div>
 
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Description</label>
                 <InputTextArea class="ntx-reg-textarea"
                                @bind-Value="seller.StoreDescription"
+                               @bind-Value:event="oninput"
                                placeholder="Describe your store" />
+                @* <ValidationMessage For="@(() => seller.StoreDescription)" class="text-danger" /> *@
             </div>
 
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Shop Category</label>
-
-                <InputSelect class="ntx-reg-select" @bind-Value="seller.CategoryName">
+                <InputSelect class="ntx-reg-select" @bind-Value="seller.ShopId">
                     <option value="">Select category</option>
-
-                    @if (ShopDetails != null && ShopDetails.Any())
+                    @if (ShopDetails != null)
                     {
                         @foreach (var cat in ShopDetails)
                         {
-                            @* value mein shop ki ID aur display mein shop ka naam *@
                             <option value="@cat.ShopId.ToString()">@cat.ShopName</option>
                         }
                     }
-                    else
-                    {
-                        <option disabled>Loading categories...</option>
-                    }
                 </InputSelect>
+                @* <ValidationMessage For="@(() => seller.ShopId)" class="text-danger" /> *@
             </div>
 
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Address</label>
                 <InputText class="ntx-reg-input"
                            @bind-Value="seller.Address"
+                           @bind-Value:event="oninput"
                            placeholder="Enter store address" />
+                @* <ValidationMessage For="@(() => seller.Address)" class="text-danger" /> *@
             </div>
 
-            <button type="button"
-                    class="ntx-reg-btn-submit"
-                    onclick="window.location.href='/seller/plan';">
+            <button type="submit" class="ntx-reg-btn-submit">
                 Create Store
             </button>
-
         </EditForm>
     </div>
 </div>
-

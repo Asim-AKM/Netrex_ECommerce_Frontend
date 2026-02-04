@@ -4,7 +4,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Interfaces
 {
     public interface ISellerManager
     {
-        Task<string> CreateSellerAsync(VmSeller vmSeller);
+        Task<VmSeller> CreateSellerAsync(VmSeller vmSeller);
         Task<string> UpdateSellerAsync(VmSeller vmSeller);
         Task<string> DeleteSellerAsync(Guid Id);
         Task<List<VmSeller>> GetSellerAsync();

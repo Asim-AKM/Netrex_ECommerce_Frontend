@@ -35,31 +35,3 @@
         </div>
     </div>
 </div>
-
-@code {
-    private string Email { get; set; } = "";
-    private string? ErrorMessage { get; set; }
-    private bool IsProcessing { get; set; }
-
-    private async Task VerifyAndRedirect()
-    {
-        ErrorMessage = null;
-
-        // Basic Email Validation
-        if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
-        {
-            ErrorMessage = "Please enter a valid email address.";
-            return;
-        }
-
-        IsProcessing = true;
-        
-        // Yahan aap apna API call kar saktay hain OTP bhejne ke liye
-        await Task.Delay(1500); 
-
-        IsProcessing = false;
-        
-        // Redirecting to Reset Password page
-        Navigation.NavigateTo("/reset-password");
-    }
-}

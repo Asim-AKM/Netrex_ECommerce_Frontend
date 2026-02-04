@@ -30,7 +30,7 @@ html, body {
 }
 
 
-.sidebar {
+.sidebarseller {
     position: fixed;
     top: 0;
     left: 0;
@@ -46,7 +46,7 @@ html, body {
     transition: transform 0.35s ease;
 }
 
-.sidebar-header {
+.sidebar-headerseller {
     background: #ffffff;
     border-radius: 14px;
     padding: 14px 16px;

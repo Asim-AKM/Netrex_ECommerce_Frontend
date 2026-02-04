@@ -15,12 +15,12 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         public async Task AddToCart()
         {
 
-            var response = await CartItemManager.AddCartItemAsync(model);
+            //var response = await CartItemManager.AddCartItemAsync(model);
 
-            if (!response.IsSuccess)
-            {
-                _Toast.Error(response.Message);
-            }
+            //if (!response.IsSuccess)
+            //{
+            //    _Toast.Error(response.Message);
+            //}
         }
     }
 }

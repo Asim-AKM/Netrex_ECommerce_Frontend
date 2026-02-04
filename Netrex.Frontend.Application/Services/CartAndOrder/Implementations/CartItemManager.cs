@@ -1,72 +1,59 @@
-﻿using Netrex.Frontend.Application.Commons;
-using Netrex.Frontend.Application.Commons.AppResponses;
-using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
+﻿using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
+using Netrex.Frontend.Application.Services.Storage.Interface;
 using Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart;
-using Netrex.Frontend.Blazor.Services;
-using System.Net.Http.Json;
-
 namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
 {
-    public class CartItemManager : ICartItemManager
+    public class CartItemManager(ILocalStorageManager localStorage) : ICartItemManager
     {
-        private readonly HttpClient _httpClient;
-        private readonly LoaderService _loader;
-
-        public CartItemManager(IHttpClientFactory httpClientFactory, LoaderService loader)
+        private const string key = "cart_state";
+        public async Task AddToCartAsync(CartItemState vm)
         {
-            _httpClient = httpClientFactory.CreateClient("ApiClient");
-            _loader = loader;
-        }
-
-        public async Task<ApiResponse<bool>> AddCartItemAsync(VmAddCartItem vm)
-        {
-            try
+            var cart = await GetCartAsync();
+            var item= cart.Items.FirstOrDefault(i => i.ProductId == vm.ProductId);
+            if (item != null)
             {
-
-                _loader.Show();
-
-                var response = await _httpClient.PostAsJsonAsync("api/CartItem/", vm);
-
-                var json = await response.Content.ReadAsStringAsync();
-
-                return ApiResponseDeserializer.Deserialize<bool>(json);
+                item.Quantity++;
             }
-            finally
+            else
             {
+                cart.Items.Add(vm);
+            }
+            await localStorage.SetAsync(key, cart);
+        }
 
-                _loader.Hide();
+        public async Task<CartState> GetCartAsync()
+        {
+            return await localStorage.GetAsync<CartState>(key) ?? new CartState { Items = new List<CartItemState>() };
+        }
+        public async Task IncreaseQuantityAsync(Guid productId)
+        {
+            var cart = await GetCartAsync();
+            var item = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+            if (item != null)
+            {
+                item.Quantity++;
+                await localStorage.SetAsync(key, cart);
             }
         }
-
-        public async Task<ApiResponse<bool>> DecreaseQuantityAsync(Guid cartitemid)
+        public async Task DecreaseQuantityAsync(Guid productId)
         {
-            var response = await _httpClient.PutAsync("api/CartItem/DecreaseQuantity/{cartItemId}", null);
-            return new ApiResponse<bool>
+            var cart = await GetCartAsync();
+            var item = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+            if (item != null && item.Quantity > 1)
             {
-                IsSuccess = response.IsSuccessStatusCode,
-                Data = response.IsSuccessStatusCode
-            };
+               item.Quantity--;
+               await localStorage.SetAsync(key, cart);
+            }
         }
-
-        public async Task<ApiResponse<bool>> IncreaseQuantityAsync(Guid cartitemid)
+        public async Task RemoveItemAsync(Guid productId)
         {
-            var response = await _httpClient.PutAsync("api/CartItem/IncreaseQuantity/{cartItemId}", null);
-            return new ApiResponse<bool>
-            {
-                IsSuccess = response.IsSuccessStatusCode,
-                Data = response.IsSuccessStatusCode
-            };
-
+            var cart=await GetCartAsync();
+            cart.Items.RemoveAll(i => i.ProductId == productId);
+            await localStorage.SetAsync(key, cart);
         }
-
-        public async Task<ApiResponse<bool>> RemoveItemAsync(Guid cartitemid)
+        public async Task ClearCartAsync()
         {
-            var response = await _httpClient.DeleteAsync("api/CartItem/{cartItemId}");
-            return new ApiResponse<bool>
-            {
-                IsSuccess = response.IsSuccessStatusCode,
-                Data = response.IsSuccessStatusCode
-            };
+            await localStorage.RemoveAsync(key);
         }
     }
 }

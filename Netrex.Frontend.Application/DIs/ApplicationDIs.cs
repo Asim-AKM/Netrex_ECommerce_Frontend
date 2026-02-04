@@ -18,7 +18,7 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<ToastService>()
                                                                  .AddScoped<ICartItemManager, CartItemManager>()
                                                                  .AddScoped<IProductManager, ProductManager>()
-                                                                 .AddScoped<ILocalStorageManager,LocalStorageManager>();
+                                                                 .AddScoped<ILocalStorageManager,LocalStorageManager>()
                                                                  .AddScoped<ICloudnaryManager, CloudnaryManager>()
                                                                 .AddScoped<IShopManager, ShopManager>()
                                                                 .AddScoped<ISellerManager, SellerManager>();

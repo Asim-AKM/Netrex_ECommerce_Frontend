@@ -1,13 +1,23 @@
-﻿using Netrex.Frontend.Application.ViewModels.ProductManagement;
+﻿using Netrex.Frontend.Application.Commons.AppResponses;
+using Netrex.Frontend.Application.ViewModels.ProductManagement;
 
 namespace Netrex.Frontend.Application.Services.ProductManagement.Interfaces
 {
     public interface IProductManager
     {
-        Task<ProductsVm> AddProducts( ProductsVm productsVm);
-        Task<bool> RemoveProducts(int productId);
-        Task<ProductsVm> UpdateProducts(ProductsVm productsVm);
-        Task<ProductsVm> GetProductByIdAsync(int productId);
-        Task<IEnumerable<ProductsVm>> GetAllProductsAsync();
+
+        Task<ApiResponse<ProductsVm>> AddProducts(
+         ProductsVm productsVm,
+         List<byte[]> imageBytes,
+         List<string> imageNames
+     );
+        Task<ApiResponse<bool>> RemoveProducts(int productId);
+
+        Task<ApiResponse<ProductsVm>> UpdateProducts(ProductsVm productsVm);
+
+        Task<ApiResponse<ProductsVm>> GetProductByIdAsync(int productId);
+
+        Task<ApiResponse<IEnumerable<ProductsVm>>> GetAllProductsAsync();
+
     }
 }

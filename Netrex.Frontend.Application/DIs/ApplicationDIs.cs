@@ -4,8 +4,8 @@ using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
 using Netrex.Frontend.Application.Services.Common;
 using Netrex.Frontend.Application.Services.ProductManagement.Implementations;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
-using Netrex.Frontend.Application.Services.Storage.Implementation;
-using Netrex.Frontend.Application.Services.Storage.Interface;
+using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
+using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Implementations;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 
@@ -19,5 +19,8 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<ICartItemManager, CartItemManager>()
                                                                  .AddScoped<IProductManager, ProductManager>()
                                                                  .AddScoped<ILocalStorageManager,LocalStorageManager>();
+                                                                 .AddScoped<ICloudnaryManager, CloudnaryManager>()
+                                                                .AddScoped<IShopManager, ShopManager>()
+                                                                .AddScoped<ISellerManager, SellerManager>();
     }
 }

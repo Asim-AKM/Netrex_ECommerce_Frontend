@@ -20,6 +20,8 @@ builder.Services.AddScoped<LoaderService>();
 
 // 4. Application Layer DIs (Iske andar hi AuthManager register ho raha hai)
 builder.Services.AddApplicationDIs();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -29,7 +31,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 app.UseHttpsRedirection();
 app.UseAntiforgery();
 app.MapStaticAssets();

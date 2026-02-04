@@ -1,7 +1,4 @@
-﻿using Netrex.Frontend.Application.Commons;
-using Netrex.Frontend.Application.Commons.AppResponses;
-using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
-using Netrex.Frontend.Application.ViewModels.ProductManagement;
+﻿using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.ViewModels.SellerModule;
 using Netrex.Frontend.Blazor.Services;
 using System.Net.Http.Json;
@@ -17,21 +14,27 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             _httpClient = httpClient.CreateClient("ApiClient");
             _loader = loaderService;
         }
-        public async Task<string> CreateSellerAsync(VmSeller vmSeller)
+        public async Task<VmSeller> CreateSellerAsync(VmSeller vmSeller)
         {
             try
             {
                 _loader.Show();
-                var response = await _httpClient.PostAsJsonAsync("api/SellerCreateSeller", vmSeller);
-                var json = await response.Content.ReadAsStringAsync();
-                return "Data Create Successfully";
+                var response = await _httpClient.PostAsJsonAsync("api/Seller/CreateSeller", vmSeller);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadFromJsonAsync<VmSeller>();
+                    return json!;
+                }
+                else
+                {
+                    throw new Exception("Failed to add seller.");
+                }
             }
             finally
             {
                 _loader.Hide();
             }
         }
-
         public async Task<string> DeleteSellerAsync(Guid Id)
         {
             try
@@ -61,7 +64,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                     throw new Exception("Failed to retrieve Seller Data.");
                 }
                 var result = await response.Content.ReadFromJsonAsync<VmSeller>();
-                return result??new VmSeller();
+                return result ?? new VmSeller();
             }
             finally
             {
@@ -101,7 +104,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 _loader.Show();
 
                 var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Product/UpdateSeller/{vmSeller.SellerId}",vmSeller);
+                    $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
 
                 if (!response.IsSuccessStatusCode)
                 {

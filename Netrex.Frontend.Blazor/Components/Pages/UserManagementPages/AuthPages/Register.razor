@@ -78,3 +78,8 @@
         </EditForm>
     </div>
 </div>
+
+<!-- OTP Modal Component -->
+<VerifyOTP @ref="otpModal"
+           OnVerificationSuccess="HandleOtpVerified"
+           OnModalClosed="HandleModalClosed" />

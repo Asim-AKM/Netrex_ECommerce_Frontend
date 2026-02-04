@@ -1,42 +1,51 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Netrex.Frontend.Application.Services.Common;
+using Netrex.Frontend.Blazor.Services;
+using System.Text.RegularExpressions;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
-    public partial class VerifyEmail
+    // Class name must match the Razor file name (VerifyEmail)
+    public partial class VerifyEmail : IDisposable
     {
-        // Fixing Service Warnings with = default!;
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
+        [Inject] public ToastService _toastService { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
 
-        // Fixing String Warnings with = "";
         protected string Email { get; set; } = "";
-        protected string? ErrorMessage { get; set; } // Nullable because it starts null
+        protected string? ErrorMessage { get; set; }
         protected bool IsProcessing { get; set; }
 
-        // Fixing 'VerifyAndRedirect' visibility
-        protected async Task VerifyAndRedirect()
+        public async Task HandleRegister()
         {
+            ErrorMessage = null;
+
+            if (string.IsNullOrWhiteSpace(Email) || !Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                ErrorMessage = "Please enter a valid email address.";
+                return;
+            }
+
+            IsProcessing = true;
             try
             {
-                if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
-                {
-                    ErrorMessage = "Please enter a valid email address.";
-                    return;
-                }
+                // Simulate API call
+                await Task.Delay(1500);
 
-                IsProcessing = true;
-                await Task.Delay(1000);
-                Navigation.NavigateTo($"/reset-password/{Email}");
+                _toastService.Success("OTP Sent Successfully!");
+
+                // Navigating to OTP verification
+                Navigation.NavigateTo($"/verifyotp/{Uri.EscapeDataString(Email)}");
             }
-            catch (Exception) // Removed 'ex' to fix 'variable declared but never used'
+            catch (Exception ex)
             {
-                ErrorMessage = "An error occurred.";
+                _toastService.Error("Error: " + ex.Message);
             }
             finally
             {
                 IsProcessing = false;
             }
         }
+
+        public void Dispose() { }
     }
 }

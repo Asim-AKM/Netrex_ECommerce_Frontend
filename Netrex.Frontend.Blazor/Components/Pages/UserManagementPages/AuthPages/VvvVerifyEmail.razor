@@ -1,0 +1,43 @@
+﻿@* @page "/Vvvverify-email"
+@inject NavigationManager Navigation
+
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 py-4">
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <h1>NETREX<br />ECOMMERCE</h1>
+            <p>Create your account and start selling smarter.</p>
+        </div>
+        <div class="auth-right">
+            <h2>Forget Password</h2>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger py-2" style="font-size: 0.8rem;">@ErrorMessage</div>
+            }
+
+            <div class="input-group mb-3">
+                <span class="icon">
+                    <img src="assets/user-management-assets/icons/email-icon.png" alt="email" />
+                </span>
+                <input @bind="Email" @bind:event="oninput" type="email" class="form-control" placeholder="Email" />
+            </div>
+
+            <button class="btn btn-primary w-100" @onclick="VerifyAndRedirect" disabled="@IsProcessing">
+                @if (IsProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm"></span>
+                }
+                else
+                {
+                    <span>Verify Email</span>
+                }
+            </button>
+
+            <div class="auth-footer mt-3">
+                <div class="auth-footer-links text-center">
+                    Back To Login <a href="/login" class="text-primary fw-bold text-decoration-none">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@

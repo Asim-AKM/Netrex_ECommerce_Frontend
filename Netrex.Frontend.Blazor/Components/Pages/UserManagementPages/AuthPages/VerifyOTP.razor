@@ -1,0 +1,157 @@
+﻿@* REMOVE @page directive - no longer a page *@
+@rendermode InteractiveServer
+
+@if (IsVisible)
+{
+    <div class="otp-modal-overlay" @onclick="CloseModal">
+        <div class="otp-modal-content" @onclick:stopPropagation="true">
+            <!-- Close Button -->
+            <button type="button" class="otp-close-btn" @onclick="CloseModal">
+                <span>&times;</span>
+            </button>
+
+            <!-- Modal Body -->
+            <div class="otp-modal-body">
+                <h2 class="text-center mb-3">Verify OTP</h2>
+
+                @if (!string.IsNullOrEmpty(generalMessage))
+                {
+                    <div class="alert @(isSuccess ? "alert-success" : "alert-danger") text-center">
+                        @generalMessage
+                    </div>
+                }
+
+                <p class="text-muted text-center mb-4">
+                    Enter the 6-digit OTP sent to<br />
+                    <strong>@email</strong>
+                </p>
+
+                <EditForm Model="_model" OnValidSubmit="HandleVerifyOtp">
+                    <div class="input-group mb-3">
+                        <span class="icon">
+                            <img src="assets/user-management-assets/icons/Lock black.png" />
+                        </span>
+                        <InputText @bind-Value="_model.Otp"
+                                   type="text"
+                                   class="form-control text-center otp-input-field"
+                                   placeholder="000000"
+                                   maxlength="6"
+                                   required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        Verify Email
+                    </button>
+                </EditForm>
+
+                <div class="text-center">
+                    @if (canResend)
+                    {
+                        <button @onclick="HandleResendOtp" class="btn btn-link">
+                            Resend OTP
+                        </button>
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            Resend OTP in <strong>@FormatTime(remainingSeconds)</strong>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    /* Modal Overlay */
+    .otp-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Modal Content Box */
+    .otp-modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+        position: relative;
+        animation: slideDown 0.3s ease;
+    }
+
+    /* Close Button */
+    .otp-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #7f8c8d;
+        cursor: pointer;
+        line-height: 1;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+
+        .otp-close-btn:hover {
+            color: #e74c3c;
+        }
+
+    /* Modal Body */
+    .otp-modal-body {
+        padding: 40px 30px;
+    }
+
+        .otp-modal-body h2 {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    /* OTP Input Field */
+    .otp-input-field {
+        font-size: 26px !important;
+        letter-spacing: 8px;
+        font-weight: bold;
+        height: 55px;
+        text-align: center;
+    }
+
+    /* Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes slideDown {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>

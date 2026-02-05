@@ -1,11 +1,12 @@
-﻿@page "/verify-email"
-@inject NavigationManager Navigation
+﻿@page "/verifyemail"
+@namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
+@rendermode InteractiveServer
 
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 py-4">
     <div class="auth-wrapper">
         <div class="auth-left">
             <h1>NETREX<br />ECOMMERCE</h1>
-            <p>Create your account and start selling smarter.</p>
+            <p>Create an account to start shopping.</p>
         </div>
         <div class="auth-right">
             <h2>Forget Password</h2>
@@ -21,23 +22,44 @@
                 </span>
                 <input @bind="Email" @bind:event="oninput" type="email" class="form-control" placeholder="Email" />
             </div>
-
-            <button class="btn btn-primary w-100" @onclick="VerifyAndRedirect" disabled="@IsProcessing">
+            <button class="btn btn-primary w-100 py-2" @onclick="HandleRegister" disabled="@IsProcessing">
                 @if (IsProcessing)
                 {
                     <span class="spinner-border spinner-border-sm"></span>
                 }
                 else
                 {
-                    <span>Verify Email</span>
+                    <span>Send OTP</span>
                 }
             </button>
-
-            <div class="auth-footer mt-3">
-                <div class="auth-footer-links text-center">
-                    Back To Login <a href="/login" class="text-primary fw-bold text-decoration-none">Login</a>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+
+@* @code {
+    private string Email { get; set; } = "";
+    private string? ErrorMessage { get; set; }
+    private bool IsProcessing { get; set; }
+
+    private async Task VerifyAndRedirect()
+    {
+        ErrorMessage = null;
+
+        // Basic Email Validation
+        if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
+        {
+            ErrorMessage = "Please enter a valid email address.";
+            return;
+        }
+
+        IsProcessing = true;
+        
+        // Yahan aap apna API call kar saktay hain OTP bhejne ke liye
+        await Task.Delay(1500); 
+
+        IsProcessing = false;
+        
+        // Redirecting to Reset Password page
+        Navigation.NavigateTo("/reset-password");
+    }
+} *@

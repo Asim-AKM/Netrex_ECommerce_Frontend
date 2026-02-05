@@ -1,0 +1,31 @@
+﻿@inject NavigationManager navigationManager
+
+<!-- Sidebar -->
+<aside class="sidebarseller">
+    <div class="sidebar-headerseller">
+        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto;">
+    </div>
+
+    <ul class="sidebar-nav">
+        <li><a href="#dashboard" class="nav-link active" onclick="showTab('dashboard', event)"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="#products" class="nav-link" onclick="showTab('products', event)"><i class="fas fa-box"></i> Products</a></li>
+        <li><a href="#orders" class="nav-link" onclick="showTab('orders', event)"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="#delivery" class="nav-link" onclick="showTab('delivery', event)"><i class="fas fa-truck"></i> Delivery</a></li>
+        <li><a href="#customers" class="nav-link" onclick="showTab('customers', event)"><i class="fas fa-users"></i> Customers</a></li>
+        <li><a href="#reviews" class="nav-link" onclick="showTab('reviews', event)"><i class="fas fa-star"></i> Reviews</a></li>
+        <li><a href="#analytics" class="nav-link" onclick="showTab('analytics', event)"><i class="fas fa-analytics"></i> Analytics</a></li>
+        @* <li><a href="#inventory" class="nav-link" onclick="showTab('inventory', event)"><i class="fas fa-warehouse"></i> Inventory</a></li> *@
+        <li><a href="#inventory" class="nav-link" @onclick="ShowPayoutPage"><i class="fas fa-warehouse"></i> Payouts</a></li>
+        <li><a href="#settings" class="nav-link" onclick="showTab('settings', event)"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="#reports" class="nav-link" onclick="showTab('reports', event)"><i class="fas fa-file-alt"></i> Reports</a></li>
+    </ul>
+</aside>
+
+
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+
+@{
+    void ShowPayoutPage() => navigationManager.NavigateTo("/seller-payout-records");
+}

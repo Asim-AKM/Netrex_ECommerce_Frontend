@@ -1,5 +1,5 @@
 ﻿@page "/sellerregister"
-
+@rendermode InteractiveServer
 <div class="ntx-reg-container">
     <div class="ntx-reg-card">
         <h2 class="ntx-reg-title">Become a Seller</h2>
@@ -23,13 +23,22 @@
 
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Shop Category</label>
-                <InputSelect class="ntx-reg-select"
-                             @bind-Value="seller.CategoryName">
+
+                <InputSelect class="ntx-reg-select" @bind-Value="seller.CategoryName">
                     <option value="">Select category</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Grocery">Grocery</option>
-                    <option value="Home Appliances">Home Appliances</option>
+
+                    @if (ShopDetails != null && ShopDetails.Any())
+                    {
+                        @foreach (var cat in ShopDetails)
+                        {
+                            @* value mein shop ki ID aur display mein shop ka naam *@
+                            <option value="@cat.ShopId.ToString()">@cat.ShopName</option>
+                        }
+                    }
+                    else
+                    {
+                        <option disabled>Loading categories...</option>
+                    }
                 </InputSelect>
             </div>
 
@@ -50,20 +59,3 @@
     </div>
 </div>
 
-@code {
-    SellerRegisterModel seller = new();
-
-    void CreateStore()
-    {
-        // Seller details handle karne ke liye (Module 3)
-        Console.WriteLine($"Store {seller.StoreName} Created for Category {seller.CategoryName}");
-    }
-
-    public class SellerRegisterModel
-    {
-        public string StoreName { get; set; }
-        public string StoreDescription { get; set; }
-        public string CategoryName { get; set; }
-        public string Address { get; set; }
-    }
-}

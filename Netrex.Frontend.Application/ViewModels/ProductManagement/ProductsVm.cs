@@ -13,7 +13,13 @@ namespace Netrex.Frontend.Application.ViewModels.ProductManagement
         public int StockQuantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+        public string ImagePublicId { get; set; } = string.Empty; 
         public bool IsPrimary { get; set; }
         public DateTime UploadedAt { get; set; }
+    }
+    public class CloudinaryUploadResult
+    {
+        public string Url { get; set; } = string.Empty;
+        public string PublicId { get; set; } = string.Empty;
     }
 }

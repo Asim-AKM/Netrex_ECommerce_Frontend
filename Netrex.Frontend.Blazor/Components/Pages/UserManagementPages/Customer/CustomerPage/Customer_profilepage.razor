@@ -1,158 +1,268 @@
 ﻿@page "/Customer_profilepage"
+@layout EmptyLayout
 @using System.Net.Http.Json
+@using Netrex.Frontend.Blazor.Components.Layout
 @inject HttpClient Http
 
+<style>
+    :root {
+        --nx-teal: #03ADAE;
+        --nx-dark: #0C294B;
+    }
 
-<div class="container-custom">
+    .profile-master {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: transparent !important;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="profile-box">
-            <div class="avatar">@Initials</div>
-            <div>
-                <strong>@User.FirstName @User.LastName</strong>
-                <div class="time">
-                    <i class="fa fa-clock"></i> @CurrentTime
-                </div>
-            </div>
-        </div>
+    /* Sidebar logic */
+    .profile-sidebar {
+        width: 280px;
+        background: var(--nx-teal);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1050;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+    }
 
-        <a class="active">
-            <span><i class="fa fa-user"></i> My Profile</span>
-        </a>
-        <a>
-            <span><i class="fa fa-map-marker-alt"></i> Delivery Address</span>
-            <span class="badge-custom">0</span>
-        </a>
-        <a>
-            <span><i class="fa fa-shopping-bag"></i> My Orders</span>
-            <span class="badge-custom">0</span>
-        </a>
-        <a><span><i class="fa fa-eye"></i> Recently Viewed</span></a>
-        <a><span><i class="fa fa-graduation-cap"></i> Learning</span></a>
+    .mobile-nav-toggle {
+        display: none;
+        background: var(--nx-teal);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(3, 173, 174, 0.3);
+        cursor: pointer;
+    }
 
-        <hr />
+    .user-info-section {
+        padding: 40px 20px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.1);
+    }
 
-        <a><span><i class="fa fa-lock"></i> Change Password</span></a>
-        <a><span><i class="fa fa-sign-out-alt"></i> Log Out</span></a>
-    </aside>
+    .initials-circle {
+        width: 70px;
+        height: 70px;
+        background: white;
+        color: var(--nx-teal);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-weight: 800;
+        font-size: 24px;
+    }
 
-    <!-- Content -->
-    <section class="content">
-        <h1>Good Afternoon! @User.FirstName</h1>
+    .nav-links {
+        padding: 20px 0;
+        flex-grow: 1;
+    }
 
-        <div class="card-custom">
-            <div class="edit-btn" @onclick="ToggleEdit">
-                <i class="fa fa-edit"></i>
-            </div>
+    .nav-item {
+        padding: 15px 30px;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-            <form class="row g-3">
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-left: 4px solid white;
+        }
 
-                <div class="col-md-6">
-                    <label class="form-label">First Name</label>
-                    <input type="text"
-                           class="form-control form-control-custom"
-                           @bind="User.FirstName"
-                           disabled="@(!IsEditing)" />
-                </div>
+        .nav-item i {
+            margin-right: 15px;
+            width: 20px;
+        }
 
-                <div class="col-md-6">
-                    <label class="form-label">Last Name</label>
-                    <input type="text"
-                           class="form-control form-control-custom"
-                           @bind="User.LastName"
-                           disabled="@(!IsEditing)" />
-                </div>
+    .profile-content {
+        flex: 1;
+        padding: 40px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-                <div class="col-md-6">
-                    <label class="form-label">Email</label>
-                    <input type="email"
-                           class="form-control form-control-custom"
-                           @bind="User.Email"
-                           disabled="@(!IsEditing)" />
-                </div>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        padding: 40px;
+        width: 100%;
+        max-width: 850px;
+        box-shadow: 0 20px 60px rgba(12, 41, 75, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
 
-                <div class="col-md-6">
-                    <label class="form-label">Contact Number</label>
-                    <input type="text"
-                           class="form-control form-control-custom"
-                           @bind="User.Phone"
-                           disabled="@(!IsEditing)" />
-                </div>
+    /* Registration Button - Length Reduced and Centered */
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+    }
 
-                <div class="col-md-6">
-                    <label class="form-label">Address</label>
-                    <input type="text"
-                           class="form-control form-control-custom"
-                           @bind="User.Address"
-                           disabled="@(!IsEditing)" />
-                </div>
+    .btn-register {
+        background: var(--nx-teal);
+        color: white;
+        padding: 14px 30px; /* Padding adjusted for better size */
+        border-radius: 12px;
+        font-weight: 700;
+        border: none;
+        width: auto; /* Fixed width removed, now it follows padding */
+        min-width: 200px; /* Ensures it doesn't get too small */
+        transition: 0.3s;
+        box-shadow: 0 8px 15px rgba(3, 173, 174, 0.2);
+    }
 
-                <div class="col-12">
-                    <label class="form-label">Gender</label><br />
-                    <input type="radio" name="gender"
-                           @bind="User.Gender"
-                           disabled="@(!IsEditing)" /> Male
-                    &nbsp;&nbsp;
-                    <input type="radio" name="gender"
-                           @bind="User.Gender"
-                           disabled="@(!IsEditing)" /> Female
-                    &nbsp;&nbsp;
-                    <input type="radio" name="gender"
-                           @bind="User.Gender"
-                           disabled="@(!IsEditing)" /> Other
-                </div>
+        .btn-register:hover {
+            background: var(--nx-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(12, 41, 75, 0.2);
+        }
 
-            </form>
-        </div>
-    </section>
+    .custom-input {
+        border-radius: 12px;
+        border: 2px solid #f0f2f5;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.9);
+    }
 
-</div>
+    @@media (max-width: 992px) {
+        .mobile-nav-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
 
+        .profile-sidebar {
+            position: fixed;
+            left: -280px;
+            height: 100vh;
+        }
 
-@code {
+            .profile-sidebar.show {
+                left: 0;
+            }
 
-    bool IsEditing = false;
+        .profile-content {
+            padding: 20px;
+        }
 
-    UserModel User = new();
+        .glass-card {
+            padding: 25px;
+        }
 
-    string CurrentTime = DateTime.Now.ToString("hh:mm:ss tt");
-
-    string Initials
-    {
-        get
-        {
-            var f = string.IsNullOrWhiteSpace(User.FirstName) ? "" : User.FirstName[0].ToString();
-            var l = string.IsNullOrWhiteSpace(User.LastName) ? "" : User.LastName[0].ToString();
-            return f + l;
+        .btn-register {
+            width: 100%; /* Mobile par full width access easy hota hai */
+            min-width: unset;
+            padding: 12px;
         }
     }
+</style>
 
-    void ToggleEdit()
-    {
-        IsEditing = !IsEditing;
-    }
+<div class="profile-master">
+    <aside class="profile-sidebar @(ShowSidebar ? "show" : "")">
+        <div class="user-info-section">
+            <button class="d-lg-none btn btn-sm btn-light mb-3" @onclick="ToggleSidebar">Close</button>
+            <div class="initials-circle">@Initials</div>
+            <h5 class="mb-1 text-white">@User.FirstName @User.LastName</h5>
+            <small class="text-white-50">@DateTime.Now.ToString("hh:mm tt")</small>
+        </div>
 
-    protected override void OnInitialized()
-    {
-        User = new UserModel
-        {
-            FirstName = "R",
-            LastName = "S",
-            Email = "example@mail.com",
-            Phone = "91XXXXXXXX",
-            Address = "D I Khan",
-            Gender = "Male"
-        };
-    }
+        <div class="nav-links">
+            <a class="nav-item active"><i class="fa fa-user"></i> My Profile</a>
+            <a class="nav-item"><i class="fa fa-map-marker-alt"></i> Address Book</a>
+            <a class="nav-item"><i class="fa fa-shopping-bag"></i> Orders</a>
+            <hr style="border-color: rgba(255,255,255,0.1);" />
+            <a class="nav-item"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="profile-content" @onclick="CloseSidebarOnOverlay">
+        <div style="width: 100%; max-width: 850px;">
+            <button class="mobile-nav-toggle" @onclick="ToggleSidebar" @onclick:stopPropagation="true">
+                <i class="fa fa-bars"></i> Menu
+            </button>
+
+            <div class="welcome-header mb-4 text-center text-lg-start">
+                <h2 style="color: var(--nx-dark); font-weight: 800;">Account Details</h2>
+                <p class="text-muted">Update your location and personal information.</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">First Name</label>
+                        <input class="form-control custom-input" @bind="User.FirstName" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Last Name</label>
+                        <input class="form-control custom-input" @bind="User.LastName" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">City</label>
+                        <input class="form-control custom-input" @bind="User.City" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Province</label>
+                        <input class="form-control custom-input" @bind="User.Province" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Country</label>
+                        <input class="form-control custom-input" @bind="User.Country" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Detailed Address</label>
+                        <textarea class="form-control custom-input" rows="3" @bind="User.Address"></textarea>
+                    </div>
+
+                    <div class="col-12 btn-container">
+                        <button class="btn-register" @onclick="HandleRegister">
+                            Save Profile <i class="fa fa-paper-plane ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@code {
+    UserModel User = new() { FirstName = "Ahmad", LastName = "Ali", Country = "Pakistan" };
+    bool ShowSidebar = false;
+
+    string Initials => $"{(string.IsNullOrWhiteSpace(User.FirstName) ? "N" : User.FirstName[0])}{(string.IsNullOrWhiteSpace(User.LastName) ? "E" : User.LastName[0])}";
+
+    void ToggleSidebar() => ShowSidebar = !ShowSidebar;
+    void CloseSidebarOnOverlay() { if (ShowSidebar) ShowSidebar = false; }
+    void HandleRegister() => Console.WriteLine("Registered!");
 
     class UserModel
     {
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
-        public string Email { get; set; } = "";
-        public string Phone { get; set; } = "";
+        public string City { get; set; } = "";
+        public string Province { get; set; } = "";
+        public string Country { get; set; } = "";
         public string Address { get; set; } = "";
-        public string Gender { get; set; } = "";
     }
 }

@@ -17,6 +17,7 @@ builder.Services.AddRazorComponents()
 // 3. --- LOADER SERVICE REGISTER KAREIN ---
 // Isse AddScoped ke sath register karna hai taaki poori app mein ek hi instance chale
 builder.Services.AddScoped<LoaderService>();
+builder.Services.AddScoped<CustomerManager>();
 
 // 4. Application Layer DIs (Iske andar hi AuthManager register ho raha hai)
 builder.Services.AddApplicationDIs();

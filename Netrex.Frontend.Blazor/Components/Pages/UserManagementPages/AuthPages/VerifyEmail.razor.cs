@@ -1,44 +1,51 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
+using Netrex.Frontend.Application.Services.Common;
+using Netrex.Frontend.Blazor.Services;
+using System.Text.RegularExpressions;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
-    public partial class VerifyEmail
+    // Class name must match the Razor file name (VerifyEmail)
+    public partial class VerifyEmail : IDisposable
     {
-        // Yahan [Inject] ki zaroorat nahi thi, ye simple string honi chahiye
-        private string Email { get; set; } = "";
-        private string? ErrorMessage { get; set; }
-        private bool IsProcessing { get; set; }
+        [Inject] public ToastService _toastService { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
 
-        private async Task VerifyAndRedirect()
+        protected string Email { get; set; } = "";
+        protected string? ErrorMessage { get; set; }
+        protected bool IsProcessing { get; set; }
+
+        public async Task HandleRegister()
         {
             ErrorMessage = null;
 
-            // Basic Email Validation
-            if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
+            if (string.IsNullOrWhiteSpace(Email) || !Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 ErrorMessage = "Please enter a valid email address.";
                 return;
             }
 
             IsProcessing = true;
-
             try
             {
-                // Yahan aap apna API call kar saktay hain
+                // Simulate API call
                 await Task.Delay(1500);
 
-                // Redirecting to Reset Password page
-                Navigation.NavigateTo("/reset-password");
+                _toastService.Success("OTP Sent Successfully!");
+
+                // Navigating to OTP verification
+                Navigation.NavigateTo($"/verifyotp/{Uri.EscapeDataString(Email)}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                ErrorMessage = "An error occurred. Please try again.";
+                _toastService.Error("Error: " + ex.Message);
             }
             finally
             {
                 IsProcessing = false;
             }
         }
+
+        public void Dispose() { }
     }
 }

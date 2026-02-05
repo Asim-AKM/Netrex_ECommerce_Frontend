@@ -20,8 +20,11 @@
                 <span class="icon">
                     <img src="assets/user-management-assets/icons/email-icon.png" alt="email" />
                 </span>
+                @* Yahan Email variable partial class se aa raha hai *@
                 <input @bind="Email" @bind:event="oninput" type="email" class="form-control" placeholder="Email" />
             </div>
+
+            @* Method name HandleRegister hona chahiye jo partial class mein hai *@
             <button class="btn btn-primary w-100 py-2" @onclick="HandleRegister" disabled="@IsProcessing">
                 @if (IsProcessing)
                 {
@@ -36,30 +39,4 @@
     </div>
 </div>
 
-@code {
-    private string Email { get; set; } = "";
-    private string? ErrorMessage { get; set; }
-    private bool IsProcessing { get; set; }
-
-    private async Task VerifyAndRedirect()
-    {
-        ErrorMessage = null;
-
-        // Basic Email Validation
-        if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
-        {
-            ErrorMessage = "Please enter a valid email address.";
-            return;
-        }
-
-        IsProcessing = true;
-        
-        // Yahan aap apna API call kar saktay hain OTP bhejne ke liye
-        await Task.Delay(1500); 
-
-        IsProcessing = false;
-        
-        // Redirecting to Reset Password page
-        Navigation.NavigateTo("/reset-password");
-    }
-}
+@* CODE BLOCK KO DELETE KAR DEIN AGAR WO ALREADY .CS FILE MEIN HAI *@

@@ -1,162 +1,7 @@
-﻿//using Microsoft.AspNetCore.Components;
-//using Microsoft.AspNetCore.Components.Web;
-//using System.Text.RegularExpressions;
-
-//namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
-//{
-//    public partial class ResetPassword : IDisposable
-//    {
-//        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-
-//        [Parameter] public string Email { get; set; } = string.Empty;
-
-//        protected string NewPassword { get; set; } = "";
-//        protected string ConfirmPassword { get; set; } = "";
-//        protected string? ErrorMessage { get; set; }
-//        protected string? ActiveErrorField { get; set; }
-//        protected bool IsProcessing { get; set; }
-//        protected string passwordType = "password";
-
-//        private System.Timers.Timer? _timer;
-
-//        // Note: OTP logic is removed here as per your "Best Approach" 
-//        // because OTP is now verified on the VerifyOtp page.
-
-//        protected async Task HandleReset()
-//        {
-//            ValidateWaterfall();
-
-//            if (ActiveErrorField == null)
-//            {
-//                IsProcessing = true;
-//                try
-//                {
-//                    await Task.Delay(1500); // Simulate API call
-//                    Navigation.NavigateTo("/login");
-//                }
-//                catch (Exception)
-//                {
-//                    ErrorMessage = "Something went wrong. Please try again.";
-//                }
-//                finally
-//                {
-//                    IsProcessing = false;
-//                }
-//            }
-//        }
-
-//        private void ValidateWaterfall()
-//        {
-//            ActiveErrorField = null;
-//            ErrorMessage = null;
-
-//            if (string.IsNullOrEmpty(NewPassword)) { ActiveErrorField = "password"; ErrorMessage = "Password is required."; return; }
-//            if (NewPassword.Length < 8) { ActiveErrorField = "password"; ErrorMessage = "At least 8 characters."; return; }
-//            if (!NewPassword.Any(char.IsUpper)) { ActiveErrorField = "password"; ErrorMessage = "Need one Uppercase."; return; }
-//            if (!NewPassword.Any(char.IsDigit)) { ActiveErrorField = "password"; ErrorMessage = "Need one Number."; return; }
-
-//            if (ConfirmPassword != NewPassword) { ActiveErrorField = "confirm"; ErrorMessage = "Passwords do not match."; return; }
-//        }
-
-//        public void Dispose()
-//        {
-//            _timer?.Stop();
-//            _timer?.Dispose();
-//        }
-//    }
-//}
-
-//using Microsoft.AspNetCore.Components;
-//using Microsoft.AspNetCore.Components.Web;
-//using System.Text.RegularExpressions;
-
-//namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
-//{
-//    public partial class ResetPassword : IDisposable
-//    {
-//        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-
-//        [Parameter] public string Email { get; set; } = string.Empty;
-
-//        // Missing properties added here
-//        protected string Otp { get; set; } = "";
-//        protected string NewPassword { get; set; } = "";
-//        protected string ConfirmPassword { get; set; } = "";
-//        protected string? ErrorMessage { get; set; }
-//        protected string? ActiveErrorField { get; set; }
-//        protected bool IsProcessing { get; set; }
-//        protected bool IsSuccess { get; set; }
-//        protected string passwordType = "password";
-//        protected string eyeIcon = "assets/user-management-assets/icons/monkey-password-hide.png";
-
-//        // Timer properties
-//        protected int Counter { get; set; } = 60;
-//        protected string TimerText => $"00:{Counter:D2}";
-//        protected bool IsTimerExpired => Counter <= 0;
-//        private System.Timers.Timer? _timer;
-
-//        protected override void OnInitialized() => StartTimer();
-
-//        protected void HandleOtpInput(ChangeEventArgs e)
-//        {
-//            string rawValue = e.Value?.ToString() ?? "";
-//            Otp = Regex.Replace(rawValue, @"[^0-9]", "");
-//            ValidateWaterfall();
-//        }
-
-//        protected void StartTimer()
-//        {
-//            Counter = 60;
-//            _timer?.Dispose();
-//            _timer = new System.Timers.Timer(1000);
-//            _timer.Elapsed += async (s, e) => {
-//                if (Counter > 0) { Counter--; await InvokeAsync(StateHasChanged); }
-//                else { _timer.Stop(); await InvokeAsync(StateHasChanged); }
-//            };
-//            _timer.Start();
-//        }
-
-//        protected void ResendOtp() { IsSuccess = false; StartTimer(); ActiveErrorField = null; }
-
-//        protected void TogglePassword()
-//        {
-//            passwordType = (passwordType == "password") ? "text" : "password";
-//            eyeIcon = (passwordType == "password")
-//                ? "assets/user-management-assets/icons/monkey-password-hide.png"
-//                : "assets/user-management-assets/icons/monkey-password-show.png";
-//        }
-
-//        protected async Task HandleReset()
-//        {
-//            ValidateWaterfall();
-//            if (ActiveErrorField == null)
-//            {
-//                IsProcessing = true;
-//                await Task.Delay(1500);
-//                Navigation.NavigateTo("/login");
-//                IsProcessing = false;
-//            }
-//        }
-
-//        protected void ValidateWaterfall()
-//        {
-//            ActiveErrorField = null;
-//            ErrorMessage = null;
-
-//            if (string.IsNullOrEmpty(Otp)) { ActiveErrorField = "otp"; ErrorMessage = "OTP required."; return; }
-//            if (string.IsNullOrEmpty(NewPassword)) { ActiveErrorField = "password"; ErrorMessage = "Password required."; return; }
-//            if (NewPassword.Length < 8) { ActiveErrorField = "password"; ErrorMessage = "Min 8 chars."; return; }
-//            if (!NewPassword.Any(char.IsUpper)) { ActiveErrorField = "password"; ErrorMessage = "Need Uppercase."; return; }
-//            if (!NewPassword.Any(char.IsDigit)) { ActiveErrorField = "password"; ErrorMessage = "Need Number."; return; }
-//            if (ConfirmPassword != NewPassword) { ActiveErrorField = "confirm"; ErrorMessage = "No match."; return; }
-//        }
-
-//        public void Dispose() { _timer?.Dispose(); }
-//    }
-//}
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -166,11 +11,15 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 
         [Parameter] public string Email { get; set; } = string.Empty;
 
+        // UI Binding Properties
         protected string NewPassword { get; set; } = "";
         protected string ConfirmPassword { get; set; } = "";
         protected string? ErrorMessage { get; set; }
         protected string? ActiveErrorField { get; set; }
         protected bool IsProcessing { get; set; }
+        protected bool IsSuccess { get; set; } // Success alert dikhane ke liye
+
+        // Password Visibility Logic
         protected string passwordType = "password";
         protected string eyeIcon = "assets/user-management-assets/icons/monkey-password-hide.png";
 
@@ -181,9 +30,17 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
             if (ActiveErrorField == null)
             {
                 IsProcessing = true;
+                ErrorMessage = null;
                 try
                 {
-                    await Task.Delay(1500); // Simulate API call
+                    // Yahan aapki API call aayegi password update karne ke liye
+                    await Task.Delay(1500); // Simulation
+
+                    IsSuccess = true;
+                    StateHasChanged();
+
+                    // 2 second baad login par redirect karein
+                    await Task.Delay(2000);
                     Navigation.NavigateTo("/login");
                 }
                 catch (Exception)
@@ -202,25 +59,58 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
             ActiveErrorField = null;
             ErrorMessage = null;
 
-            if (string.IsNullOrEmpty(NewPassword)) { ActiveErrorField = "password"; ErrorMessage = "Password is required."; return; }
-            if (NewPassword.Length < 8) { ActiveErrorField = "password"; ErrorMessage = "At least 8 characters."; return; }
-            if (!NewPassword.Any(char.IsUpper)) { ActiveErrorField = "password"; ErrorMessage = "Need one Uppercase."; return; }
-            if (!NewPassword.Any(char.IsDigit)) { ActiveErrorField = "password"; ErrorMessage = "Need one Number."; return; }
+            // 1. New Password Validation
+            if (string.IsNullOrWhiteSpace(NewPassword))
+            {
+                ActiveErrorField = "password";
+                ErrorMessage = "Password is required.";
+                return;
+            }
+            if (NewPassword.Length < 8)
+            {
+                ActiveErrorField = "password";
+                ErrorMessage = "At least 8 characters.";
+                return;
+            }
+            if (!NewPassword.Any(char.IsUpper))
+            {
+                ActiveErrorField = "password";
+                ErrorMessage = "Need one Uppercase (A-Z).";
+                return;
+            }
+            if (!NewPassword.Any(char.IsDigit))
+            {
+                ActiveErrorField = "password";
+                ErrorMessage = "Need one Number (0-9).";
+                return;
+            }
 
-            if (ConfirmPassword != NewPassword) { ActiveErrorField = "confirm"; ErrorMessage = "Passwords do not match."; return; }
+            // 2. Confirm Password Match
+            if (ConfirmPassword != NewPassword)
+            {
+                ActiveErrorField = "confirm";
+                ErrorMessage = "Passwords do not match.";
+                return;
+            }
         }
 
         protected void TogglePassword()
         {
-            passwordType = (passwordType == "password") ? "text" : "password";
-            eyeIcon = (passwordType == "password")
-                ? "assets/user-management-assets/icons/monkey-password-hide.png"
-                : "assets/user-management-assets/icons/monkey-password-show.png";
+            if (passwordType == "password")
+            {
+                passwordType = "text";
+                eyeIcon = "assets/user-management-assets/icons/monkey-password-show.png";
+            }
+            else
+            {
+                passwordType = "password";
+                eyeIcon = "assets/user-management-assets/icons/monkey-password-hide.png";
+            }
         }
 
         public void Dispose()
         {
-            // Timer cleanup removed as it's not needed here
+            // Timer cleanup ki yahan zarurat nahi hai kyunki timer khatam kar diya gaya hai
         }
     }
 }

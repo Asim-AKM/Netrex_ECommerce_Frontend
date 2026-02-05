@@ -5,7 +5,7 @@ using System.Timers;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
-    public partial class VerifyOTP : IDisposable
+    public partial class PassswordResetOTP : IDisposable
     {
         [Parameter] public string Email { get; set; } = "";
 

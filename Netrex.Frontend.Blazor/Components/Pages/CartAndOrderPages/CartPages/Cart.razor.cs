@@ -110,5 +110,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
             navigationManager.NavigateTo("/DeliveryAddressPage");
         }
 
+
+
     }
 }

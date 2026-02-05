@@ -1,0 +1,299 @@
+﻿@page "/seller-payout-records"
+@using Netrex.Frontend.Blazor.Components.Layout
+@layout SellerMainLayout
+@rendermode InteractiveServer
+
+<!-- CONTENT FOR SELLER DASHBOARD -->
+<div class="payment-content-wrapper">
+    <!-- Page Title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary-custom mb-0"><i class="bi bi-cash-stack"></i> My Earnings & Payouts</h2>
+            <p class="text-muted mb-0">Track your sales revenue and payout history</p>
+        </div>
+        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#requestPayoutModal">
+            <i class="bi bi-plus-circle"></i> Request Payout
+        </button>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card">
+                <h3>$12,450.00</h3>
+                <p>Total Earnings</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card success">
+                <h3>$8,200.00</h3>
+                <p>Paid Out</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card warning">
+                <h3>$3,150.00</h3>
+                <p>Pending Payout</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card info">
+                <h3>$1,100.00</h3>
+                <p>Available Balance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert for Available Balance -->
+    <div class="alert-success-custom">
+        <i class="bi bi-info-circle"></i> <strong>Good News!</strong> You have $1,100.00 available for payout. Minimum payout amount is $100.00
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs-custom mb-3" id="sellerPayoutTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="payouts-tab" data-bs-toggle="tab" data-bs-target="#payouts" type="button" role="tab">
+                <i class="bi bi-wallet2"></i> Payout History
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="earnings-tab" data-bs-toggle="tab" data-bs-target="#earnings" type="button" role="tab">
+                <i class="bi bi-graph-up"></i> Earnings Breakdown
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="bankdetails-tab" data-bs-toggle="tab" data-bs-target="#bankdetails" type="button" role="tab">
+                <i class="bi bi-bank"></i> Bank Details
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="sellerPayoutTabsContent">
+        <!-- Payout History Tab -->
+        <div class="tab-pane fade show active" id="payouts" role="tabpanel">
+            <!-- Search and Filter -->
+            <div class="search-filter-section">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <select class="form-select form-select-custom">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <input type="date" class="form-control form-control-custom" placeholder="From Date">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <input type="date" class="form-control form-control-custom" placeholder="To Date">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <button class="btn btn-primary-custom w-100"><i class="bi bi-search"></i> Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payout History Table -->
+            <div class="custom-card">
+                <div class="card-header-custom">
+                    <i class="bi bi-clock-history"></i> Payout Transaction History
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Payout ID</th>
+                                <th>Request Date</th>
+                                <th>Amount</th>
+                                <th>Bank Account</th>
+                                <th>Status</th>
+                                <th>Processed Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#PAY-001</strong></td>
+                                <td>2026-01-10</td>
+                                <td>$1,500.00</td>
+                                <td>****4532 (Bank Alfalah)</td>
+                                <td><span class="badge-success-custom"><i class="bi bi-check-circle"></i> Completed</span></td>
+                                <td>2026-01-12</td>
+                                <td>
+                                    <button class="btn btn-sm-custom btn-info-custom"><i class="bi bi-eye"></i> Details</button>
+                                    <button class="btn btn-sm-custom btn-secondary-custom"><i class="bi bi-download"></i> Receipt</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#PAY-002</strong></td>
+                                <td>2026-01-15</td>
+                                <td>$2,200.00</td>
+                                <td>****4532 (Bank Alfalah)</td>
+                                <td><span class="badge-info-custom"><i class="bi bi-arrow-repeat"></i> Processing</span></td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-sm-custom btn-info-custom"><i class="bi bi-eye"></i> Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#PAY-003</strong></td>
+                                <td>2026-01-18</td>
+                                <td>$850.00</td>
+                                <td>****4532 (Bank Alfalah)</td>
+                                <td><span class="badge-warning-custom"><i class="bi bi-hourglass-split"></i> Pending</span></td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-sm-custom btn-info-custom"><i class="bi bi-eye"></i> Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings Breakdown Tab -->
+        <div class="tab-pane fade" id="earnings" role="tabpanel">
+            <div class="custom-card">
+                <div class="card-header-custom">
+                    <i class="bi bi-bar-chart"></i> Sales & Earnings by Order
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Order Date</th>
+                                <th>Product</th>
+                                <th>Sale Amount</th>
+                                <th>Commission (10%)</th>
+                                <th>Your Earning</th>
+                                <th>Payout Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#ORD-1234</strong></td>
+                                <td>2026-01-15</td>
+                                <td>Wireless Headphones</td>
+                                <td>$500.00</td>
+                                <td>$50.00</td>
+                                <td><strong>$450.00</strong></td>
+                                <td><span class="badge-success-custom">Paid Out</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-1235</strong></td>
+                                <td>2026-01-16</td>
+                                <td>Smart Watch</td>
+                                <td>$320.00</td>
+                                <td>$32.00</td>
+                                <td><strong>$288.00</strong></td>
+                                <td><span class="badge-success-custom">Paid Out</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-1236</strong></td>
+                                <td>2026-01-17</td>
+                                <td>Bluetooth Speaker</td>
+                                <td>$150.00</td>
+                                <td>$15.00</td>
+                                <td><strong>$135.00</strong></td>
+                                <td><span class="badge-warning-custom">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-1237</strong></td>
+                                <td>2026-01-18</td>
+                                <td>Phone Case</td>
+                                <td>$25.00</td>
+                                <td>$2.50</td>
+                                <td><strong>$22.50</strong></td>
+                                <td><span class="badge-info-custom">Available</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Details Tab -->
+        <div class="tab-pane fade" id="bankdetails" role="tabpanel">
+            <div class="custom-card">
+                <div class="card-header-custom">
+                    <i class="bi bi-bank"></i> Bank Account Information
+                </div>
+                <div class="alert-info-custom mb-3">
+                    <i class="bi bi-shield-check"></i> Your bank details are encrypted and secure. Update them if needed.
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Account Holder Name</label>
+                            <input type="text" class="form-control form-control-custom" value="John Doe Seller" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Bank Name</label>
+                            <input type="text" class="form-control form-control-custom" value="Bank Alfalah" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Account Number</label>
+                            <input type="text" class="form-control form-control-custom" value="****4532" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">IBAN</label>
+                            <input type="text" class="form-control form-control-custom" value="PK**BAFL***********4532" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Branch Code</label>
+                            <input type="text" class="form-control form-control-custom" value="1234" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Account Type</label>
+                            <input type="text" class="form-control form-control-custom" value="Current Account" readonly>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary-custom"><i class="bi bi-pencil"></i> Edit Bank Details</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Payout Modal -->
+<div class="modal fade" id="requestPayoutModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title"><i class="bi bi-cash"></i> Request Payout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-info-custom mb-3">
+                    <i class="bi bi-info-circle"></i> Available balance: <strong>$1,100.00</strong>
+                </div>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label-custom">Payout Amount</label>
+                        <input type="number" class="form-control form-control-custom" placeholder="Enter amount" max="1100" min="100">
+                        <small class="text-muted">Minimum: $100.00 | Maximum: $1,100.00</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-custom">Bank Account</label>
+                        <select class="form-select form-select-custom">
+                            <option>****4532 - Bank Alfalah (Current)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-custom">Notes (Optional)</label>
+                        <textarea class="form-control form-control-custom" rows="2" placeholder="Any additional information..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary-custom"><i class="bi bi-send"></i> Submit Request</button>
+            </div>
+        </div>
+    </div>
+</div>

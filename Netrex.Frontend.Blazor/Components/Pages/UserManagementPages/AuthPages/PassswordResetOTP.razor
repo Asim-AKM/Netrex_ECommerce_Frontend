@@ -19,7 +19,11 @@
 
             <div class="mt-4">
                 <div class="mb-3">
-                    <input type="text" maxlength="6" @bind="OtpCode" @bind:event="oninput"
+                    <input type="tel"
+                           maxlength="6"
+                           @bind="OtpCode"
+                           @bind:event="oninput"
+                           @onkeypress="HandleKeyPress"
                            class="form-control form-control-lg text-center fw-bold"
                            placeholder="· · · · · ·"
                            style="letter-spacing: 15px; font-size: 2rem; border: 2px solid #eee;" />

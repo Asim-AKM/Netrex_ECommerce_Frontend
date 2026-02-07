@@ -8,21 +8,27 @@
             <h1>NETREX<br />ECOMMERCE</h1>
             <p>Create an account to start shopping.</p>
         </div>
-        <div class="auth-right">
+
+        <EditForm class="auth-right" Model="Model" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+
             <h2>Forget Password</h2>
-
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-danger py-2" style="font-size: 0.8rem;">@ErrorMessage</div>
-            }
-
-            <div class="input-group mb-3">
+            <div class="input-group mb-1">
                 <span class="icon">
                     <img src="assets/user-management-assets/icons/email-icon.png" alt="email" />
                 </span>
-                <input @bind="Email" @bind:event="oninput" type="email" class="form-control" placeholder="Email" />
+                <InputText type="email"
+                           class="form-control"
+                           placeholder="Email"
+                           @bind-Value="Model.Email" />
             </div>
-            <button class="btn btn-primary w-100 py-2" @onclick="HandleRegister" disabled="@IsProcessing">
+            <!-- ✅ Validation Error (No CSS Added) -->
+            <ValidationMessage For="@(() => Model.Email)"
+                               class="text-danger small fw-bold mb-2 d-block" />
+
+            <button class="btn btn-primary w-100 py-2"
+                    type="submit"
+                    disabled="@IsProcessing">
                 @if (IsProcessing)
                 {
                     <span class="spinner-border spinner-border-sm"></span>
@@ -32,34 +38,6 @@
                     <span>Send OTP</span>
                 }
             </button>
-        </div>
+        </EditForm>
     </div>
 </div>
-
-@* @code {
-    private string Email { get; set; } = "";
-    private string? ErrorMessage { get; set; }
-    private bool IsProcessing { get; set; }
-
-    private async Task VerifyAndRedirect()
-    {
-        ErrorMessage = null;
-
-        // Basic Email Validation
-        if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
-        {
-            ErrorMessage = "Please enter a valid email address.";
-            return;
-        }
-
-        IsProcessing = true;
-        
-        // Yahan aap apna API call kar saktay hain OTP bhejne ke liye
-        await Task.Delay(1500); 
-
-        IsProcessing = false;
-        
-        // Redirecting to Reset Password page
-        Navigation.NavigateTo("/reset-password");
-    }
-} *@

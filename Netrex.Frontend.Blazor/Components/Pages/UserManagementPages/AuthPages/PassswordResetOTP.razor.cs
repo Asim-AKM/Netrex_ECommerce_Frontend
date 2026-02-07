@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Netrex.Frontend.Application.Services.Common;
-using Netrex.Frontend.Blazor.Services;
-using System.Timers;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -12,11 +11,28 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public ToastService _toastService { get; set; } = default!;
 
-        private string OtpCode { get; set; } = "";
+        private string _otpCode = "";
+        private string OtpCode
+        {
+            get => _otpCode;
+            set
+            {
+                // Sirf digits allow karein aur max 6 length rakhein
+                if (!string.IsNullOrEmpty(value))
+                {
+                    _otpCode = new string(value.Where(char.IsDigit).Take(6).ToArray());
+                }
+                else
+                {
+                    _otpCode = "";
+                }
+            }
+        }
+
         private bool IsProcessing { get; set; }
 
         // Timer Logic
-        private int ResendTimer { get; set; } = 30;
+        private int ResendTimer { get; set; } = 150;
         private bool IsResendDisabled { get; set; } = true;
         private System.Timers.Timer? _timer;
 
@@ -28,23 +44,29 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         private void StartTimer()
         {
             IsResendDisabled = true;
-            ResendTimer = 60;
+            ResendTimer = 150;
+            _timer?.Dispose();
             _timer = new System.Timers.Timer(1000);
-            _timer.Elapsed += (sender, e) =>
+            _timer.Elapsed += async (sender, e) =>
             {
                 if (ResendTimer > 0)
                 {
                     ResendTimer--;
-                    InvokeAsync(StateHasChanged);
+                    await InvokeAsync(StateHasChanged);
                 }
                 else
                 {
                     IsResendDisabled = false;
-                    _timer.Stop();
-                    InvokeAsync(StateHasChanged);
+                    _timer?.Stop();
+                    await InvokeAsync(StateHasChanged);
                 }
             };
             _timer.Start();
+        }
+        //this function will handle the key press event and only allow digits to be entered in the OTP input field
+        private void HandleKeyPress(KeyboardEventArgs e)
+        {
+            
         }
 
         private async Task VerifyOtp()
@@ -58,13 +80,14 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
             IsProcessing = true;
             try
             {
-                // Yahan aap apna real API call lagayenge
+                // Simulation of API Call
                 await Task.Delay(2000);
 
                 _toastService.Success("Email verified successfully! Welcome to NETREX.");
-                Navigation.NavigateTo("/reset-password/{Email}" + Email);
+                // Correct Navigation Path
+                Navigation.NavigateTo($"/reset-password/{Uri.EscapeDataString(Email)}");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _toastService.Error("Invalid OTP. Please try again.");
             }
@@ -84,7 +107,11 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            if (_timer != null)
+            {
+                _timer.Stop();
+                _timer.Dispose();
+            }
         }
     }
 }

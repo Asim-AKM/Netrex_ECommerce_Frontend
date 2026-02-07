@@ -3,7 +3,6 @@ using Netrex.Frontend.Application.Commons.AppResponses;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Blazor.Services;
-using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
@@ -18,70 +17,75 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                               LoaderService loaderService,
                               ICloudnaryManager cloudnaryManager)
         {
-            _httpClient = httpClientFactory.CreateClient("ApiClient"); 
+            _httpClient = httpClientFactory.CreateClient("ApiClient");
             _loaderService = loaderService;
             _cloudnaryManager = cloudnaryManager;
         }
 
-        public async Task<ApiResponse<ProductsVm>> AddProducts(
-            ProductsVm productsVm,
-            List<byte[]> imageBytes,
-            List<string> imageNames)
+        public async Task<ApiResponse<ProductsVm>> AddProducts(ProductsVm productsVm, List<byte[]> imageBytes, List<string> imageNames)
         {
             try
             {
                 _loaderService.Show();
 
-                for (int i = 0; i < imageBytes.Count; i++)
+
+                string contentType = imageNames.Count > 0
+                    ? GetContentType(imageNames[0])
+                    : "image/jpeg";
+
+                List<CloudinaryUploadResult> uploadedImages;
+
+                if (imageBytes.Count == 1)
                 {
-                    var uploadResponse =
-                        await _cloudnaryManager.UploadImageToCloudinary(
-                            imageBytes[i],
-                            imageNames[i],
-                            GetContentType(imageNames[i])
-                        );
 
-                    if (!uploadResponse.IsSuccess)
+                    var singleResponse = await _cloudnaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
+                        imageBytes, imageNames, contentType);
+
+                    if (!singleResponse.IsSuccess || singleResponse.Data == null)
                     {
-                        return new ApiResponse<ProductsVm>
-                        {
-                            IsSuccess = false,
-                            IsError = true,
-                            Message = $"Image {imageNames[i]} upload failed",
-                            Status = 500,
-                            Data = default!
-                        };
+                        return ApiResponseDeserializer.FailResponse<ProductsVm>(
+                            $"Single image upload failed: {singleResponse.Message}");
                     }
 
-                   
-                    if (i == 0)
+                    uploadedImages = new List<CloudinaryUploadResult> { singleResponse.Data };
+                }
+                else
+                {
+
+                    var listResponse = await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
+                        imageBytes, imageNames, contentType);
+
+                    if (!listResponse.IsSuccess || listResponse.Data == null)
                     {
-                        productsVm.ImageUrl = uploadResponse.Data.Url;
-                        productsVm.ImagePublicId = uploadResponse.Data.PublicId;
-                        productsVm.IsPrimary = true;
+                        return ApiResponseDeserializer.FailResponse<ProductsVm>(
+                            $"Multiple images upload failed: {listResponse.Message}");
                     }
+
+                    uploadedImages = listResponse.Data;
                 }
 
-               
-                var response =
-                    await _httpClient.PostAsJsonAsync(
-                        "api/Product/CreateProduct",
-                        productsVm
-                    );
+                if (uploadedImages.Count == 0)
+                {
+                    return ApiResponseDeserializer.FailResponse<ProductsVm>(
+                        "No images uploaded successfully");
+                }
+
+                var firstImage = uploadedImages[0];
+                productsVm.ImageUrl = firstImage.Url;
+                productsVm.ImagePublicId = firstImage.PublicId;
+                productsVm.IsPrimary = true;
+
+                var response = await _httpClient.PostAsJsonAsync(
+                    "api/Product/CreateProduct",
+                    productsVm
+                );
 
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
             catch (Exception ex)
             {
-                return new ApiResponse<ProductsVm>
-                {
-                    IsSuccess = false,
-                    IsError = true,
-                    Message = ex.Message,
-                    Status = 500,
-                    Data = default!
-                };
+                return ApiResponseDeserializer.FailResponse<ProductsVm>(ex.Message);
             }
             finally
             {
@@ -93,10 +97,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         {
             return fileName.ToLower() switch
             {
-                var f when f.EndsWith(".jpg") || f.EndsWith(".jpeg") => "image/jpeg",
-                var f when f.EndsWith(".png") => "image/png",
-                var f when f.EndsWith(".gif") => "image/gif",
-                _ => "application/octet-stream"
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".bmp" => "image/bmp",
+                ".tiff" or ".tif" => "image/tiff",
+                _ => "image/jpeg"
             };
         }
 

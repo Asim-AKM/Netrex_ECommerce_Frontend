@@ -1,5 +1,7 @@
 ﻿using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Commons.AppResponses;
+using Netrex.Frontend.Application.Commons.Mappers.Products;
+using Netrex.Frontend.Application.DTO_s.ProductDto;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Blazor.Services;
@@ -71,13 +73,15 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 }
 
                 var firstImage = uploadedImages[0];
-                productsVm.ImageUrl = firstImage.Url;
-                productsVm.ImagePublicId = firstImage.PublicId;
+                productsVm.ImageUrl = firstImage.Url!;
+                productsVm.CloudPublicId = firstImage.CloudPublicId!;
                 productsVm.IsPrimary = true;
+
+                var AddProductDto = productsVm.Map();
 
                 var response = await _httpClient.PostAsJsonAsync(
                     "api/Product/CreateProduct",
-                    productsVm
+                    AddProductDto
                 );
 
                 var json = await response.Content.ReadAsStringAsync();

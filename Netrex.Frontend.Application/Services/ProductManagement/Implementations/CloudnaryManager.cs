@@ -1,8 +1,6 @@
 ﻿using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Commons.AppResponses;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
-using Netrex.Frontend.Application.ViewModels.ProductManagement;
-using static System.Net.Mime.MediaTypeNames;
 
 public class CloudnaryManager : ICloudnaryManager
 {
@@ -13,10 +11,7 @@ public class CloudnaryManager : ICloudnaryManager
         _httpClient = httpClientFactory.CreateClient("ApiClient");
     }
 
-    public async Task<ApiResponse<T>> UploadToCloudinaryAsync<T>(
-        List<byte[]> images,
-        List<string> fileNames,
-        string contentType)
+    public async Task<ApiResponse<T>> UploadToCloudinaryAsync<T>(List<byte[]> images, List<string> fileNames, string contentType)
     {
         try
         {
@@ -33,8 +28,18 @@ public class CloudnaryManager : ICloudnaryManager
                     ? $"{Path.GetFileNameWithoutExtension(fileNames[i])}_{i}{Path.GetExtension(fileNames[i])}"
                     : fileNames[i];
 
-                content.Add(streamContent, "files", uniqueFileName);
+                if (images.Count == 1)
+                {
+
+                    content.Add(streamContent, "file", uniqueFileName);
+                }
+                else
+                {
+
+                    content.Add(streamContent, "files", uniqueFileName);
+                }
             }
+
 
             string url = images.Count > 1
                 ? "api/Image/upload-batch"
@@ -44,7 +49,7 @@ public class CloudnaryManager : ICloudnaryManager
 
             if (!response.IsSuccessStatusCode)
             {
-               
+
                 return ApiResponseDeserializer.FailResponse<T>(
                     $"Upload failed with status: {response.StatusCode}");
             }
@@ -54,7 +59,7 @@ public class CloudnaryManager : ICloudnaryManager
         }
         catch (Exception ex)
         {
-           
+
             return ApiResponseDeserializer.FailResponse<T>($"Upload failed: {ex.Message}");
         }
 

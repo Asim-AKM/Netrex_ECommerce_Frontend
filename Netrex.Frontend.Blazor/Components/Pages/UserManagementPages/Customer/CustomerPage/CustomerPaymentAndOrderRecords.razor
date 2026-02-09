@@ -1,5 +1,8 @@
-﻿@page "/customer-payments-records"
+﻿
+@page "/customer-payments-records"
 @rendermode InteractiveServer
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
 
 <!-- CONTENT FOR USER DASHBOARD -->
 <div class="payment-content-wrapper">
@@ -42,17 +45,17 @@
     <!-- Tabs for different sections -->
     <ul class="nav nav-tabs-custom mb-3" id="paymentTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button @onclick="() => SetTab(ActiveTabType.Payment)" class="nav-link active" id="payments-tab" type="button">
+            <button @onclick="() => SetTab(ActiveTabType.Payment)" class="nav-link @(ActiveTab == ActiveTabType.Payment ? "active" : "")" id="payments-tab" type="button">
                 <i class="bi bi-credit-card"></i> My Payments
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button @onclick="() => SetTab(ActiveTabType.Invoice)" class=" nav-link" id="invoices-tab" type="button">
+            <button @onclick="() => SetTab(ActiveTabType.Invoice)" class="nav-link @(ActiveTab == ActiveTabType.Invoice ? "active" : "")" id="invoices-tab" type="button">
                 <i class="bi bi-receipt"></i> Invoices
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button @onclick="() => SetTab(ActiveTabType.Refund)" class="nav-link" id="refunds-tab" type="button">
+            <button @onclick="() => SetTab(ActiveTabType.Refund)" class="nav-link @(ActiveTab == ActiveTabType.Refund ? "active" : "")" id="refunds-tab" type="button">
                 <i class="bi bi-arrow-counterclockwise"></i> Refunds & Disputes
             </button>
         </li>
@@ -162,7 +165,7 @@
         else if (ActiveTab == ActiveTabType.Invoice)
         {
             <!-- Invoices Tab -->
-            <div class="tab-pane fade" id="invoices" role="tabpanel">
+            <div class="tab-pane fade show active" id="invoices" role="tabpanel">
                 <div class="custom-card">
                     <div class="card-header-custom">
                         <i class="bi bi-file-earmark-text"></i> My Invoices
@@ -217,12 +220,11 @@
                     </div>
                 </div>
             </div>
-            @* @StateHasChanged; *@
         }
         else
         {
             <!-- Refunds & Disputes Tab -->
-            <div class="tab-pane fade" id="refunds" role="tabpanel">
+            <div class="tab-pane fade show active" id="refunds" role="tabpanel">
                 <!-- Request Refund Section -->
                 <div class="custom-card">
                     <div class="card-header-custom">
@@ -311,7 +313,11 @@
 @code {
     private ActiveTabType ActiveTab = ActiveTabType.Payment;
 
-    private void SetTab(ActiveTabType tab) => ActiveTab = tab;
+    private void SetTab(ActiveTabType tab)
+    {
+        ActiveTab = tab;
+        StateHasChanged();  // Force re-render to update the UI
+    }
 
     private enum ActiveTabType
     {

@@ -1,105 +1,215 @@
-﻿* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-}
-/* 404 Page mein is CSS ko add karein */
-.empty-layout {
-    background-color: #03ADAE !important;
-    background-image: /* your gradients */ !important;
-}
-/* Add this instead: */
-.not-found-page {
+﻿/* =========================================================
+   EXCEPTION HANDLER – GLOBAL WRAPPER
+========================================================= */
+.exc-handler-page {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
+    background: linear-gradient(145deg, #03ADAE 0%, #ffffff 70%);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 15px;
-}
-/* ---- container ---- */
-.containerr {
-    max-width: 300px;
-    width: 28%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 30px;
-    /* Mixed Background: Teal to White Gradient */
-    background: linear-gradient(145deg, #03ADAE 0%, #ffffff 70%);
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    /* Center the card within EmptyLayout */
-    margin: 0 auto;
-    z-index: 1000; /* Ensure it's above background */
-    margin-bottom: 10px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
-/* ---- error numbers ---- */
-.error-number {
-    display: flex;
-    gap: 6px;
-}
-.error-digit {
-    font-size: 5.5rem;
-    font-weight: 900;
-    /* Dark Blue for high contrast on teal/white background */
-    color: #0C294B;
-    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-}
-.first-4 {
-    animation: float1 3s infinite;
-}
-.second-4 {
-    animation: float2 3.5s infinite;
-}
-.zero {
-    animation: float3 4s infinite;
-}
-/* ---- animations ---- */
+
+    /* =========================================================
+   DECORATIONS
+========================================================= */
+    .exc-handler-page .halloween-decoration {
+        position: absolute;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .exc-handler-page .decoration-1 {
+        top: 10%;
+        left: 10%;
+        width: 50px;
+        height: 50px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.3), transparent);
+        border-radius: 50%;
+        animation: floatDecoration 8s infinite ease-in-out;
+    }
+
+    .exc-handler-page .decoration-2 {
+        bottom: 15%;
+        right: 10%;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, rgba(3, 173, 174, 0.4), transparent);
+        border-radius: 50%;
+        animation: floatDecoration 10s infinite ease-in-out reverse;
+    }
+
+    /* =========================================================
+   MAIN CARD
+========================================================= */
+    .exc-handler-page .exception-handler-container {
+        width: 100%;
+        max-width: 320px;
+        padding: 28px;
+        text-align: center;
+        background: linear-gradient(145deg, #03ADAE 0%, #ffffff 70%);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        position: relative;
+        z-index: 10;
+    }
+
+    /* =========================================================
+   ERROR NUMBERS
+========================================================= */
+    .exc-handler-page .error-number {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .exc-handler-page .error-digit {
+        font-size: 5.2rem;
+        font-weight: 900;
+        color: #0C294B;
+        text-shadow: 2px 4px 10px rgba(0,0,0,.15);
+    }
+
+    .exc-handler-page .first-4 {
+        animation: float1 3s infinite;
+    }
+
+    .exc-handler-page .zero-0 {
+        animation: float3 4s infinite;
+    }
+
+    .exc-handler-page .first-1 {
+        animation: float2 3.5s infinite;
+    }
+
+    /* =========================================================
+   ICON SECTION
+========================================================= */
+    .exc-handler-page .zombie-icon-container {
+        position: relative;
+        margin: 12px 0 22px;
+    }
+
+    .exc-handler-page .zombie-icon {
+        font-size: 3.8rem;
+        color: #0C294B;
+        animation: zombieFloat 4s infinite;
+    }
+
+    .exc-handler-page .zombie-aura {
+        position: absolute;
+        inset: 50%;
+        width: 100px;
+        height: 100px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(12,41,75,.2), transparent);
+        border-radius: 50%;
+        animation: pulseAura 3s infinite;
+    }
+
+    /* =========================================================
+   TEXT
+========================================================= */
+    .exc-handler-page .error-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #0C294B;
+        margin-bottom: 6px;
+    }
+
+    .exc-handler-page .error-description {
+        font-size: 0.95rem;
+        color: #4B5563;
+        margin-bottom: 22px;
+        line-height: 1.5;
+    }
+
+    /* =========================================================
+   BUTTONS
+========================================================= */
+    .exc-handler-page .buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .exc-handler-page .btn {
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .35s ease;
+        border: none;
+    }
+
+    .exc-handler-page .btn-primary {
+        background: #0C294B;
+        color: #fff;
+    }
+
+        .exc-handler-page .btn-primary:hover {
+            background: #7C3AED;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(124,58,237,.35);
+        }
+
+    .exc-handler-page .btn-secondary {
+        background: rgba(255,255,255,.6);
+        border: 1px solid #0C294B;
+        color: #0C294B;
+    }
+
+        .exc-handler-page .btn-secondary:hover {
+            background: #f3e8ff;
+            border-color: #7C3AED;
+            color: #7C3AED;
+        }
+
+    /* =========================================================
+   HELP TEXT
+========================================================= */
+    .exc-handler-page .help-text {
+        margin-top: 14px;
+        font-size: .85rem;
+        color: #ffffff;
+    }
+
+        .exc-handler-page .help-text a {
+            color: #03ADAE;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+            .exc-handler-page .help-text a:hover {
+                color: darkcyan;
+                text-decoration: underline;
+            }
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
 @keyframes float1 {
     50% {
         transform: translateY(-10px);
     }
 }
+
 @keyframes float2 {
     50% {
         transform: translateY(-15px);
     }
 }
+
 @keyframes float3 {
     50% {
         transform: translateY(-8px);
     }
-}
-
-/* ---- icon/zombie ---- */
-.zombie-icon-container {
-    position: relative;
-    margin: 10px 0 25px;
-}
-
-.zombie-icon {
-    font-size: 4rem;
-    color: #0C294B;
-    animation: zombieFloat 4s infinite;
-}
-
-.zombie-aura {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(12, 41, 75, 0.2), transparent);
-    border-radius: 50%;
-    animation: pulseAura 3s infinite;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }
 
 @keyframes zombieFloat {
@@ -111,128 +221,39 @@
 @keyframes pulseAura {
     50% {
         transform: translate(-50%, -50%) scale(1.3);
-        opacity: 0.8;
+        opacity: .8;
     }
-}
-
-/* ---- text ---- */
-.error-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #0C294B;
-}
-
-.error-description {
-    font-size: 0.95rem;
-    color: #4B5563;
-    margin-bottom: 25px;
-    line-height: 1.4;
-    font-weight: 500;
-}
-
-/* ---- buttons ---- */
-.buttons-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.btn {
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.4s ease; /* Smooth transition for color change */
-    border: none;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: #0C294B; /* Starting with Dark Blue */
-    color: white;
-}
-
-    /* Hover Effect to Purple */
-    .btn-primary:hover {
-        background-color: #7C3AED; /* Purple color on hover */
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
-    }
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid #0C294B;
-    color: #0C294B;
-}
-
-    /* Secondary Hover Effect to Purple */
-    .btn-secondary:hover {
-        background-color: #f3e8ff; /* Very light purple bg */
-        border-color: #7C3AED;
-        color: #7C3AED;
-    }
-
-/* ---- footer ---- */
-.footer {
-    margin-top: 15px;
-    font-size: 0.8rem;
-    color: #ffffff; /* Changed to white for EmptyLayout background */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-/* Halloween decorations */
-.halloween-decoration {
-    position: absolute;
-    z-index: 5;
-    pointer-events: none;
-}
-.decoration-1 {
-    top: 10%;
-    left: 10%;
-    width: 50px;
-    height: 50px;
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.3), transparent);
-    border-radius: 50%;
-    animation: floatDecoration 8s infinite ease-in-out;
-}
-
-.decoration-2 {
-    bottom: 15%;
-    right: 10%;
-    width: 40px;
-    height: 40px;
-    background: radial-gradient(circle, rgba(3, 173, 174, 0.4), transparent);
-    border-radius: 50%;
-    animation: floatDecoration 10s infinite ease-in-out reverse;
 }
 
 @keyframes floatDecoration {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
     50% {
         transform: translateY(-20px) rotate(180deg);
     }
 }
 
-/* Help text */
-.help-text {
-    margin-top: 15px;
-    margin-bottom : 15px;
-    font-size: 0.85rem;
-    color: #ffffff;
-}
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+========================================================= */
 
-    .help-text a {
-        color: #03ADAE;
-        text-decoration: none;
-        font-weight: bold;
+/* MOBILE */
+@media (max-width: 576px) {
+    .exc-handler-page .exception-handler-container {
+        max-width: 100%;
+        padding: 22px;
     }
 
-        .help-text a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
+    .exc-handler-page .error-digit {
+        font-size: 4.2rem;
+    }
+
+    .exc-handler-page .zombie-icon {
+        font-size: 3.2rem;
+    }
+}
+
+/* TABLET */
+@media (min-width: 577px) and (max-width: 991px) {
+    .exc-handler-page .exception-handler-container {
+        max-width: 360px;
+    }
+}

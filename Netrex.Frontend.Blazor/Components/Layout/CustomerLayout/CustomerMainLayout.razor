@@ -1,0 +1,80 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
+
+<nav class="customer-sidebar @(IsCollapsed ? "collapsed" : "") @(IsMobile && IsMobileOpen ? "show" : "")">
+    <div class="sidebar-header">
+        <h2>Dashboard</h2>
+        <div class="mobile-topbar">
+            @if (!IsMobile)  
+            {
+                <button class="toggle-btn" @onclick="ToggleSidebar">
+                    <i class="bi @(IsCollapsed || IsMobileOpen ? "bi-x-lg" : "bi-list")"></i>
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Rest of the sidebar content remains unchanged -->
+    <div class="user-info">
+        <img src="/assets/images/Logo for Netrex.png" alt="User Avatar">
+        <div class="user-details">
+            <h4>John Doe</h4>
+            <p>Customer</p>
+        </div>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li><a href="/" class="active"><i class="fas fa-tachometer-alt"></i><span>Home</span></a></li>
+        <li><a href="/orders"><i class="fas fa-shopping-cart"></i><span>Orders</span></a></li>
+        <li><a href="/customer-payments-records"><i class="fas fa-credit-card"></i><span>Payments</span></a></li>
+        <li><a href="/account"><i class="fas fa-user"></i><span>Profile</span></a></li>
+        <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+    </ul>
+</nav>
+
+<!-- New mobile toggle button: Always visible on mobile, outside the sidebar -->
+@if (IsMobile)
+{
+    <button class="mobile-toggle-btn" @onclick="ToggleSidebar">
+        <i class="bi @(IsMobileOpen ? "bi-x-lg" : "bi-list")"></i>
+    </button>
+}
+
+<div class="Cust-main-content @(IsCollapsed && !IsMobile ? "expanded" : "")">
+    @Body
+</div>
+
+<script>
+    window.sidebarHelper = {
+        isMobile: () => window.innerWidth <= 767
+    };
+</script>
+
+@code {
+    private bool IsCollapsed;
+    private bool IsMobile;
+    private bool IsMobileOpen;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IsMobile = await JS.InvokeAsync<bool>("sidebarHelper.isMobile");
+            StateHasChanged();
+        }
+    }
+
+    private async Task ToggleSidebar()
+    {
+        IsMobile = await JS.InvokeAsync<bool>("sidebarHelper.isMobile");
+
+        if (IsMobile)
+        {
+            IsMobileOpen = !IsMobileOpen;
+        }
+        else
+        {
+            IsCollapsed = !IsCollapsed;
+        }
+    }
+}

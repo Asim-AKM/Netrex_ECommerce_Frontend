@@ -1,268 +1,166 @@
-﻿@page "/Customer_profilepage"
-@layout EmptyLayout
-@using System.Net.Http.Json
-@using Netrex.Frontend.Blazor.Components.Layout
-@inject HttpClient Http
+﻿@page "/account"
+@rendermode InteractiveServer
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
 
-<style>
-    :root {
-        --nx-teal: #03ADAE;
-        --nx-dark: #0C294B;
-    }
+<div class="dashboard-header">
+    <h1>Welcome to Your Dashboard, Muhammad Shoaib</h1>
+    <p>Manage your account and preferences here.</p>
+</div>
 
-    .profile-master {
-        display: flex;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        background: transparent !important;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
+<div class="quick-access">
+    <div class="access-box">
+        <i class="fas fa-shopping-cart"></i>
+        <h4>Orders</h4>
+        <p>View and manage your orders</p>
+    </div>
+    <div class="access-box">
+        <i class="fas fa-credit-card"></i>
+        <h4>Payments</h4>
+        <p>Manage payment methods</p>
+    </div>
+    <div class="access-box">
+        <i class="fas fa-user"></i>
+        <h4>Profile</h4>
+        <p>Update your personal information</p>
+    </div>
+    <div class="access-box">
+        <i class="fas fa-cog"></i>
+        <h4>Settings</h4>
+        <p>Configure your preferences</p>
+    </div>
+</div>
 
-    /* Sidebar logic */
-    .profile-sidebar {
-        width: 280px;
-        background: var(--nx-teal);
-        color: white;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1050;
-        box-shadow: 10px 0 30px rgba(0,0,0,0.1);
-    }
+<div class="personal-info-card">
+    <h3>Edit Personal Information</h3>
+    <EditForm Model="@userModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-    .mobile-nav-toggle {
-        display: none;
-        background: var(--nx-teal);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 12px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(3, 173, 174, 0.3);
-        cursor: pointer;
-    }
-
-    .user-info-section {
-        padding: 40px 20px;
-        text-align: center;
-        background: rgba(0, 0, 0, 0.1);
-    }
-
-    .initials-circle {
-        width: 70px;
-        height: 70px;
-        background: white;
-        color: var(--nx-teal);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        font-weight: 800;
-        font-size: 24px;
-    }
-
-    .nav-links {
-        padding: 20px 0;
-        flex-grow: 1;
-    }
-
-    .nav-item {
-        padding: 15px 30px;
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            border-left: 4px solid white;
-        }
-
-        .nav-item i {
-            margin-right: 15px;
-            width: 20px;
-        }
-
-    .profile-content {
-        flex: 1;
-        padding: 40px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .glass-card {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        border-radius: 30px;
-        padding: 40px;
-        width: 100%;
-        max-width: 850px;
-        box-shadow: 0 20px 60px rgba(12, 41, 75, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    /* Registration Button - Length Reduced and Centered */
-    .btn-container {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin-top: 20px;
-    }
-
-    .btn-register {
-        background: var(--nx-teal);
-        color: white;
-        padding: 14px 30px; /* Padding adjusted for better size */
-        border-radius: 12px;
-        font-weight: 700;
-        border: none;
-        width: auto; /* Fixed width removed, now it follows padding */
-        min-width: 200px; /* Ensures it doesn't get too small */
-        transition: 0.3s;
-        box-shadow: 0 8px 15px rgba(3, 173, 174, 0.2);
-    }
-
-        .btn-register:hover {
-            background: var(--nx-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(12, 41, 75, 0.2);
-        }
-
-    .custom-input {
-        border-radius: 12px;
-        border: 2px solid #f0f2f5;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.9);
-    }
-
-    @@media (max-width: 992px) {
-        .mobile-nav-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profile-sidebar {
-            position: fixed;
-            left: -280px;
-            height: 100vh;
-        }
-
-            .profile-sidebar.show {
-                left: 0;
-            }
-
-        .profile-content {
-            padding: 20px;
-        }
-
-        .glass-card {
-            padding: 25px;
-        }
-
-        .btn-register {
-            width: 100%; /* Mobile par full width access easy hota hai */
-            min-width: unset;
-            padding: 12px;
-        }
-    }
-</style>
-
-<div class="profile-master">
-    <aside class="profile-sidebar @(ShowSidebar ? "show" : "")">
-        <div class="user-info-section">
-            <button class="d-lg-none btn btn-sm btn-light mb-3" @onclick="ToggleSidebar">Close</button>
-            <div class="initials-circle">@Initials</div>
-            <h5 class="mb-1 text-white">@User.FirstName @User.LastName</h5>
-            <small class="text-white-50">@DateTime.Now.ToString("hh:mm tt")</small>
+        <div class="form-group mb-3">
+            <label for="firstName" class="form-label-custom">First Name</label>
+            <InputText id="firstName" class="form-control-custom" @bind-Value="userModel.FirstName" />
         </div>
-
-        <div class="nav-links">
-            <a class="nav-item active"><i class="fa fa-user"></i> My Profile</a>
-            <a class="nav-item"><i class="fa fa-map-marker-alt"></i> Address Book</a>
-            <a class="nav-item"><i class="fa fa-shopping-bag"></i> Orders</a>
-            <hr style="border-color: rgba(255,255,255,0.1);" />
-            <a class="nav-item"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        <div class="form-group mb-3">
+            <label for="lastName" class="form-label-custom">Last Name</label>
+            <InputText id="lastName" class="form-control-custom" @bind-Value="userModel.LastName" />
         </div>
-    </aside>
+        <div class="form-group mb-3">
+            <label for="email" class="form-label-custom">Email</label>
+            <InputText id="email" type="email" class="form-control-custom" @bind-Value="userModel.Email" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="phone" class="form-label-custom">Phone</label>
+            <InputText id="phone" type="tel" class="form-control-custom" @bind-Value="userModel.Phone" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="address" class="form-label-custom">Address</label>
+            <InputTextArea id="address" rows="3" class="form-control-custom" @bind-Value="userModel.Address" />
+        </div>
+        <button type="submit" class="btn-primary-custom">Update Information</button>
+    </EditForm>
+</div>
 
-    <main class="profile-content" @onclick="CloseSidebarOnOverlay">
-        <div style="width: 100%; max-width: 850px;">
-            <button class="mobile-nav-toggle" @onclick="ToggleSidebar" @onclick:stopPropagation="true">
-                <i class="fa fa-bars"></i> Menu
-            </button>
+<div class="personal-info-card">
+    <h3>Account Security</h3>
+    <p>Manage your password and two-factor authentication settings.</p>
+    <div class="d-flex flex-column flex-sm-row">
+        <button class="btn-primary-custom me-sm-3 mb-2 mb-sm-0" data-bs-toggle="modal" data-bs-target="#passwordModal">Change Password</button>
+        <button class="btn-secondary-custom" data-bs-toggle="modal" data-bs-target="#twoFAModal">Enable 2FA</button>
+    </div>
+</div>
 
-            <div class="welcome-header mb-4 text-center text-lg-start">
-                <h2 style="color: var(--nx-dark); font-weight: 800;">Account Details</h2>
-                <p class="text-muted">Update your location and personal information.</p>
+<!-- Password Change Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordModalLabel">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                <EditForm Model="@passwordModel" OnValidSubmit="HandlePasswordSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-            <div class="glass-card">
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">First Name</label>
-                        <input class="form-control custom-input" @bind="User.FirstName" />
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <InputText id="currentPassword" type="password" class="form-control" @bind-Value="passwordModel.CurrentPassword" />
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Last Name</label>
-                        <input class="form-control custom-input" @bind="User.LastName" />
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <InputText id="newPassword" type="password" class="form-control" @bind-Value="passwordModel.NewPassword" />
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">City</label>
-                        <input class="form-control custom-input" @bind="User.City" />
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                        <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="passwordModel.ConfirmPassword" />
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Province</label>
-                        <input class="form-control custom-input" @bind="User.Province" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Country</label>
-                        <input class="form-control custom-input" @bind="User.Country" />
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label fw-bold">Detailed Address</label>
-                        <textarea class="form-control custom-input" rows="3" @bind="User.Address"></textarea>
-                    </div>
-
-                    <div class="col-12 btn-container">
-                        <button class="btn-register" @onclick="HandleRegister">
-                            Save Profile <i class="fa fa-paper-plane ms-2"></i>
-                        </button>
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
-    </main>
+    </div>
+</div>
+
+<!-- 2FA Modal -->
+<div class="modal fade" id="twoFAModal" tabindex="-1" aria-labelledby="twoFAModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="twoFAModalLabel">Enable 2FA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Two-factor authentication adds an extra layer of security to your account.</p>
+                <button class="btn btn-primary">Enable 2FA</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @code {
-    UserModel User = new() { FirstName = "Ahmad", LastName = "Ali", Country = "Pakistan" };
-    bool ShowSidebar = false;
-
-    string Initials => $"{(string.IsNullOrWhiteSpace(User.FirstName) ? "N" : User.FirstName[0])}{(string.IsNullOrWhiteSpace(User.LastName) ? "E" : User.LastName[0])}";
-
-    void ToggleSidebar() => ShowSidebar = !ShowSidebar;
-    void CloseSidebarOnOverlay() { if (ShowSidebar) ShowSidebar = false; }
-    void HandleRegister() => Console.WriteLine("Registered!");
-
-    class UserModel
+    private UserModel userModel = new UserModel
     {
-        public string FirstName { get; set; } = "";
-        public string LastName { get; set; } = "";
-        public string City { get; set; } = "";
-        public string Province { get; set; } = "";
-        public string Country { get; set; } = "";
-        public string Address { get; set; } = "";
+        FirstName = "Muhammad",
+        LastName = "Shoaib",
+        Email = "john@example.com",
+        Phone = "+1234567890",
+        Address = "123 Main St, City, Country"
+    };
+
+    private PasswordModel passwordModel = new PasswordModel();
+
+    private void HandleValidSubmit()
+    {
+        // Handle form submission
+        Console.WriteLine("User information updated");
+    }
+
+    private void HandlePasswordSubmit()
+    {
+        // Handle password change
+        Console.WriteLine("Password changed");
+    }
+
+    public class UserModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+    }
+
+    public class PasswordModel
+    {
+        public string CurrentPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

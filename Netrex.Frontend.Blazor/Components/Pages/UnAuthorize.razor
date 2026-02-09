@@ -1,14 +1,14 @@
-﻿@page "/unauthorized"
-@using Netrex.Frontend.Blazor.Components.Layout
-@layout EmptyLayout
+﻿@page "/401"
+@layout ExceptionHandlerLayout
 @inject NavigationManager NavigationManager
 
+<div class="exc-handler-page">
 <!-- SAME decorations -->
 <div class="halloween-decoration decoration-1"></div>
 <div class="halloween-decoration decoration-2"></div>
 
 <!-- SAME container (no extra wrapper) -->
-<div class="containerr">
+<div class="exception-handler-container">
     <div class="error-number">
         <div class="error-digit first-4">4</div>
         <div class="error-digit zero-0">0</div>
@@ -42,6 +42,7 @@
     <p class="help-text">
         <a href="/help">Visit the survival guide</a>
     </p>
+</div>
 </div>
 
 @code {

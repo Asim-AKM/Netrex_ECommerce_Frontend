@@ -20,7 +20,7 @@
 /* Main Content Container */
 .payment-content-wrapper {
     padding: 20px;
-    margin-left:285px;
+    /*    margin-left:285px;*/
 }
 
 /* Card Styles */
@@ -154,7 +154,9 @@
     background: var(--white);
     border-radius: 8px;
     overflow: hidden;
+    table-layout: auto;
 }
+
 
     .table-custom thead {
         background-color: var(--primary-color);
@@ -165,6 +167,11 @@
             padding: 15px;
             font-weight: 600;
             border: none;
+        }
+
+        .table-custom thead th,
+        .table-custom tbody td {
+            vertical-align: middle;
         }
 
     .table-custom tbody td {
@@ -180,6 +187,42 @@
     .table-custom tbody tr:last-child td {
         border-bottom: none;
     }
+
+    /* Fix Order ID wrapping */
+    .table-custom td:first-child,
+    .table-custom th:first-child {
+        white-space: nowrap;
+        min-width: 110px;
+    }
+
+        .table-custom td:first-child strong {
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+    /* Fix Transaction ID heading + column */
+    .table-custom th:nth-child(4),
+    .table-custom td:nth-child(4) {
+        white-space: nowrap;
+        min-width: 140px;
+    }
+    /* Status column width */
+    .table-custom th:nth-child(6),
+    .table-custom td:nth-child(6) {
+        min-width: 130px;
+        white-space: nowrap;
+        text-align: center;
+    }
+    /* Action buttons alignment */
+    .table-custom td:last-child {
+        white-space: nowrap;
+    }
+
+        .table-custom td:last-child .btn {
+            vertical-align: middle;
+        }
+
+
+
 
 /* Badge Styles */
 .badge-success-custom {
@@ -231,6 +274,32 @@
     font-weight: 500;
     display: inline-block;
 }
+/* Common badge fix */
+.badge-success-custom,
+.badge-warning-custom,
+.badge-danger-custom,
+.badge-primary-custom,
+.badge-info-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+    /* Icon inside badge */
+    .badge-success-custom i,
+    .badge-warning-custom i,
+    .badge-danger-custom i,
+    .badge-primary-custom i,
+    .badge-info-custom i {
+        font-size: 0.9rem;
+        line-height: 1;
+    }
+
 
 /* Search and Filter Section */
 .search-filter-section {
@@ -488,3 +557,157 @@
 .border-primary-custom {
     border-color: var(--primary-color);
 }
+
+/* ================= MOBILE (PHONES) ================= */
+@media (max-width: 576px) {
+
+    /* Page padding */
+    .payment-content-wrapper {
+        padding: 8px;
+    }
+
+        /* Page header */
+        .payment-content-wrapper h2 {
+            font-size: 1.2rem;
+        }
+
+        .payment-content-wrapper p {
+            font-size: 0.85rem;
+        }
+
+    /* Cards */
+    .custom-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .card-header-custom {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    /* Stat cards */
+    .stat-card h3 {
+        font-size: 1.4rem;
+    }
+
+    .stat-card p {
+        font-size: 0.8rem;
+    }
+
+    /* Tabs → horizontal scroll */
+    .nav-tabs-custom {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+        .nav-tabs-custom .nav-link {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+    /* Search filter */
+    .search-filter-section .row > div {
+        margin-bottom: 10px;
+    }
+
+    /* Buttons */
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+    }
+
+    /* Tables */
+    .table-custom {
+        font-size: 0.8rem;
+    }
+
+        .table-custom td:first-child {
+            min-width: 120px;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            white-space: nowrap;
+        }
+
+            /* Action buttons spacing */
+            .table-custom td button {
+                margin-bottom: 5px;
+            }
+}
+
+/* ================= TABLETS / IPAD ================= */
+@media (min-width: 577px) and (max-width: 991px) {
+
+    .payment-content-wrapper {
+        padding: 15px;
+    }
+
+    .custom-card {
+        padding: 20px;
+    }
+
+    .card-header-custom {
+        font-size: 1.1rem;
+    }
+
+    .stat-card h3 {
+        font-size: 1.6rem;
+    }
+
+    .stat-card p {
+        font-size: 0.9rem;
+    }
+
+    .table-custom {
+        font-size: 0.9rem;
+    }
+
+    .btn-sm-custom {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+/* ================= DESKTOP ================= */
+@media (min-width: 992px) {
+
+    .payment-content-wrapper {
+        padding: 20px 25px;
+    }
+
+    .stat-card {
+        min-height: 120px;
+    }
+
+    .table-custom th,
+    .table-custom td {
+        vertical-align: middle;
+    }
+}
+
+/*@media (max-width: 576px) {
+    .table-custom thead {
+        display: none;
+    }
+
+    .table-custom tbody tr {
+        display: block;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .table-custom tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+        .table-custom tbody td:last-child {
+            border-bottom: none;
+        }
+}*/

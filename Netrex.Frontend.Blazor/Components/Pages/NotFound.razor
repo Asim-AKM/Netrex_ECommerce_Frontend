@@ -1,12 +1,12 @@
 ﻿@page "/404"
-@using Netrex.Frontend.Blazor.Components.Layout
-@layout EmptyLayout
+@layout ExceptionHandlerLayout
 @inject NavigationManager NavigationManager
 
+<div class="exc-handler-page">
 <div class="halloween-decoration decoration-1"></div>
 <div class="halloween-decoration decoration-2"></div>
 
-<div class="containerr">
+<div class="exception-handler-container">
     <div class="error-number">
         <div class="error-digit first-4">4</div>
         <div class="error-digit zero">0</div>
@@ -39,6 +39,7 @@
     <p class="help-text">
         <a href="/help">Visit our survival guide</a>
     </p>
+</div>
 </div>
 
 

@@ -13,6 +13,9 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
         private ToastService _Toast { get; set; } = default!;
 
         private List<VmGetCartItem> getcartItems = new();
+        private bool IsCartEmpty = false;
+        private bool IsLoading = false;
+
 
         // Calculated properties for the order summary
         private decimal Subtotal => (decimal)getcartItems.Sum(item => item.Price * item.Quantity);
@@ -27,82 +30,79 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
         /// Initializes the component with sample data when it's first rendered.
         /// In a real application, this data would come from a service or API.
         /// </summary>
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            GetCartItems();
+            await LoadCartAsync();
         }
-        public void GetCartItems()
+        public async Task LoadCartAsync()
         {
-            getcartItems = new List<VmGetCartItem>
-        {
-            new VmGetCartItem
+            try
             {
-                CartItemId = Guid.NewGuid(),
-                ProductName = "Men Denim Jacket",
-                Description = "Size: M",
+                IsLoading = true;
+                IsCartEmpty = false;
 
-                Price = 3500,
-                Quantity = 1
-            },
-            new VmGetCartItem
-            {
-                CartItemId = Guid.NewGuid(),
-                ProductName = "Wireless Headphones",
-                Description = "Color: Black",
-
-                Price = 4200,
-                Quantity = 2
-            },
-            new VmGetCartItem
-            {
-                CartItemId = Guid.NewGuid(),
-                ProductName = "Smart Watch",
-                Description = "Color: Silver",
-
-                Price = 5500,
-                Quantity = 1
+                var response = await CartItemManager.GetCartItemAsync();
+                if (!response.IsSuccess)
+                {
+                    _Toast.Error(response.Message ?? "Failed to load cart items");
+                    return;
+                }
+                if (response.Data == null || !response.Data.Any())
+                {
+                    IsCartEmpty = true;
+                    return;
+                }
+                getcartItems = response.Data;
             }
-        };
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        private async Task IncreaseQuantity(VmGetCartItem item)
+        private async Task IncreaseQuantity(Guid itemId)
         {
-            var response = await CartItemManager.IncreaseQuantityAsync(item.CartItemId);
-            if (response.IsSuccess)
-            {
-                GetCartItems();
-            }
-            else
+            var response = await CartItemManager.IncreaseQuantityAsync(itemId);
+            if (!response.IsSuccess)
             {
                 _Toast.Error("Failed to increase quantity");
+                return;
             }
+            await LoadCartAsync();
         }
 
-        private async Task DecreaseQuantity(VmGetCartItem item)
+        private async Task DecreaseQuantity(Guid itemId)
         {
-            var response = await CartItemManager.DecreaseQuantityAsync(item.CartItemId);
-            if (response.IsSuccess && item.Quantity > 1)
+            var item=getcartItems.FirstOrDefault(i=>i.CartItemId==itemId);
+            if(item==null)
             {
-                GetCartItems();
+                return;
             }
-            else
+            if(item.Quantity<=1)
+            {
+                _Toast.Warning("Quantity cannot be less than 1");
+                return;
+            }
+
+            var response = await CartItemManager.DecreaseQuantityAsync(itemId);
+            if (!response.IsSuccess)
             {
                 _Toast.Error("Failed to decrease quantity");
+                return;
             }
+            await LoadCartAsync();
+
         }
 
-        private async Task RemoveItem(VmGetCartItem item)
+        private async Task RemoveItem(Guid Itemid)
         {
-            var response = await CartItemManager.RemoveItemAsync(item.CartItemId);
+            var response = await CartItemManager.RemoveItemAsync(Itemid);
             if (response.IsSuccess)
             {
-                getcartItems.Remove(item);
                 _Toast.Success("Item removed");
+                await LoadCartAsync();
             }
-            else
-            {
-                _Toast.Error("Failed to remove item");
-            }
+     
         }
 
         private async Task ProceedToCheckOut()

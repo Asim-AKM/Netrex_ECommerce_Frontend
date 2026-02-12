@@ -1,0 +1,204 @@
+﻿@page "/wishlist"
+@using System.Linq
+
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Poppins', sans-serif;
+        padding-top: 50px;
+    }
+
+    .main-container {
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        position: relative;
+    }
+
+    .product-card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 20px;
+        border: 1px solid #f1f1f1;
+        padding: 20px;
+        background: #fff;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Professional Image Hover Effect */
+    .img-wrapper {
+        overflow: hidden;
+        border-radius: 15px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 180px;
+    }
+
+    .product-card img {
+        transition: transform 0.5s ease;
+        max-height: 140px;
+    }
+
+    .product-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+        border-color: #14B8A6;
+    }
+
+        .product-card:hover img {
+            transform: scale(1.1); /* Image zoom effect */
+        }
+
+    .btn-custom {
+        background-color: #14B8A6;
+        color: white;
+        border-radius: 50px;
+        padding: 10px 25px;
+        border: none;
+        font-weight: 600;
+    }
+
+    .custom-popup-overlay {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .popup-box {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 400px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    }
+</style>
+
+<div class="container mb-5">
+    <div class="main-container mx-auto" style="max-width: 1100px;">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h3 class="fw-bold m-0 text-dark">Netrex WISHLIST</h3>
+                <span class="text-muted small">(@Products.Count ITEMS)</span>
+            </div>
+            <button class="btn btn-custom px-4">SHARE WISHLIST</button>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var p in Products)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card text-center">
+                        <div class="img-wrapper">
+                            <img src="@p.Img" class="img-fluid" alt="product">
+                        </div>
+
+                        <h6 class="fw-bold text-truncate mt-3">@p.Name</h6>
+                        <p class="text-muted small mb-2">Size: 42 | Color: Std</p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="text-info fw-bold small">Rs. 18.500</span>
+                            <span class="text-danger fs-5" style="cursor:pointer" @onclick="() => AskDelete(p.Id)">❤</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <hr class="mt-5 mb-4 border-secondary border-dashed">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="text-info fs-3 me-2">♥</span>
+                <span class="fw-bold text-secondary">
+                    @(Products.Count == 0 ? "Your Wishlist is Empty!" : "Your Wishlist is Lonely!")
+                </span>
+            </div>
+            <button class="btn btn-custom px-5 py-2 mt-2 mt-md-0">CONTINUE SHOPPING</button>
+        </div>
+
+        @if (ShowPopup)
+        {
+            <div class="custom-popup-overlay">
+                <div class="popup-box text-center">
+                    <h5 class="fw-bold">Remove Item?</h5>
+                    <p class="text-muted small mb-4">Are you sure you want to remove this item from your wishlist?</p>
+                    <button class="btn btn-danger w-100 rounded-pill mb-2 fw-bold" @onclick="ConfirmDelete">Yes, Remove</button>
+                    <button class="btn btn-light w-100 rounded-pill fw-bold border" @onclick="HidePopup">No, Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool ShowPopup { get; set; } = false;
+    private int? itemToDeleteId;
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Img { get; set; } = "";
+    }
+
+    private List<Product> Products = new()
+    {
+        new Product { Id = 1, Name = "Nike Almax 2270", Img = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" },
+        new Product { Id = 2, Name = "Apple Watch S8", Img = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" },
+        new Product { Id = 3, Name = "Sony Headphones", Img = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" },
+        new Product { Id = 4, Name = "Denim Jacket", Img = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=200" }
+    };
+
+    private void AskDelete(int id)
+    {
+        itemToDeleteId = id;
+        ShowPopup = true;
+    }
+
+    private void HidePopup()
+    {
+        ShowPopup = false;
+        itemToDeleteId = null;
+    }
+
+    private void ConfirmDelete()
+    {
+        if (itemToDeleteId.HasValue)
+        {
+            var item = Products.FirstOrDefault(x => x.Id == itemToDeleteId.Value);
+            if (item != null)
+            {
+                Products.Remove(item);
+            }
+            HidePopup();
+        }
+    }
+}

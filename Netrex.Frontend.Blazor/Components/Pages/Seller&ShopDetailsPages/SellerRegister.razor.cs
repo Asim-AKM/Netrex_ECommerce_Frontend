@@ -17,14 +17,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.Seller_ShopDetailsPages
         [SupplyParameterFromForm]
         public SellerRegisterModel seller { get; set; } = new();
 
-        protected override async Task OnInitializedAsync()
-        {
-            var shop = await _shopManager.GetAllShopsAsync();
-            if (shop != null)
-            {
-                ShopDetails = shop;
-            }
-        }
+        
         private async Task HandleRegistration()
         {
             bool isSaved = false;

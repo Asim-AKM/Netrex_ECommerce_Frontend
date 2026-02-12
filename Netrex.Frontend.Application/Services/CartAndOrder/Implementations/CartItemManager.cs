@@ -18,6 +18,23 @@ namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
             _loader = loader;
         }
 
+        public async Task<ApiResponse<List<VmGetCartItem>>> GetCartItemAsync()
+        {
+            try
+            {
+                _loader.Show();
+
+                var response = await _httpClient.GetAsync("api/CartItem");
+                var json = await response.Content.ReadAsStringAsync();
+
+                return ApiResponseDeserializer.Deserialize<List<VmGetCartItem>>(json);
+            }
+            finally
+            {
+                _loader.Hide();
+            }
+        }
+
         public async Task<ApiResponse<bool>> AddCartItemAsync(VmAddCartItem vm)
         {
             try
@@ -40,7 +57,7 @@ namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
 
         public async Task<ApiResponse<bool>> DecreaseQuantityAsync(Guid cartitemid)
         {
-            var response = await _httpClient.PutAsync("api/CartItem/DecreaseQuantity/{cartItemId}", null);
+            var response = await _httpClient.PutAsync($"api/CartItem/DecreaseQuantity/{cartitemid}", null);
             return new ApiResponse<bool>
             {
                 IsSuccess = response.IsSuccessStatusCode,
@@ -50,7 +67,7 @@ namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
 
         public async Task<ApiResponse<bool>> IncreaseQuantityAsync(Guid cartitemid)
         {
-            var response = await _httpClient.PutAsync("api/CartItem/IncreaseQuantity/{cartItemId}", null);
+            var response = await _httpClient.PutAsync($"api/CartItem/IncreaseQuantity/{cartitemid}", null);
             return new ApiResponse<bool>
             {
                 IsSuccess = response.IsSuccessStatusCode,
@@ -61,7 +78,7 @@ namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
 
         public async Task<ApiResponse<bool>> RemoveItemAsync(Guid cartitemid)
         {
-            var response = await _httpClient.DeleteAsync("api/CartItem/{cartItemId}");
+            var response = await _httpClient.DeleteAsync($"api/CartItem/{cartitemid}");
             return new ApiResponse<bool>
             {
                 IsSuccess = response.IsSuccessStatusCode,

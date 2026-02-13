@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace Netrex.Frontend.Application.ViewModels.ProductManagement
+namespace Netrex.Frontend.Application.DTO_s.ProductDto
 {
-    public class ProductsVm
+    public class UpdateProductDto
     {
         [property: JsonPropertyName("productId")]
         public Guid ProductId { get; set; }
@@ -29,12 +33,5 @@ namespace Netrex.Frontend.Application.ViewModels.ProductManagement
         public bool IsPrimary { get; set; }
         [property: JsonPropertyName("uploadedAt")]
         public DateTime UploadedAt { get; set; }
-    }
-    public class CloudinaryUploadResult
-    {
-        [JsonPropertyName("imageUrl")]
-        public string? Url { get; set; }
-        [JsonPropertyName("cloudPublicId")]
-        public string? CloudPublicId { get; set; } 
     }
 }

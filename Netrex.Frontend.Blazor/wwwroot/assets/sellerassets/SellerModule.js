@@ -1,4 +1,4 @@
-// Seller Profile Data
+// ============ SELLER PROFILE DATA ============
 let sellerProfile = {
     name: 'saqibkhan',
     email: 'saqibkhanskm1@gmail.com',
@@ -6,178 +6,34 @@ let sellerProfile = {
     bio: 'Premium electronics store with quality products',
     image: '/assets/sellerassets/Pictures/MyImage.png'
 };
-// Product Data
-let products = [
-    {
-        id: 1,
-        name: 'Wireless Headphones',
-        sku: 'WH-001',
-        price: 129.99,
-        stock: 45,
-        image: '/assets/sellerassets/Pictures/image.png'
-    },
-    {
-        id: 2,
-        name: 'Wireless Keyboard',
-        sku: 'USB-002',
-        price: 19.99,
-        stock: 200,
-        image: '/assets/sellerassets/Pictures/image copy.png'
-    },
-    {
-        id: 3,
-        name: 'IPhone 16 pro max case',
-        sku: 'PC-003',
-        price: 24.99,
-        stock: 150,
-        image: '/assets/sellerassets/Pictures/image copy 2.png'
-    },
-    {
-        id: 4,
-        name: 'Portable HardDrive',
-        sku: 'PC-004',
-        price: 12.99,
-        stock: 25,
-        image: '/assets/sellerassets/Pictures/image copy 3.png'
-    }
-];
 
-
-// Tab Navigation
+// ============ TAB NAVIGATION ============
 function showTab(tabName, event) {
     event.preventDefault();
-
-    // Hide all tabs
-    document.querySelectorAll('.tab-pane').forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    // Show selected tab
+    document.querySelectorAll('.tab-pane').forEach(tab => { tab.classList.remove('active'); });
     const selectedTab = document.getElementById(tabName);
-    if (selectedTab) {
-        selectedTab.classList.add('active');
-    }
+    if (selectedTab) selectedTab.classList.add('active');
 
-    // Update nav links
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
     event.target.closest('.nav-link').classList.add('active');
 
-    // 🔥 IMPORTANT FIX
-    if (tabName === 'products') {
-        renderProducts();
-    }
-
-    if (tabName === 'reports') {
-        setTimeout(initializeCharts, 300);
-    }
+    // Charts initialize only
+    if (tabName === 'reports') setTimeout(initializeCharts, 300);
 }
 
-// Render Products
-function renderProducts() {
-    const productGrid = document.getElementById('productGrid');
-    if (!productGrid) return;
-
-    productGrid.innerHTML = products.map(product => `
-        <div class="product-card">
-            <div class="product-image">
-                <img src="${product.image}" alt="${product.name}">
-            </div>
-            <div class="product-info">
-                <div class="product-name">${product.name}</div>
-                <div class="product-sku">SKU: ${product.sku}</div>
-                <div class="product-price-row">
-                    <div class="product-price">$${product.price}</div>
-                    <div class="product-stock">${product.stock} in stock</div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn-sm btn-view">View</button>
-                    <button class="btn-sm btn-edit">Edit</button>
-                    <button class="btn-sm btn-delete">Delete</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-
-    // Update active products count
-    document.getElementById('activeProductsCount').textContent = products.length;
-}
-
-// Add Product
-function addProduct() {
-    const nameInput = document.getElementById('productName');
-    const skuInput = document.getElementById('productSKU');
-    const priceInput = document.getElementById('productPrice');
-    const stockInput = document.getElementById('productStock');
-    const imageInput = document.getElementById('productImage');
-    const imagePreview = document.getElementById('imagePreview');
-
-    if (!nameInput.value || !skuInput.value || !priceInput.value || !stockInput.value) {
-        alert('Please fill all fields');
-        return;
-    }
-
-    if (!imageInput.files[0]) {
-        alert('❌ Product image is mandatory! Please upload an image.');
-        return;
-    }
-
-    const newProduct = {
-        id: products.length + 1,
-        name: nameInput.value,
-        sku: skuInput.value,
-        price: parseFloat(priceInput.value),
-        stock: parseInt(stockInput.value),
-        image: imagePreview.src
-    };
-
-    products.push(newProduct);
-    renderProducts();
-
-    // Reset form
-    nameInput.value = '';
-    skuInput.value = '';
-    priceInput.value = '';
-    stockInput.value = '';
-    imageInput.value = '';
-    imagePreview.src = '';
-    imagePreview.style.display = 'none';
-
-    bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-    alert('✅ Product added successfully!');
-}
-function toggleSidebar() {
-    document.querySelector('.sidebar').classList.toggle('active');
-}
-
-// Preview Product Image
-function previewProductImage(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('imagePreview');
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// Profile Image Preview
+// ============ PROFILE IMAGE PREVIEW ============
 function previewProfileImage(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             document.getElementById('previewProfileImg').src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
 }
 
-// Save Profile Changes
+// ============ SAVE PROFILE CHANGES ============
 function saveProfileChanges() {
     const name = document.getElementById('editSellerName').value;
     const email = document.getElementById('editSellerEmail').value;
@@ -191,7 +47,6 @@ function saveProfileChanges() {
     if (bio) sellerProfile.bio = bio;
     if (imgSrc) sellerProfile.image = imgSrc;
 
-    // Update profile display
     document.getElementById('profileImg').src = sellerProfile.image;
     document.getElementById('sellerName').textContent = sellerProfile.name;
     document.getElementById('sellerEmail').textContent = sellerProfile.email;
@@ -201,31 +56,16 @@ function saveProfileChanges() {
     alert('✅ Profile updated successfully!');
 }
 
-// Populate edit form
-document.addEventListener('DOMContentLoaded', function() {
-    const editProfileModal = document.getElementById('editProfileModal');
-    if (editProfileModal) {
-        editProfileModal.addEventListener('show.bs.modal', function() {
-            document.getElementById('editSellerName').value = sellerProfile.name;
-            document.getElementById('editSellerEmail').value = sellerProfile.email;
-            document.getElementById('editSellerPhone').value = sellerProfile.phone;
-            document.getElementById('editSellerBio').value = sellerProfile.bio;
-            document.getElementById('previewProfileImg').src = sellerProfile.image;
-        });
-    }
-});
+// ============ TOGGLE SIDEBAR ============
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+}
 
-// Charts Configuration
+// ============ CHARTS CONFIGURATION ============
 let salesChart, revenueChart, productChart, categoryChart;
 
-    function toggleSidebar() {
-        document.querySelector('.sidebar').classList.toggle('active');
-    }
-
-
-
 function initializeCharts() {
-    // Sales Chart (Line Chart)
+    // Sales Chart
     const salesCtx = document.getElementById('salesChart');
     if (salesCtx) {
         if (salesChart) salesChart.destroy();
@@ -269,7 +109,7 @@ function initializeCharts() {
         });
     }
 
-    // Revenue Chart (Area Chart)
+    // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart');
     if (revenueCtx) {
         if (revenueChart) revenueChart.destroy();
@@ -313,7 +153,7 @@ function initializeCharts() {
         });
     }
 
-    // Product Performance Chart (Bar Chart)
+    // Product Performance Chart
     const productCtx = document.getElementById('productChart');
     if (productCtx) {
         if (productChart) productChart.destroy();
@@ -355,7 +195,7 @@ function initializeCharts() {
         });
     }
 
-    // Category Chart (Pie Chart)
+    // Category Chart
     const categoryCtx = document.getElementById('categoryChart');
     if (categoryCtx) {
         if (categoryChart) categoryChart.destroy();
@@ -389,12 +229,27 @@ function initializeCharts() {
     }
 }
 
-// Download Report
+// ============ DOWNLOAD REPORT ============
 function downloadReport() {
     alert('📥 Report downloaded successfully!');
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
+// ============ INITIALIZE ON PAGE LOAD ============
+document.addEventListener('DOMContentLoaded', function () {
+    // Edit Profile Modal setup
+    const editProfileModal = document.getElementById('editProfileModal');
+    if (editProfileModal) {
+        editProfileModal.addEventListener('show.bs.modal', function () {
+            document.getElementById('editSellerName').value = sellerProfile.name;
+            document.getElementById('editSellerEmail').value = sellerProfile.email;
+            document.getElementById('editSellerPhone').value = sellerProfile.phone;
+            document.getElementById('editSellerBio').value = sellerProfile.bio;
+            document.getElementById('previewProfileImg').src = sellerProfile.image;
+        });
+    }
+
+    // Initialize charts if reports tab is active
+    if (document.getElementById('reports')?.classList.contains('active')) {
+        setTimeout(initializeCharts, 300);
+    }
 });

@@ -112,14 +112,14 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         }
 
 
-        public async Task<ApiResponse<IEnumerable<ProductsVm>>> GetAllProductsAsync()
+        public async Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync()
         {
             try
             {
                 _loaderService.Show();
                 var response = await _httpClient.GetAsync("api/Product/GetAllProducts");
                 var json = await response.Content.ReadAsStringAsync();
-                return ApiResponseDeserializer.Deserialize<IEnumerable<ProductsVm>>(json);
+                return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
             finally
             {
@@ -127,7 +127,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
         }
 
-        public async Task<ApiResponse<ProductsVm>> GetProductByIdAsync(int productId)
+        public async Task<ApiResponse<ProductsVm>> GetProductByIdAsync(Guid productId)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
         }
 
-        public async Task<ApiResponse<bool>> RemoveProducts(int productId)
+        public async Task<ApiResponse<bool>> RemoveProducts(Guid productId)
         {
             try
             {
@@ -157,21 +157,28 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
         }
 
-        public async Task<ApiResponse<ProductsVm>> UpdateProducts(ProductsVm productsVm)
+        public async Task<ApiResponse<string>> UpdateProducts(ProductsVm productsVm)
         {
             try
             {
                 _loaderService.Show();
+
+                var updateProductDto = productsVm.MapToUpdateDto();
+
                 var response = await _httpClient.PutAsJsonAsync(
                     $"api/Product/UpdateProduct/{productsVm.ProductId}",
-                    productsVm);
+                    updateProductDto);
+
                 var json = await response.Content.ReadAsStringAsync();
-                return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
+
+                return ApiResponseDeserializer.Deserialize<string>(json);
             }
             finally
             {
                 _loaderService.Hide();
             }
         }
+
     }
+
 }

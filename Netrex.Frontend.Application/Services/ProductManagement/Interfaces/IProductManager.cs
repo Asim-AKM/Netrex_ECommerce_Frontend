@@ -7,13 +7,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Interfaces
     {
 
         Task<ApiResponse<ProductsVm>> AddProducts(ProductsVm productsVm,List<byte[]> imageBytes, List<string> imageNames);
-        Task<ApiResponse<bool>> RemoveProducts(int productId);
+        Task<ApiResponse<bool>> RemoveProducts(Guid productId);
 
-        Task<ApiResponse<ProductsVm>> UpdateProducts(ProductsVm productsVm);
+        Task<ApiResponse<string>> UpdateProducts(ProductsVm productsVm);
 
-        Task<ApiResponse<ProductsVm>> GetProductByIdAsync(int productId);
+        Task<ApiResponse<ProductsVm>> GetProductByIdAsync(Guid productId);
 
-        Task<ApiResponse<IEnumerable<ProductsVm>>> GetAllProductsAsync();
+        Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync();
 
     }
 }

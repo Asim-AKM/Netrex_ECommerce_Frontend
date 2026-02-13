@@ -5,11 +5,10 @@
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components.Forms
 @layout SellerMainLayout
-
+@inject IProductManager ProductManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Seller Hub</PageTitle>
-
-
 
 <!-- Main Content -->
 <div class="main-wrapper">
@@ -39,7 +38,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Active Products</div>
-                    <div class="stat-value" id="activeProductsCount">3</div>
+                    <div class="stat-value" id="activeProductsCount">@products.Count</div>
                     <div class="stat-change">In stock</div>
                 </div>
                 <div class="stat-card">
@@ -96,21 +95,70 @@
             </div>
         </div>
 
-        <!-- Products Tab -->
+        <!-- ============ PRODUCTS TAB ============ -->
         <div id="products" class="tab-pane">
             <div class="page-header">
                 <h1>Product Management</h1>
-                <button class="btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" @onclick="ShowModal">
+                <button class="btn-primary" @onclick="ShowModal">
                     <i class="fas fa-plus"></i> Add Product
                 </button>
             </div>
 
             <!-- Product Gallery -->
             <div class="product-grid" id="productGrid">
-                <!-- Products will be generated here -->
+                @if (isLoadingProducts)
+                {
+                    <div style="text-align: center; padding: 40px; width: 100%;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p style="margin-top: 10px;">Loading products...</p>
+                    </div>
+                }
+                else if (products == null || products.Count == 0)
+                {
+                    <div class="no-products" style="text-align: center; padding: 40px; width: 100%;">
+                        <p>No products found</p>
+                        <button class="btn btn-primary" @onclick="ShowModal">
+                            Add Your First Product
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var product in products)
+                    {
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="@(product.ImageUrl ?? "/assets/placeholder.jpg")"
+                                     alt="@product.ProductName"
+                                     onerror="this.src='/assets/placeholder.jpg'">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">@product.ProductName</div>
+                                <div class="product-sku">Description: @(product.ProductDescription ?? "N/A")</div>
+                                <div class="product-price-row">
+                                    <div class="product-price">Rs. @product.Price</div>
+                                    <div class="product-stock">@product.StockQuantity in stock</div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn-sm btn-view" @onclick="() => ViewProduct(product.ProductId)">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn-sm btn-edit" @onclick="() => EditProduct(product.CloudPublicId)">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn-sm btn-delete" @onclick="() => DeleteProduct(product.CloudPublicId, product.ProductId)">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
-
+        <!-- ============ PRODUCTS TAB END ============ -->
         <!-- Orders Tab -->
         <div id="orders" class="tab-pane">
             <div class="page-header">
@@ -119,7 +167,6 @@
                     <i class="fas fa-download"></i> Export Orders
                 </button>
             </div>
-
             <div class="table-container">
                 <table>
                     <thead>
@@ -168,7 +215,6 @@
                     <i class="fas fa-plus"></i> Create Shipment
                 </button>
             </div>
-
             <div class="table-container">
                 <table>
                     <thead>
@@ -204,7 +250,6 @@
             <div class="page-header">
                 <h1>Customer Management</h1>
             </div>
-
             <div class="table-container">
                 <table>
                     <thead>
@@ -240,7 +285,6 @@
             <div class="page-header">
                 <h1>Customer Reviews & Ratings</h1>
             </div>
-
             <div class="table-container">
                 <table>
                     <thead>
@@ -274,7 +318,6 @@
             <div class="page-header">
                 <h1>Analytics & Reports</h1>
             </div>
-
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">Conversion Rate</div>
@@ -300,7 +343,6 @@
             <div class="page-header">
                 <h1>Inventory Management</h1>
             </div>
-
             <div class="table-container">
                 <table>
                     <thead>
@@ -330,7 +372,6 @@
             <div class="page-header">
                 <h1>Account & Shop Settings</h1>
             </div>
-
             <div class="table-container" style="max-width: 600px;">
                 <div style="padding: 24px;">
                     <h3 style="margin-bottom: 20px;">Shop Information</h3>
@@ -355,17 +396,13 @@
                     <i class="fas fa-download"></i> Download Report
                 </button>
             </div>
-
             <div class="charts-grid">
-                <!-- Sales Report Chart -->
                 <div class="chart-container">
                     <div class="chart-title"><i class="fas fa-chart-line"></i> Monthly Sales Report</div>
                     <div class="chart-wrapper">
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
-
-                <!-- Revenue Chart -->
                 <div class="chart-container">
                     <div class="chart-title"><i class="fas fa-dollar-sign"></i> Revenue Trend</div>
                     <div class="chart-wrapper">
@@ -373,17 +410,13 @@
                     </div>
                 </div>
             </div>
-
             <div class="charts-grid">
-                <!-- Product Performance Chart -->
                 <div class="chart-container">
                     <div class="chart-title"><i class="fas fa-chart-bar"></i> Top Products Performance</div>
                     <div class="chart-wrapper">
                         <canvas id="productChart"></canvas>
                     </div>
                 </div>
-
-                <!-- Category Distribution -->
                 <div class="chart-container">
                     <div class="chart-title"><i class="fas fa-chart-pie"></i> Sales by Category</div>
                     <div class="chart-wrapper">
@@ -391,8 +424,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sales Metrics -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">Total Orders (This Month)</div>
@@ -419,8 +450,7 @@
     </div>
 </div>
 
-<!-- Modals -->
-<!-- Profile Modal -->
+<!-- ============ PROFILE MODAL ============ -->
 <div class="modal fade" id="profileModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -441,7 +471,7 @@
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
+<!-- ============ EDIT PROFILE MODAL ============ -->
 <div class="modal fade" id="editProfileModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -481,15 +511,10 @@
     </div>
 </div>
 
-<!-- Add Product Modal -->
-@inject IProductManager ProductManager
-
+<!-- ============ ADD PRODUCT MODAL ============ -->
 @if (IsModalVisible)
 {
-    <!-- Modal Backdrop -->
     <div class="modal-backdrop fade show"></div>
-
-    <!-- Add Product Modal -->
     <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -497,36 +522,25 @@
                     <h5 class="modal-title">Add New Product</h5>
                     <button type="button" class="btn-close" @onclick="HideModal"></button>
                 </div>
-
                 <div class="modal-body">
                     <EditForm Model="_model" OnValidSubmit="SaveProduct">
                         <DataAnnotationsValidator />
-
-                        <!-- Product Name -->
                         <div class="form-group mb-2">
                             <label>Product Name <span class="image-required">*</span></label>
                             <InputText class="form-control" @bind-Value="_model.ProductName" />
                         </div>
-
-                        <!-- Description -->
                         <div class="form-group mb-2">
                             <label>Description <span class="image-required">*</span></label>
                             <InputText class="form-control" @bind-Value="_model.ProductDescription" />
                         </div>
-
-                        <!-- Price -->
                         <div class="form-group mb-2">
                             <label>Price <span class="text-danger">*</span></label>
                             <InputNumber class="form-control" @bind-Value="_model.Price" step="0.01" />
                         </div>
-
-                        <!-- Discount -->
                         <div class="form-group mb-2">
-                            <label>Discount (%) <span class="text-danger">*</span></label>
+                            <label>Discount (%)</label>
                             <InputNumber class="form-control" @bind-Value="_model.Discount" step="0.01" />
                         </div>
-
-                        <!-- Category -->
                         <div class="form-group mb-2">
                             <label>Category <span class="image-required">*</span></label>
                             <InputSelect class="form-control" @bind-Value="_model.CategoryName">
@@ -538,14 +552,10 @@
                                 <option value="Home & Kitchen">Home & Kitchen</option>
                             </InputSelect>
                         </div>
-
-                        <!-- Stock -->
                         <div class="form-group mb-2">
                             <label>Stock <span class="text-danger">*</span></label>
                             <InputNumber class="form-control" @bind-Value="_model.StockQuantity" />
                         </div>
-
-                        <!-- Images -->
                         <div class="form-group mb-2">
                             <label>Product Images (Max 5, 2.5MB each)</label>
                             <InputFile OnChange="OnImagesSelected" multiple />
@@ -564,15 +574,16 @@
                                 </div>
                             }
                         </div>
-
-                        <!-- Error -->
                         @if (!string.IsNullOrEmpty(ErrorMessage))
                         {
                             <p class="text-danger">@ErrorMessage</p>
                         }
-
-                        <button class="btn-primary mt-2" type="submit">
-                            <i class="fas fa-plus"></i> Add Product
+                        <button class="btn-primary mt-2" type="submit" disabled="@isSaving">
+                            @if (isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="fas fa-plus"></i> @(isSaving ? "Adding..." : "Add Product")
                         </button>
                     </EditForm>
                 </div>
@@ -581,19 +592,258 @@
     </div>
 }
 
-<!-- Success Modal -->
+<!-- ============ VIEW PRODUCT MODAL - FIXED: Product ID aur Cloud ID REMOVE ============ -->
+@if (showViewModal)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-box text-primary me-2"></i>
+                        Product Details
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseViewModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (selectedProduct != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-5 text-center mb-3 mb-md-0">
+                                <div class="border rounded p-3 bg-light">
+                                    <img src="@(selectedProduct.ImageUrl ?? "/assets/placeholder.jpg")"
+                                         alt="@selectedProduct.ProductName"
+                                         style="max-width: 100%; max-height: 250px; object-fit: contain;"
+                                         onerror="this.src='/assets/placeholder.jpg'">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="product-details-info">
+                                    <h4 class="mb-3">@selectedProduct.ProductName</h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <th style="width: 35%; background-color: #f8f9fa; padding: 8px;">Description:</th>
+                                            <td style="padding: 8px;">@selectedProduct.ProductDescription</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="background-color: #f8f9fa; padding: 8px;">Price:</th>
+                                            <td style="padding: 8px; color: #04ADB1; font-weight: bold; font-size: 1.2rem;">Rs. @selectedProduct.Price.ToString("N0")</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="background-color: #f8f9fa; padding: 8px;">Discount:</th>
+                                            <td style="padding: 8px;">@selectedProduct.Discount%</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="background-color: #f8f9fa; padding: 8px;">Category:</th>
+                                            <td style="padding: 8px;"><span class="badge bg-info">@selectedProduct.CategoryName</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="background-color: #f8f9fa; padding: 8px;">Stock:</th>
+                                            <td style="padding: 8px;">
+                                                @if (selectedProduct.StockQuantity > 0)
+                                                {
+                                                    <span class="badge bg-success">@selectedProduct.StockQuantity units available</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Out of stock</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">Product not found</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    @if (selectedProduct != null)
+                    {
+                        <button class="btn btn-primary" @onclick="EditFromViewModal">
+                            <i class="fas fa-edit"></i> Edit Product
+                        </button>
+                        <button class="btn btn-danger" @onclick="DeleteFromViewModal">
+                            <i class="fas fa-trash"></i> Delete Product
+                        </button>
+                    }
+                    <button class="btn btn-secondary" @onclick="CloseViewModal">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- ============ EDIT PRODUCT MODAL - FINAL FIXED ============ -->
+@if (showEditModal)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        Edit Product
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseEditModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (_editModel != null)
+                    {
+                        <EditForm Model="_editModel" OnValidSubmit="UpdateProduct">
+                            <DataAnnotationsValidator />
+
+                            <!-- Hidden Guid -->
+                            <input type="hidden" @bind-value="_editModel.ProductId" />
+
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Product Name</label>
+                                <InputText class="form-control" @bind-Value="_editModel.ProductName" />
+                                <ValidationMessage For="@(() => _editModel.ProductName)" />
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Description</label>
+                                <InputText class="form-control" @bind-Value="_editModel.ProductDescription" />
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Price (Rs.)</label>
+                                        <InputNumber class="form-control" @bind-Value="_editModel.Price" step="0.01" />
+                                        <ValidationMessage For="@(() => _editModel.Price)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Discount (%)</label>
+                                        <InputNumber class="form-control" @bind-Value="_editModel.Discount" step="0.01" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Category</label>
+                                <InputSelect class="form-control" @bind-Value="_editModel.CategoryName">
+                                    <option value="">-- Select Category --</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Books">Books</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Home & Kitchen">Home & Kitchen</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => _editModel.CategoryName)" />
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Stock Quantity</label>
+                                <InputNumber class="form-control" @bind-Value="_editModel.StockQuantity" />
+                                <ValidationMessage For="@(() => _editModel.StockQuantity)" />
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(_editModel.ImageUrl))
+                            {
+                                <div class="form-group mb-3">
+                                    <label class="form-label fw-bold">Current Image</label>
+                                    <div class="border rounded p-2 bg-light">
+                                        <img src="@_editModel.ImageUrl" style="max-width: 100%; max-height: 80px;" class="rounded" />
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(EditErrorMessage))
+                            {
+                                <div class="alert alert-danger">@EditErrorMessage</div>
+                            }
+
+                            <div class="modal-footer px-0 pb-0">
+                                <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                                <button type="submit" class="btn btn-warning" disabled="@isUpdating">
+                                    @if (isUpdating)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    <i class="fas fa-save"></i> @(isUpdating ? "Updating..." : "Update Product")
+                                </button>
+                            </div>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- ============ DELETE CONFIRMATION MODAL ============ -->
+@if (showDeleteModal)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-trash me-2"></i>
+                        Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="CloseDeleteModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (selectedProduct != null)
+                    {
+                        <div class="text-center mb-4">
+                            <img src="@(selectedProduct.ImageUrl ?? "/assets/placeholder.jpg")"
+                                 alt="@selectedProduct.ProductName"
+                                 style="max-width: 120px; max-height: 120px; border-radius: 8px; border: 1px solid #dee2e6; padding: 5px;">
+                        </div>
+                        <p class="text-center fs-5">Are you sure you want to delete <strong class="text-danger">@selectedProduct.ProductName</strong>?</p>
+                        <p class="text-center text-muted">This action cannot be undone!</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseDeleteModal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-danger" @onclick="ConfirmDeleteProduct" disabled="@isDeleting">
+                        @if (isDeleting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        <i class="fas fa-trash"></i> @(isDeleting ? "Deleting..." : "Delete Permanently")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- ============ SUCCESS MODAL ============ -->
 @if (IsSuccessModalVisible)
 {
     <div class="modal-backdrop fade show"></div>
     <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-success">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Success</h5>
-                    <button type="button" class="btn-close" @onclick="HideSuccessModal"></button>
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Success
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="HideSuccessModal"></button>
                 </div>
-                <div class="modal-body">
-                    <p>@Message</p>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                    <p class="mt-3 mb-0 fs-5">@Message</p>
                 </div>
             </div>
         </div>
@@ -601,8 +851,12 @@
 }
 
 @code {
+    // ============ EXISTING CODE ============
     private bool IsModalVisible = false;
     private bool IsSuccessModalVisible = false;
+    private bool isSaving = false;
+    private List<ProductsVm> products = new();
+    private bool isLoadingProducts = false;
 
     ProductsVm _model = new();
     List<byte[]> ImageBytesList = new();
@@ -616,7 +870,6 @@
     const int MaxFiles = 5;
 
     void ShowModal() => IsModalVisible = true;
-   
 
     void HideModal()
     {
@@ -648,13 +901,11 @@
     {
         ErrorMessage = null;
         var files = e.GetMultipleFiles(MaxFiles);
-
         if (files.Count + ImageBytesList.Count > MaxFiles)
         {
             ErrorMessage = $"Maximum {MaxFiles} images allowed.";
             return;
         }
-
         foreach (var file in files)
         {
             if (file.Size > MaxFileSize)
@@ -662,14 +913,46 @@
                 ErrorMessage = $"Image {file.Name} is larger than 2.5MB.";
                 continue;
             }
-
             using var stream = file.OpenReadStream(MaxFileSize);
             using var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
-
             ImageBytesList.Add(ms.ToArray());
             ImageNames.Add(file.Name);
             ImagePreviews.Add($"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProductsAsync();
+    }
+
+    private async Task LoadProductsAsync()
+    {
+        try
+        {
+            isLoadingProducts = true;
+            StateHasChanged();
+            var response = await ProductManager.GetAllProductsAsync();
+            if (response.IsSuccess)
+            {
+                products = response.Data ?? new();
+                Console.WriteLine($"✅ {products.Count} products loaded");
+                await JSRuntime.InvokeVoidAsync("updateActiveProductsCount", products.Count);
+            }
+            else
+            {
+                Console.WriteLine($"❌ Failed: {response.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingProducts = false;
+            StateHasChanged();
         }
     }
 
@@ -680,24 +963,207 @@
             ErrorMessage = "Please upload at least one image.";
             return;
         }
-
-        var result = await ProductManager.AddProducts(_model, ImageBytesList, ImageNames);
-
-        if (result.IsSuccess)
+        try
         {
-            Message = "Product saved successfully ✅";
-            HideModal(); // original add modal close
-            IsSuccessModalVisible = true; // success modal open
+            isSaving = true;
+            StateHasChanged();
+            var result = await ProductManager.AddProducts(_model, ImageBytesList, ImageNames);
+            if (result.IsSuccess)
+            {
+                await LoadProductsAsync();
+                Message = "Product saved successfully ✅";
+                HideModal();
+                IsSuccessModalVisible = true;
+            }
+            else
+            {
+                ErrorMessage = result.Message ?? "Something went wrong ❌";
+            }
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    // ============ FIXED VIEW/EDIT/DELETE CODE ============
+    private ProductsVm? selectedProduct = null;
+    private bool showViewModal = false;
+    private bool showEditModal = false;
+    private bool showDeleteModal = false;
+    private bool isDeleting = false;
+    private bool isUpdating = false;
+    private string? EditErrorMessage;
+    private ProductsVm _editModel = new();
+
+    // ============ VIEW PRODUCT ============
+    private void ViewProduct(Guid productId)
+    {
+        Console.WriteLine($"ViewProduct called with ID: {productId}");
+        selectedProduct = products.FirstOrDefault(p => p.ProductId == productId);
+        if (selectedProduct != null)
+        {
+            Console.WriteLine($"Product found: {selectedProduct.ProductName}");
+            showViewModal = true;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseViewModal()
+    {
+        showViewModal = false;
+        StateHasChanged();
+    }
+
+    // ============ EDIT PRODUCT - FINAL FIXED: SAB FIELDS SHOW HONGE ============
+    private void EditProduct(string publicId)
+    {
+        Console.WriteLine($"EditProduct called with PublicId: {publicId}");
+        var product = products.FirstOrDefault(p => p.CloudPublicId == publicId);
+        if (product != null)
+        {
+            selectedProduct = product;
+
+            // 🔴 IMPORTANT: NAYA MODEL BANAO AUR HAR FIELD ASSIGN KARO
+            _editModel = new ProductsVm();
+            _editModel.ProductId = product.ProductId;
+            _editModel.ProductName = product.ProductName ?? string.Empty;
+            _editModel.ProductDescription = product.ProductDescription ?? string.Empty;
+            _editModel.Price = product.Price;
+            _editModel.Discount = product.Discount;
+            _editModel.CategoryName = product.CategoryName ?? string.Empty;
+            _editModel.StockQuantity = product.StockQuantity;
+            _editModel.ImageUrl = product.ImageUrl ?? string.Empty;
+            _editModel.CloudPublicId = product.CloudPublicId ?? string.Empty;
+
+            Console.WriteLine($"✅ Edit Product Loaded: {_editModel.ProductName}, Price: {_editModel.Price}, Category: {_editModel.CategoryName}, Stock: {_editModel.StockQuantity}");
+
+            showEditModal = true;
+            StateHasChanged();
         }
         else
         {
-            ErrorMessage = result.Message ?? "Something went wrong ❌";
+            Console.WriteLine($"❌ Product not found with PublicId: {publicId}");
         }
     }
+
+    private void EditFromViewModal()
+    {
+        if (selectedProduct != null)
+        {
+            showViewModal = false;
+            EditProduct(selectedProduct.CloudPublicId);
+        }
+    }
+
+    private void CloseEditModal()
+    {
+        showEditModal = false;
+        _editModel = new ProductsVm();
+        EditErrorMessage = null;
+        StateHasChanged();
+    }
+
+    // ============ UPDATE PRODUCT ============
+    private async Task UpdateProduct()
+    {
+        try
+        {
+            isUpdating = true;
+            EditErrorMessage = null;
+            StateHasChanged();
+
+            Console.WriteLine($"Updating product: {_editModel.ProductId}");
+
+            var response = await ProductManager.UpdateProducts(_editModel);
+
+            if (response.IsSuccess)
+            {
+                await LoadProductsAsync();
+                CloseEditModal();
+                Message = "Product updated successfully ✅";
+                IsSuccessModalVisible = true;
+            }
+            else
+            {
+                EditErrorMessage = response.Message ?? "Update failed";
+                Console.WriteLine($"Update failed: {response.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            EditErrorMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Update exception: {ex}");
+        }
+        finally
+        {
+            isUpdating = false;
+            StateHasChanged();
+        }
+    }
+
+    // ============ DELETE PRODUCT ============
+    private void DeleteProduct(string publicId, Guid productId)
+    {
+        Console.WriteLine($"DeleteProduct called - PublicId: {publicId}, ProductId: {productId}");
+        selectedProduct = products.FirstOrDefault(p => p.ProductId == productId);
+        if (selectedProduct != null)
+        {
+            showDeleteModal = true;
+            StateHasChanged();
+        }
+    }
+
+    private void DeleteFromViewModal()
+    {
+        if (selectedProduct != null)
+        {
+            showViewModal = false;
+            showDeleteModal = true;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmDeleteProduct()
+    {
+        if (selectedProduct == null) return;
+        try
+        {
+            isDeleting = true;
+            StateHasChanged();
+            var response = await ProductManager.RemoveProducts(selectedProduct.ProductId);
+            if (response.IsSuccess)
+            {
+                await LoadProductsAsync();
+                CloseDeleteModal();
+                Message = "Product deleted successfully ✅";
+                IsSuccessModalVisible = true;
+            }
+            else
+            {
+                ErrorMessage = response.Message ?? "Delete failed";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isDeleting = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task RefreshProducts()
+    {
+        await LoadProductsAsync();
+    }
 }
-
-
-
-
-
-

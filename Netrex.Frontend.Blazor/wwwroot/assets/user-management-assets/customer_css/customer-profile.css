@@ -214,6 +214,45 @@ body {
         margin-bottom: 20px;
     }
 
+
+
+
+
+
+.profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+}
+
+.profile-img-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #03ADAE;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-link-custom {
+    color: #03ADAE;
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .btn-link-custom:hover {
+        text-decoration: underline;
+    }
+
+
+
+
+
+
+
+
 .form-label-custom {
     color: var(--customer-secondary-color);
     font-weight: 600;

@@ -2,7 +2,7 @@
 {
     public class UpdateCustomerDto
     {
-        public Guid UserId { get; set; } // Ye zaroori hai update ke liye
+        public Guid UserId { get; set; }
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
         public string City { get; set; } = "";

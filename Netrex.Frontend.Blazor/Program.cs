@@ -1,4 +1,6 @@
 using Netrex.Frontend.Application.DIs;
+using Netrex.Frontend.Application.Services.Customer.Implementation;
+using Netrex.Frontend.Application.Services.Customer.Interfaces;
 using Netrex.Frontend.Blazor.Components;
 using Netrex.Frontend.Blazor.Services;
 
@@ -17,7 +19,7 @@ builder.Services.AddRazorComponents()
 // 3. --- LOADER SERVICE REGISTER KAREIN ---
 // Isse AddScoped ke sath register karna hai taaki poori app mein ek hi instance chale
 builder.Services.AddScoped<LoaderService>();
-builder.Services.AddScoped<CustomerManager>();
+builder.Services.AddScoped<ICustomerManager, CustomerManager>();
 
 // 4. Application Layer DIs (Iske andar hi AuthManager register ho raha hai)
 builder.Services.AddApplicationDIs();

@@ -17,7 +17,6 @@ namespace Netrex.Frontend.Application.Services.Customer.Implementation
                 throw new Exception("Failed to update customer");
             }
         }
-        
         public async Task UpdateProfileImageAsync(Guid userId, byte[] imageData)
         {
             using var content = new MultipartFormDataContent();

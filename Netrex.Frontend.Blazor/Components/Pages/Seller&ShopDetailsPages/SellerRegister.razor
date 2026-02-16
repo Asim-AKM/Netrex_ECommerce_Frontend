@@ -1,109 +1,61 @@
 ﻿@page "/sellerregister"
 @rendermode InteractiveServer
 
-@using System.ComponentModel.DataAnnotations
-
 <div class="ntx-reg-container">
     <div class="ntx-reg-card">
         <h2 class="ntx-reg-title">Become a Seller</h2>
 
-        <EditForm Model="@Seller" OnValidSubmit="HandleSubmit">
+        <EditForm Model="@seller" OnValidSubmit="HandleRegistration" FormName="SellerRegForm">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" />
-
             <!-- Store Name -->
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Name</label>
-                <InputText class="ntx-reg-input"
-                           @bind-Value="Seller.StoreName"
+                <InputText class="ntx-reg-input" @bind-Value="seller.StoreName"
                            placeholder="Enter store name" />
-                <ValidationMessage For="@(() => Seller.StoreName)" />
+                <ValidationMessage For="@(() => seller.StoreName)" class="text-danger" />
             </div>
 
             <!-- Store Description -->
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Description</label>
-                <InputTextArea class="ntx-reg-textarea"
-                               @bind-Value="Seller.StoreDescription"
-                               placeholder="Describe your store" />
-                <ValidationMessage For="@(() => Seller.StoreDescription)" />
+                <InputTextArea class="ntx-reg-textarea" @bind-Value="seller.StoreDescription" placeholder="Describe your store" />
+                <ValidationMessage For="@(() => seller.StoreDescription)" class="text-danger" />
             </div>
 
-            <!-- Shop Category -->
+            <!-- Shop Category (Lazy Load) -->
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Shop Category</label>
                 <InputSelect class="ntx-reg-select"
-                             @bind-Value="Seller.ShopId">
-                    <option value="">Select category</option>
-                    @foreach (var cat in ShopList)
+                             @bind-Value="seller.ShopId"
+                             @onfocus="LoadCategoriesAsync"
+                             disabled="@isLoadingCategories">
+
+                    <option value="">-- Select category --</option>
+
+                    @foreach (var cat in ShopDetails)
                     {
-                        <option value="@cat.ShopId">@cat.ShopName</option>
+                        <option value="@cat.ShopId.ToString()">@cat.ShopName</option>
                     }
                 </InputSelect>
-                <ValidationMessage For="@(() => Seller.ShopId)" />
+
+                <ValidationMessage For="@(() => seller.ShopId)" class="text-danger" />
+
+                @if (isLoadingCategories)
+                {
+                    <div class="text-primary mt-1">🔄 Loading categories...</div>
+                }
             </div>
 
             <!-- Store Address -->
             <div class="ntx-reg-field">
                 <label class="ntx-reg-label">Store Address</label>
+
                 <InputText class="ntx-reg-input"
-                           @bind-Value="Seller.StoreAddress"
-                           placeholder="Enter store address" />
-                <ValidationMessage For="@(() => Seller.StoreAddress)" />
+                           @bind-Value="seller.Address" placeholder="Enter store address" />
+                <ValidationMessage For="@(() => seller.Address)" class="text-danger" />
+
             </div>
-
-            <button type="submit" class="ntx-reg-btn-submit">
-                Create Store
-            </button>
+            <button type="submit" class="ntx-reg-btn-submit">Create Store</button>
         </EditForm>
-
-        @if (!string.IsNullOrEmpty(Message))
-        {
-            <p class="text-success mt-2">@Message</p>
-        }
     </div>
 </div>
-
-@code {
-
-    // VmSeller comes from your existing model file
-    VmSeller Seller = new();
-
-    // simple shop list (normally API se aayegi)
-    List<ShopVm> ShopList = new();
-
-    string Message = "";
-
-    protected override Task OnInitializedAsync()
-    {
-        // temporary user id (later auth se aayega)
-        Seller.UserId = Guid.NewGuid();
-
-        ShopList = new()
-        {
-            new ShopVm { ShopId = Guid.NewGuid(), ShopName = "Electronics" },
-            new ShopVm { ShopId = Guid.NewGuid(), ShopName = "Clothing" },
-            new ShopVm { ShopId = Guid.NewGuid(), ShopName = "Grocery" }
-        };
-
-        return Task.CompletedTask;
-    }
-
-    private Task HandleSubmit()
-    {
-        // sirf VALID data hi yahan aata hai
-        Seller.SellerId = Guid.NewGuid();
-
-        // yahan API / database call karni hai
-        Message = "Seller registered successfully!";
-
-        return Task.CompletedTask;
-    }
-
-    // local view-model for dropdown (no conflict)
-    class ShopVm
-    {
-        public Guid ShopId { get; set; }
-        public string ShopName { get; set; } = string.Empty;
-    }
-}

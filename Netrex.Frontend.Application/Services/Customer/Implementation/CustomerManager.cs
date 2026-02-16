@@ -17,21 +17,21 @@ namespace Netrex.Frontend.Application.Services.Customer.Implementation
                 throw new Exception("Failed to update customer");
             }
         }
-
         public async Task UpdateProfileImageAsync(Guid userId, byte[] imageData)
         {
             using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(new MemoryStream(imageData));
+          var fileContent = new ByteArrayContent(imageData);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
 
             content.Add(fileContent, "File", "profile.jpg");
             content.Add(new StringContent(userId.ToString()), "UserId");
 
-            var response = await http.PostAsync("api/customer/updateProfileImage", content);
+            var response = await http.PostAsync("api/Customer/updateProfileImage", content);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Image upload failed");
+              var error = await response.Content.ReadAsStringAsync();
+              throw new Exception($"Image upload failed: {error}");
             }
         }
     }

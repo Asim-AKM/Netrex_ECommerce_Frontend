@@ -21,11 +21,18 @@ namespace Netrex.Frontend.Application.Commons.Mappers.Products
                 Price = productsVm.Price,
                 Discount = productsVm.Discount,
                 StockQuantity = productsVm.StockQuantity,
-                CreatedAt = productsVm.CreatedAt,
                 ImageUrl = productsVm.ImageUrl,
                 CloudPublicId = productsVm.CloudPublicId,
-                IsPrimary = productsVm.IsPrimary,
-                UploadedAt = productsVm.UploadedAt
+                IsPrimary = productsVm.IsPrimary, 
+                UploadedAt = productsVm.UploadedAt,
+
+                
+                Images = productsVm.Images?.Select(img => new ImageDto
+                {
+                    ImageUrl = img.Url!,           
+                    CloudPublicId = img.CloudPublicId!,
+                    IsPrimary = img.IsPrimary
+                }).ToList() ?? new List<ImageDto>()
             };
         }
     }

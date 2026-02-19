@@ -1,5 +1,4 @@
 ﻿using Netrex.Frontend.Application.Commons.AppResponses;
-using Netrex.Frontend.Application.ViewModels.SellerModule;
 
 namespace Netrex.Frontend.Application.Services.SellerAndShop.Interfaces
 {

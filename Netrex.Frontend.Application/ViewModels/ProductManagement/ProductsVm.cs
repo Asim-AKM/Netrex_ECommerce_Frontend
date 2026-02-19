@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Netrex.Frontend.Application.ViewModels.ProductManagement
 {
@@ -25,16 +26,23 @@ namespace Netrex.Frontend.Application.ViewModels.ProductManagement
         public string ImageUrl { get; set; } = string.Empty;
         [property: JsonPropertyName("cloudPublicId")]
         public string CloudPublicId { get; set; } = string.Empty;
-        [property: JsonPropertyName("isPrimary")]
-        public bool IsPrimary { get; set; }
+        public List<CloudinaryUploadResult> Images { get; set; } = new();
         [property: JsonPropertyName("uploadedAt")]
         public DateTime UploadedAt { get; set; }
+        public bool IsPrimary { get; set; }
+
+        public double FinalPrice => Price - (Price * Discount / 100);
+        public string FormattedFinalPrice => $"Rs. {FinalPrice:N0}";
+        public string FormattedOriginalPrice => $"Rs. {Price:N0}";
+        public string DiscountDisplay => Discount > 0 ? $"{Discount}% OFF" : "";
     }
     public class CloudinaryUploadResult
     {
         [JsonPropertyName("imageUrl")]
         public string? Url { get; set; }
         [JsonPropertyName("cloudPublicId")]
-        public string? CloudPublicId { get; set; } 
+        public string? CloudPublicId { get; set; }
+        [property: JsonPropertyName("isPrimary")]
+        public bool IsPrimary { get; set; }
     }
 }

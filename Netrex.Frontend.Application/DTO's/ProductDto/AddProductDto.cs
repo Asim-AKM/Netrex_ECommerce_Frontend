@@ -2,19 +2,21 @@
 
 namespace Netrex.Frontend.Application.DTO_s.ProductDto
 {
-    public record AddProductDto
-        (
-        [property: JsonPropertyName("productName")] string ProductName,
-        [property: JsonPropertyName("productDescription")] string ProductDescription,
-        [property: JsonPropertyName("categoryName")] string CategoryName,
-        [property: JsonPropertyName("price")] double Price,
-        [property: JsonPropertyName("discount")] double Discount,
-        [property: JsonPropertyName("stockQuantity")] int StockQuantity,
-        [property: JsonPropertyName("createdAt")] DateTime CreatedAt,
-        [property: JsonPropertyName("imageUrl")] string ImageUrl,
-        [property: JsonPropertyName("cloudPublicId")] string CloudPublicId,
-        [property: JsonPropertyName("isPrimary")] bool IsPrimary,
-        [property: JsonPropertyName("uploadedAt")] DateTime UploadedAt
-        );
-  
+    public class AddProductDto()
+    {
+        public string ProductName { get; set; } = string.Empty;
+        public string ProductDescription { get; set; } = string.Empty;
+        public string CategoryName { get; set; } = string.Empty;
+        public double Price { get; set; }
+        public double Discount { get; set; }
+        public int StockQuantity { get; set; }
+        public List<ImageDto> Images { get; set; } = new();
+    }
+    public class ImageDto
+    {
+        public string ImageUrl { get; set; } = string.Empty;
+        public string CloudPublicId { get; set; } = string.Empty;
+        public bool IsPrimary { get; set; }
+    }
+
 }

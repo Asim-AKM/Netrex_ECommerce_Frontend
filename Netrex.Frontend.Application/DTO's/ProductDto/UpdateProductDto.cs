@@ -33,5 +33,12 @@ namespace Netrex.Frontend.Application.DTO_s.ProductDto
         public bool IsPrimary { get; set; }
         [property: JsonPropertyName("uploadedAt")]
         public DateTime UploadedAt { get; set; }
+        public List<ImageDto> Images { get; set; } = new();
+    }
+    public class ImagesDto
+    {
+        public string ImageUrl { get; set; }
+        public string CloudPublicId { get; set; }
+        public bool IsPrimary { get; set; }
     }
 }

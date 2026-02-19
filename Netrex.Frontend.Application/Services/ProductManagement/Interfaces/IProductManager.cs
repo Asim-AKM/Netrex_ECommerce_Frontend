@@ -9,7 +9,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Interfaces
         Task<ApiResponse<ProductsVm>> AddProducts(ProductsVm productsVm,List<byte[]> imageBytes, List<string> imageNames);
         Task<ApiResponse<bool>> RemoveProducts(Guid productId);
 
-        Task<ApiResponse<string>> UpdateProducts(ProductsVm productsVm);
+        Task<ApiResponse<string>> UpdateProducts(ProductsVm productsVm, List<byte[]>? newImageBytes = null, List<string>? newImageNames = null);
 
         Task<ApiResponse<ProductsVm>> GetProductByIdAsync(Guid productId);
 

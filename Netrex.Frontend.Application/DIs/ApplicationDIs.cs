@@ -20,6 +20,7 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<IProductManager, ProductManager>()
                                                                  .AddScoped<ICloudnaryManager, CloudnaryManager>()
                                                                 .AddScoped<IShopManager, ShopManager>()
-                                                                .AddScoped<ISellerManager, SellerManager>();
+                                                                .AddScoped<ISellerManager, SellerManager>()
+                                                                .AddScoped<IUserManager, UserManager>();
     }
 }

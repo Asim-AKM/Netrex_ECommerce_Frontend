@@ -116,7 +116,6 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-
                 var response = await _httpClient.PutAsJsonAsync(
                     $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
                 var jsonString=await response.Content.ReadAsStringAsync();

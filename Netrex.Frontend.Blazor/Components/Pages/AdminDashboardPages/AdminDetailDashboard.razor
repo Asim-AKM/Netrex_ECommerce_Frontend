@@ -3,16 +3,16 @@
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
 
-    <div class="sidebar-header" style="display: flex; display: flex;
+    <div class="sidebar-header" style="display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;">
-        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;padding-left:55px;width: auto; padding-left:10px">
+        <img src="/assets/sellerassets/Pictures/Logo_for_Netrex-.png" alt="Netrex Logo" style="height: 50px;width: auto; padding-left:10px">
 
         <i class="fa-solid fa-xmark close-icon  " style="padding-left:20px;"></i>
 
     </div>
-    
+
     <ul class="ntx-admin-nav list-unstyled">
         <li>
             <a href="#dashboard" class="ntx-nav-link active" onclick="showTab('dashboard', event)">
@@ -139,8 +139,8 @@
     </section>
 
     <section id="ad-user-management" class="ad-section">
-        <h2>User Management</h2>
-        <button class="ad-btn">Add New User</button>
+        <h2>Customer Management</h2>
+        <button class="ad-btn">Add New Customer</button>
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
@@ -155,33 +155,58 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>john@example.com</td>
-                        <td>Customer</td>
-                        <td><span class="ad-status-badge">Active</span></td>
-                        <td>
-                            <button class="ad-action-btn edit"></button>
-                            <button class="ad-action-btn delete"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jane Smith</td>
-                        <td>jane@example.com</td>
-                        <td>Seller</td>
-                        <td><span class="ad-status-badge">Active</span></td>
-                        <td>
-                            <button class="ad-action-btn edit"></button>
-                            <button class="ad-action-btn delete"></button>
-                        </td>
-                    </tr>
+                    @if (IsUserLoading)
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center;">Loading users...</td>
+                        </tr>
+                    }
+                    else if (Users != null && Users.Any())
+                    {
+                        @foreach (var user in Users)
+                        {
+                            <tr>
+                                <td>@user.Id.ToString().Substring(0, 8)...</td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        @if (!string.IsNullOrWhiteSpace(user.ImageUrl))
+                                        {
+                                            <img src="@user.ImageUrl" style="width:30px; border-radius:50%;" />
+                                        }
+                                        @user.FullName
+                                    </div>
+                                </td>
+                                <td>@user.Email</td>
+                                <td>@user.RoleName.ToString()</td>
+                                <td>
+                                    <span class="ad-status-badge status-@user.Userstatus.ToString().ToLower()">
+                                        @user.Userstatus.ToString()
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="ad-action-btn edit"
+                                            title="Edit"
+                                            @onclick="() => EditUser(user)">
+                                    </button>
+
+                                    <button class="ad-action-btn delete"
+                                            @onclick="() => HandleDelete(user.Id)"
+                                            title="Delete">
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center;">No users found.</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </section>
-
     <section id="ad-seller-module" class="ad-section">
         <h2>Seller Module</h2>
         <button class="ad-btn">Add New Seller</button>
@@ -193,34 +218,41 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Products</th>
+                        <th>Products Count</th>
                         <th>Revenue</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Seller A</td>
-                        <td>sellerA@example.com</td>
-                        <td>20</td>
-                        <td>$5,000</td>
-                        <td>
-                            <button class="ad-btn">View</button>
-                            <button class="ad-btn">Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Seller B</td>
-                        <td>sellerB@example.com</td>
-                        <td>15</td>
-                        <td>$3,200</td>
-                        <td>
-                            <button class="ad-btn">View</button>
-                            <button class="ad-btn">Edit</button>
-                        </td>
-                    </tr>
+                    @if (IsSellersLoading)
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center;">Loading Sellers...</td>
+                        </tr>
+                    }
+                    else if (Sellers != null && Sellers.Any())
+                    {
+                        @foreach (var seller in Sellers)
+                        {
+                            <tr>
+                                <td>@seller.SellerId.ToString().Substring(0, 5)...</td>
+                                <td>@seller.FullName</td> @* VmSeller ki properties ke mutabiq change karein *@
+                                <td>@seller.Email</td>
+                                <td>@seller.TotalProducts</td> @* Agar ViewModel mein ye property hai *@
+                                <td>@seller.TotalRevenue.ToString("C")</td>
+                                <td>
+                                    <button class="ad-btn" @onclick="() => ViewSeller(seller.SellerId)">View</button>
+                                    <button class="ad-btn" @onclick="() => EditSeller(seller)">Edit</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center;">No sellers found.</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -470,15 +502,3 @@
         </div>
     </section>
 </main>
-@code {
-    // Yahan hum JS ko call karte hain jab page render ho jaye
-    [Inject] IJSRuntime JSRuntime { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
-        }
-    }
-}

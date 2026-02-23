@@ -58,7 +58,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById{Id}");
+                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById/{Id}");
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new Exception("Failed to retrieve Seller Data.");
@@ -102,19 +102,19 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-
                 var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
+                    $"api/Seller/UpdateSeller/{vmSeller.SellerId}", vmSeller);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Failed to update Seller.");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to update Seller: {errorContent}");
                 }
-
-                var jason = await response.Content
-                    .ReadFromJsonAsync<VmSeller>();
-
-                return "Data successfully";
+                return "Data updated successfully";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
             }
             finally
             {

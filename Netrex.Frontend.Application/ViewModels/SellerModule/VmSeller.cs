@@ -19,6 +19,11 @@ public class VmSeller
     [JsonPropertyName("StoreName")]
     public string StoreName { get; set; } = string.Empty;
 
+    public string FullName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public int TotalProducts { get; set; }
+    public decimal TotalRevenue { get; set; }
+
     [Required(ErrorMessage = "Store description is required")]
     [MinLength(10, ErrorMessage = "Description must be at least 10 characters")]
     [JsonPropertyName("StoreDescription")]

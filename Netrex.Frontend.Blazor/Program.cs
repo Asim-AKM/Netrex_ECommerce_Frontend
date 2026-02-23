@@ -1,6 +1,8 @@
 using Netrex.Frontend.Application.DIs;
 using Netrex.Frontend.Application.Services.Customer.Implementation;
 using Netrex.Frontend.Application.Services.Customer.Interfaces;
+using Netrex.Frontend.Application.Services.UserManagement.Implementations;
+using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Blazor.Components;
 using Netrex.Frontend.Blazor.Services;
 

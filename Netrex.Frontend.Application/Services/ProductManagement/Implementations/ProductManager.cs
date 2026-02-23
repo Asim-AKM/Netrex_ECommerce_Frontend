@@ -1,7 +1,6 @@
 ﻿using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Commons.AppResponses;
 using Netrex.Frontend.Application.Commons.Mappers.Products;
-using Netrex.Frontend.Application.DTO_s.ProductDto;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Blazor.Services;
@@ -24,67 +23,76 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             _cloudnaryManager = cloudnaryManager;
         }
 
-        public async Task<ApiResponse<ProductsVm>> AddProducts(ProductsVm productsVm, List<byte[]> imageBytes, List<string> imageNames)
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLower();
+            return extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".bmp" => "image/bmp",
+                ".tiff" or ".tif" => "image/tiff",
+                _ => "image/jpeg"
+            };
+        }
+        public async Task<ApiResponse<ProductsVm>> AddProducts(
+           ProductsVm productsVm,
+           List<byte[]> imageBytes,
+           List<string> imageNames)
         {
             try
             {
                 _loaderService.Show();
 
+                if (imageBytes == null || imageBytes.Count == 0)
+                    return ApiResponseDeserializer.FailResponse<ProductsVm>("No images to upload");
 
-                string contentType = imageNames.Count > 0
-                    ? GetContentType(imageNames[0])
-                    : "image/jpeg";
-
+                string contentType = GetContentType(imageNames[0]);
                 List<CloudinaryUploadResult> uploadedImages;
 
                 if (imageBytes.Count == 1)
                 {
-
-                    var singleResponse = await _cloudnaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
+                    var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
                         imageBytes, imageNames, contentType);
-
-                    if (!singleResponse.IsSuccess || singleResponse.Data == null)
-                    {
-                        return ApiResponseDeserializer.FailResponse<ProductsVm>(
-                            $"Single image upload failed: {singleResponse.Message}");
-                    }
-
-                    uploadedImages = new List<CloudinaryUploadResult> { singleResponse.Data };
+                    if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                        return ApiResponseDeserializer.FailResponse<ProductsVm>($"Upload failed: {uploadResponse.Message}");
+                    uploadedImages = new List<CloudinaryUploadResult> { uploadResponse.Data };
                 }
                 else
                 {
-
-                    var listResponse = await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
+                    var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
                         imageBytes, imageNames, contentType);
-
-                    if (!listResponse.IsSuccess || listResponse.Data == null)
-                    {
-                        return ApiResponseDeserializer.FailResponse<ProductsVm>(
-                            $"Multiple images upload failed: {listResponse.Message}");
-                    }
-
-                    uploadedImages = listResponse.Data;
+                    if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                        return ApiResponseDeserializer.FailResponse<ProductsVm>($"Upload failed: {uploadResponse.Message}");
+                    uploadedImages = uploadResponse.Data;
                 }
 
                 if (uploadedImages.Count == 0)
+                    return ApiResponseDeserializer.FailResponse<ProductsVm>("No images uploaded");
+
+               
+                for (int i = 0; i < uploadedImages.Count; i++)
                 {
-                    return ApiResponseDeserializer.FailResponse<ProductsVm>(
-                        "No images uploaded successfully");
+                    uploadedImages[i].IsPrimary = i == 0;
                 }
 
-                var firstImage = uploadedImages[0];
-                productsVm.ImageUrl = firstImage.Url!;
-                productsVm.CloudPublicId = firstImage.CloudPublicId!;
-                productsVm.IsPrimary = true;
+                
+                productsVm.Images = uploadedImages;
 
-                var AddProductDto = productsVm.Map();
+               
+                var primary = uploadedImages.FirstOrDefault(i => i.IsPrimary);
+                if (primary != null)
+                {
+                    productsVm.ImageUrl = primary.Url!;
+                    productsVm.CloudPublicId = primary.CloudPublicId!;
+                }
 
-                var response = await _httpClient.PostAsJsonAsync(
-                    "api/Product/CreateProduct",
-                    AddProductDto
-                );
-
-                var json = await response.Content.ReadAsStringAsync();
+              
+                var dto = productsVm.Map();
+                var apiResponse = await _httpClient.PostAsJsonAsync("api/Product/CreateProduct", dto);
+                var json = await apiResponse.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
             catch (Exception ex)
@@ -96,22 +104,6 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _loaderService.Hide();
             }
         }
-
-        private string GetContentType(string fileName)
-        {
-            return fileName.ToLower() switch
-            {
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".gif" => "image/gif",
-                ".webp" => "image/webp",
-                ".bmp" => "image/bmp",
-                ".tiff" or ".tif" => "image/tiff",
-                _ => "image/jpeg"
-            };
-        }
-
-
         public async Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync()
         {
             try
@@ -142,6 +134,78 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
         }
 
+        public async Task<ApiResponse<string>> UpdateProducts(
+            ProductsVm productsVm,
+            List<byte[]>? newImageBytes = null,
+            List<string>? newImageNames = null)
+        {
+            try
+            {
+                _loaderService.Show();
+
+                if (newImageBytes != null && newImageBytes.Any() && newImageNames != null && newImageNames.Any())
+                {
+                    string contentType = GetContentType(newImageNames[0]);
+                    List<CloudinaryUploadResult> uploadedImages;
+
+                    if (newImageBytes.Count == 1)
+                    {
+                        var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
+                            newImageBytes, newImageNames, contentType);
+                        if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                            return ApiResponseDeserializer.FailResponse<string>($"Image upload failed: {uploadResponse.Message}");
+                        uploadedImages = new List<CloudinaryUploadResult> { uploadResponse.Data };
+                    }
+                    else
+                    {
+                        var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
+                            newImageBytes, newImageNames, contentType);
+                        if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                            return ApiResponseDeserializer.FailResponse<string>($"Image upload failed: {uploadResponse.Message}");
+                        uploadedImages = uploadResponse.Data;
+                    }
+
+                    
+                    bool hasExistingImages = productsVm.Images.Any();
+                    for (int i = 0; i < uploadedImages.Count; i++)
+                    {
+                        uploadedImages[i].IsPrimary = !hasExistingImages && i == 0;
+                    }
+
+                   
+                    productsVm.Images.AddRange(uploadedImages);
+
+                   
+                    if (!productsVm.Images.Any(i => i.IsPrimary) && productsVm.Images.Any())
+                    {
+                        productsVm.Images.First().IsPrimary = true;
+                    }
+
+                    
+                    var primary = productsVm.Images.FirstOrDefault(i => i.IsPrimary);
+                    if (primary != null)
+                    {
+                        productsVm.ImageUrl = primary.Url!;
+                        productsVm.CloudPublicId = primary.CloudPublicId!;
+                    }
+                }
+
+               
+                var updateDto = productsVm.MapToUpdateDto();
+                var apiResponse = await _httpClient.PutAsJsonAsync($"api/Product/UpdateProduct/{productsVm.ProductId}", updateDto);
+                var json = await apiResponse.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<string>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>(ex.Message);
+            }
+            finally
+            {
+                _loaderService.Hide();
+            }
+        }
+
         public async Task<ApiResponse<bool>> RemoveProducts(Guid productId)
         {
             try
@@ -156,29 +220,5 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _loaderService.Hide();
             }
         }
-
-        public async Task<ApiResponse<string>> UpdateProducts(ProductsVm productsVm)
-        {
-            try
-            {
-                _loaderService.Show();
-
-                var updateProductDto = productsVm.MapToUpdateDto();
-
-                var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Product/UpdateProduct/{productsVm.ProductId}",
-                    updateProductDto);
-
-                var json = await response.Content.ReadAsStringAsync();
-
-                return ApiResponseDeserializer.Deserialize<string>(json);
-            }
-            finally
-            {
-                _loaderService.Hide();
-            }
-        }
-
     }
-
 }

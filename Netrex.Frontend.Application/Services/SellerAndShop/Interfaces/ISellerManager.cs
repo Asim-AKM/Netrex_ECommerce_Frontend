@@ -1,14 +1,14 @@
-﻿using Netrex.Frontend.Application.ViewModels.SellerModule;
+﻿using Netrex.Frontend.Application.Commons.AppResponses;
 
 namespace Netrex.Frontend.Application.Services.SellerAndShop.Interfaces
 {
     public interface ISellerManager
     {
-        Task<VmSeller> CreateSellerAsync(VmSeller vmSeller);
-        Task<string> UpdateSellerAsync(VmSeller vmSeller);
-        Task<string> DeleteSellerAsync(Guid Id);
-        Task<List<VmSeller>> GetSellerAsync();
-        Task<VmSeller> GetSellerbyIdAsync(Guid Id);
+        Task<ApiResponse<VmSeller>> CreateSellerAsync(VmSeller vmSeller);
+        Task<ApiResponse<VmSeller>> UpdateSellerAsync(VmSeller vmSeller);
+        Task<ApiResponse<string>> DeleteSellerAsync(Guid Id);
+        Task<ApiResponse<List<VmSeller>>> GetSellerAsync();
+        Task<ApiResponse<VmSeller>> GetSellerbyIdAsync(Guid Id);
 
     }
 }

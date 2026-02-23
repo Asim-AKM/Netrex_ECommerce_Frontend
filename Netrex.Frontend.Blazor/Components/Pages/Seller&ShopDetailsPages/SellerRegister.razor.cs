@@ -6,62 +6,42 @@ namespace Netrex.Frontend.Blazor.Components.Pages.Seller_ShopDetailsPages
 {
     public partial class SellerRegister
     {
-        [Inject]
-        public IShopManager _shopManager { get; set; } = default!;
-
-        [Inject]
-        public ISellerManager _sellerManager { get; set; } = default!;
+        [Inject] public IShopManager _shopManager { get; set; } = default!;
+        [Inject] public ISellerManager _sellerManager { get; set; } = default!;
         [Inject] public NavigationManager Navigation { get; set; } = default!;
+
         public List<VmShopDetail> ShopDetails { get; set; } = new();
+        public VmSeller seller { get; set; } = new();
 
-        [SupplyParameterFromForm]
-        public SellerRegisterModel seller { get; set; } = new();
+        private bool isLoadingCategories = false;
+        private bool categoriesLoaded = false;
 
-        
+        // Lazy load categories when dropdown is clicked (on focus)
+        private async Task LoadCategoriesAsync()
+        {
+            if (categoriesLoaded) return; // Already loaded, no DB call
+
+            isLoadingCategories = true;
+
+            var shops = await _shopManager.GetAllShopsAsync();
+
+            if (shops != null)
+            {
+                ShopDetails = shops;
+                categoriesLoaded = true;
+            }
+
+            isLoadingCategories = false;
+        }
+
         private async Task HandleRegistration()
         {
-            bool isSaved = false;
-            try
-            {
-                var newSeller = new VmSeller
-                {
-                    StoreName = seller.StoreName,
-                    StoreDescription = seller.StoreDescription,
-                    ShopId = Guid.Parse(seller.ShopId),
-                    StoreAddress = seller.Address,
-                };
+            var result = await _sellerManager.CreateSellerAsync(seller);
 
-                var result = await _sellerManager.CreateSellerAsync(newSeller);
-
-                if (result != null)
-                {
-                    Console.WriteLine("Data Save Successfully");
-                    isSaved = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-
-            if (isSaved)
+            if (result != null)
             {
                 Navigation.NavigateTo("/seller/plan");
             }
-        }
-
-        public class SellerRegisterModel
-        {
-
-            public string StoreName { get; set; } = string.Empty;
-
-            public string StoreDescription { get; set; } = string.Empty;
-
-            public string ShopId { get; set; } = string.Empty;
-
-            public string Address { get; set; } = string.Empty;
-
-            public string CategoryName { get; set; } = string.Empty;
         }
     }
 }

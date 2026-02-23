@@ -8,19 +8,22 @@ namespace Netrex.Frontend.Application.Commons.Mappers.Products
         public static AddProductDto Map(this ProductsVm vm)
         {
             return new AddProductDto
-            (
-                vm.ProductName,
-                vm.ProductDescription,
-                vm.CategoryName,
-                vm.Price,
-                vm.Discount,
-                vm.StockQuantity,
-                vm.CreatedAt,
-                vm.ImageUrl,
-                vm.CloudPublicId,
-                vm.IsPrimary,
-                vm.UploadedAt
-            );
+            {
+                ProductName = vm.ProductName,
+                ProductDescription = vm.ProductDescription ?? string.Empty,
+                CategoryName = vm.CategoryName,
+                Price = (double)vm.Price,
+                Discount = (double)vm.Discount,
+                StockQuantity = vm.StockQuantity,
+
+                
+                Images = vm.Images?.Select(img => new ImageDto
+                {
+                    ImageUrl = img.Url!,
+                    CloudPublicId = img.CloudPublicId!,
+                    IsPrimary = img.IsPrimary
+                }).ToList() ?? new List<ImageDto>()
+            };
         }
     }
 }

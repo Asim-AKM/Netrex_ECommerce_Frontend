@@ -6,7 +6,6 @@ public class VmSeller
     [JsonPropertyName("SellerId")]
     public Guid SellerId { get; set; }
 
-    [Required(ErrorMessage = "User is required")]
     [JsonPropertyName("UserId")]
     public Guid UserId { get; set; }
 
@@ -14,8 +13,9 @@ public class VmSeller
     [JsonPropertyName("ShopId")]
     public Guid ShopId { get; set; }
 
+
     [Required(ErrorMessage = "Store name is required")]
-    [MinLength(3, ErrorMessage = "Store name must be at least 3 characters")]
+    [MinLength(3, ErrorMessage = "Minimum 3 characters required")]
     [JsonPropertyName("StoreName")]
     public string StoreName { get; set; } = string.Empty;
 
@@ -25,7 +25,7 @@ public class VmSeller
     public decimal TotalRevenue { get; set; }
 
     [Required(ErrorMessage = "Store description is required")]
-    [MinLength(10, ErrorMessage = "Description must be at least 10 characters")]
+    [MinLength(10, ErrorMessage = "Minimum 10 characters required")]
     [JsonPropertyName("StoreDescription")]
     public string StoreDescription { get; set; } = string.Empty;
 

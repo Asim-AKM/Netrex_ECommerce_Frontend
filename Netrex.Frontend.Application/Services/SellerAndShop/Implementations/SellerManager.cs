@@ -1,5 +1,6 @@
-﻿using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
-using Netrex.Frontend.Application.ViewModels.SellerModule;
+﻿using Netrex.Frontend.Application.Commons;
+using Netrex.Frontend.Application.Commons.AppResponses;
+using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Blazor.Services;
 using System.Net.Http.Json;
 
@@ -14,107 +15,121 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             _httpClient = httpClient.CreateClient("ApiClient");
             _loader = loaderService;
         }
-        public async Task<VmSeller> CreateSellerAsync(VmSeller vmSeller)
+        public async Task<ApiResponse<VmSeller>> CreateSellerAsync(VmSeller vmSeller)
         {
             try
             {
                 _loader.Show();
                 var response = await _httpClient.PostAsJsonAsync("api/Seller/CreateSeller", vmSeller);
-                if (response.IsSuccessStatusCode)
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadFromJsonAsync<VmSeller>();
-                    return json!;
+                    return ApiResponseDeserializer.FailResponse<VmSeller>(
+                        $"Failed to add seller. Status: {response.StatusCode}");
                 }
-                else
-                {
-                    throw new Exception("Failed to add seller.");
-                }
+
+                return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
+            }
+            catch (Exception ex)
+            {
+
+                return ApiResponseDeserializer.FailResponse<VmSeller>(
+            $"Unexpected error occurred: {ex.Message}");
             }
             finally
             {
                 _loader.Hide();
             }
         }
-        public async Task<string> DeleteSellerAsync(Guid Id)
+        public async Task<ApiResponse<string>> DeleteSellerAsync(Guid Id)
         {
             try
             {
                 _loader.Show();
                 var response = await _httpClient.DeleteAsync($"api/Seller/DeleteSeller/{Id}");
+                var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Failed to delete Seller.");
+                    return ApiResponseDeserializer.FailResponse<string>($"Failed to delete seller. Status: {response.StatusCode}");
                 }
-                return "Deleted Sucessfully";
+                return ApiResponseDeserializer.Deserialize<string>(jsonString);
+            }
+            catch(Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>(
+           $"Unexpected error occurred: {ex.Message}");
             }
             finally
             {
                 _loader.Hide();
             }
         }
-
-        public async Task<VmSeller> GetSellerbyIdAsync(Guid Id)
+        public async Task<ApiResponse<VmSeller>> GetSellerbyIdAsync(Guid Id)
         {
             try
             {
                 _loader.Show();
-                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById/{Id}");
+                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById{Id}");
+                var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Failed to retrieve Seller Data.");
+                    return ApiResponseDeserializer.FailResponse<VmSeller>($"Failed to retrieve seller.Status:{response.StatusCode}");
                 }
-                var result = await response.Content.ReadFromJsonAsync<VmSeller>();
-                return result ?? new VmSeller();
+                return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
+            }
+            catch(Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<VmSeller>($"Unexpected error occurred: {ex.Message}");
             }
             finally
             {
                 _loader.Hide();
             }
         }
-
-        public async Task<List<VmSeller>> GetSellerAsync()
+        public async Task<ApiResponse<List<VmSeller>>> GetSellerAsync()
         {
             try
             {
                 _loader.Show();
 
-                var response = await _httpClient.GetAsync(
-                    "api/Seller/GetAllSellers");
+                var response = await _httpClient.GetAsync("api/Seller/GetAllSellers");
+                var jsonString=await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Failed to retrieve Seller.");
+                    return ApiResponseDeserializer.FailResponse<List<VmSeller>>("Failed to retrieve sellers. ");
                 }
-
-                var products = await response.Content
-                    .ReadFromJsonAsync<List<VmSeller>>();
-
-                return products ?? new List<VmSeller>();
+                return ApiResponseDeserializer.Deserialize<List<VmSeller>>(jsonString);
+            }
+            catch( Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<List<VmSeller>>($"Error retrieving sellers: {ex.Message}");
             }
             finally
             {
                 _loader.Hide();
             }
         }
-
-        public async Task<string> UpdateSellerAsync(VmSeller vmSeller)
+        public async Task<ApiResponse<VmSeller>> UpdateSellerAsync(VmSeller vmSeller)
         {
             try
             {
                 _loader.Show();
                 var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Seller/UpdateSeller/{vmSeller.SellerId}", vmSeller);
+                    $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
+                var jsonString=await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Failed to update Seller: {errorContent}");
+                    return ApiResponseDeserializer.FailResponse<VmSeller>($"Failed to update seller. Status: {response.StatusCode}");
                 }
-                return "Data updated successfully";
+                return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                return ApiResponseDeserializer.FailResponse<VmSeller>(
+                    $"Unexpected error occurred: {ex.Message}");
             }
             finally
             {

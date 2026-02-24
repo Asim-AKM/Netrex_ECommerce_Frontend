@@ -1,11 +1,14 @@
 ﻿@page "/"
+@using Netrex.Frontend.Application.Services.ProductManagement.Interfaces
+@using Netrex.Frontend.Application.ViewModels.ProductManagement
 @inject IJSRuntime JS
+@inject IProductManager ProductManager
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
 <div class="home-page">
-
     <!-- Slider -->
     <div class="slide-container">
         <div class="slide">
@@ -16,7 +19,6 @@
                 <button>Explore Now</button>
             </div>
         </div>
-
         <div class="slide">
             <img src="assets/images/home1-slider-3.jpg" alt="" />
             <div class="caption">
@@ -25,7 +27,6 @@
                 <button>Explore Now</button>
             </div>
         </div>
-
         <span class="arrow prev" onclick="slideControler(-1)">&#10094;</span>
         <span class="arrow next" onclick="slideControler(1)">&#10095;</span>
     </div>
@@ -42,7 +43,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
                     <a href="">
                         <div class="catg">
@@ -51,7 +51,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
                     <a href="">
                         <div class="catg">
@@ -60,7 +59,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
                     <a href="">
                         <div class="catg">
@@ -69,7 +67,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
                     <a href="">
                         <div class="catg">
@@ -78,7 +75,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
                     <a href="">
                         <div class="catg">
@@ -87,7 +83,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="col-6 col-sm-4 col-md-3 col-lg-auto">
                     <a href="">
                         <div class="catg">
@@ -100,227 +95,74 @@
         </div>
     </section>
 
-    <!-- Products -->
+    <!-- Products Section -->
     <section class="product-list py-4">
         <div class="container">
             <h2 class="featured">Featured Products</h2>
 
-            <div class="row">
-                <!-- Product Card 1 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
+            @if (isLoading)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
+                    <p class="mt-2">Loading products...</p>
                 </div>
-
-                <!-- Product Card 2 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
+            }
+            else if (products == null || products.Count == 0)
+            {
+                <div class="text-center py-5">
+                    <p class="text-muted">No products available at the moment.</p>
                 </div>
-
-                <!-- Product Card 3 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var product in products)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="product-card h-100 d-flex flex-column">
+                                <div class="product-image">
+                                    @if (product.Discount > 0)
+                                    {
+                                        <span class="discount">-@product.Discount%</span>
+                                    }
+                                    <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
+                                    <img src="@(product.ImageUrl ?? "/assets/placeholder.jpg")"
+                                         alt="@product.ProductName"
+                                         onerror="this.src='/assets/placeholder.jpg'" />
+                                </div>
+                                <div class="product-info flex-grow-1 d-flex flex-column">
+                                    <a href="">
+                                        <h3 class="product-title">@product.ProductName</h3>
+                                    </a>
+                               
+                                    <div class="price mt-auto">
+                                        @if (product.Discount > 0)
+                                        {
+                                            var finalPrice = product.Price - (product.Price * product.Discount / 100);
+                                            <span style="text-decoration: line-through; color: #999; margin-right: 5px;">Rs @product.Price.ToString("N0")</span>
+                                            <span style="color: #04ADB1;">Rs @finalPrice.ToString("N0")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Rs @product.Price.ToString("N0")</span>
+                                        }
+                                    </div>
+                                    <div class="cart-row mt-3">
+                                        <button class="add-cart" @onclick="() => AddToCart(product.ProductId)">
+                                            Add to Cart
+                                        </button>
+                                        <button class="buy-now" @onclick="() => BuyNow(product.ProductId)">
+                                            Buy Now
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
-
-                <!-- Product Card 4 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 5 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 6 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <span class="discount">-30%</span>
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 7 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 8 -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
-                            <img src="assets/product-images/13.jpg" width="200" alt="Product" />
-                        </div>
-                        <div class="product-info">
-                            <a href="">
-                                <h3 class="product-title">Trendy Casual Wear Shirt</h3>
-                            </a>
-                            <div class="product-meta">
-                                <span class="unit">10 QTY</span>
-                                <span class="rating"><img src="assets/icons/star.png" width="15" alt=""> <strong>4.5</strong></span>
-                            </div>
-                            <div class="price">Rs 2000</div>
-                            <div class="cart-row">
-                                <button class="add-cart">Add to Cart</button>
-                                <NavLink class="buy-now" href="/ProductlandingPage">
-                                    Buy Now
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
 
             <div class="text-center">
                 <button class="more-products">More Products</button>
@@ -332,7 +174,6 @@
     <section class="netrex-guidence py-5">
         <div class="container">
             <h2 class="choose-us">Why Choose Us</h2>
-
             <div class="row mt-4 justify-content-center">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
                     <div class="netrex">
@@ -343,7 +184,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
                     <div class="netrex">
                         <img src="assets/icons/wallet.png" width="70" alt="" />
@@ -353,7 +193,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
                     <div class="netrex">
                         <img src="assets/icons/product-return.png" width="70" alt="" />
@@ -363,7 +202,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
                     <div class="netrex">
                         <img src="assets/icons/24-7.png" width="70" alt="" />
@@ -386,21 +224,68 @@
                 <p class="user-name"></p>
             </div>
         </div>
-
         <div class="arrow">
             <button class="left-arrow"><img src="assets/icons/left-arrow.png" alt=""></button>
             <button class="right-arrow"><img src="assets/icons/right-arrow.png" alt=""></button>
         </div>
     </section>
-
 </div>
 
 @code {
+    private List<ProductsVm> products = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProductsAsync();
+    }
+
+    private async Task LoadProductsAsync()
+    {
+        try
+        {
+            isLoading = true;
+            var response = await ProductManager.GetAllProductsAsync();
+            if (response.IsSuccess)
+            {
+                products = response.Data ?? new();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to load products: {response.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading products: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void AddToCart(Guid productId)
+    {
+        // Product Id CartIteam module developer necha deya gya line sa la sakta hain
+        Console.WriteLine($"Product {productId} added to cart.");
+        
+    }
+
+    private void BuyNow(Guid productId)
+    {
+        
+        Navigation.NavigateTo($"/ProductlandingPage", new NavigationOptions
+        {
+            
+        });
+       
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Call your JavaScript initialization function
             await JS.InvokeVoidAsync("initializeHomePage");
         }
     }

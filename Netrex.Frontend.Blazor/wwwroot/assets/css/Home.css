@@ -49,14 +49,14 @@ header {
 }
 
 .contact-number h3 a {
-    text-decoration:none;
+    text-decoration: none;
     color: black;
     font-weight: bold;
     font-size: 18px;
 }
 
 .contact-number p a {
-    text-decoration:none;
+    text-decoration: none;
     color: rgb(137, 137, 137);
     margin: 0;
 }
@@ -130,6 +130,7 @@ nav {
 .nav-icons ul li {
     list-style: none;
 }
+
 .nav-icons a img {
     filter: brightness(0) invert(1);
 }
@@ -263,7 +264,7 @@ nav {
     margin-top: 10px;
 }
 
-/* Product Cards */
+/* Product Cards - UPDATED with equal heights */
 .product-list .featured {
     text-align: center;
     margin-bottom: 20px;
@@ -277,7 +278,16 @@ nav {
     padding: 14px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     margin-bottom: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
 }
+
+    .product-card:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        transform: translateY(-5px);
+    }
 
 .product-image {
     position: relative;
@@ -285,12 +295,16 @@ nav {
     border-radius: 20px;
     padding: 20px;
     text-align: center;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
     .product-image img {
-        width: 100%;
-        max-height: 180px;
-        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
     }
 
 .discount {
@@ -328,6 +342,9 @@ nav {
 
 .product-info {
     padding: 14px 6px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
     .product-info a {
@@ -340,6 +357,11 @@ nav {
     color: #222;
     margin-bottom: 6px;
     line-height: 1.4;
+    height: 50px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .product-meta {
@@ -355,12 +377,14 @@ nav {
     font-weight: 600;
     color: #000;
     margin-bottom: 12px;
+    margin-top: auto;
 }
 
 .cart-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
 }
 
 .add-cart {
@@ -371,6 +395,9 @@ nav {
     border-radius: 3px;
     cursor: pointer;
     color: white;
+    flex: 1;
+    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
 .buy-now {
@@ -381,11 +408,18 @@ nav {
     border-radius: 3px;
     cursor: pointer;
     color: white;
+    flex: 1;
+    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
-    .add-cart:hover {
-        background-color: #03aeae92;
-    }
+.add-cart:hover {
+    background-color: #03aeae92;
+}
+
+.buy-now:hover {
+    background-color: #1e5a5f;
+}
 
 .more-products {
     background-color: #113c6d;
@@ -509,7 +543,7 @@ nav {
 footer {
     background-color: #03ADAE;
     color: whitesmoke;
-        padding: 1px 1px;
+    padding: 1px 1px;
 }
 
     footer h2 {
@@ -532,9 +566,9 @@ footer {
         footer .subscribe-info p {
             color: white;
             margin: 0;
-            text-decoration:none;
+            text-decoration: none;
         }
-       
+
         footer .nav-items li {
             list-style: none;
             padding: 0;
@@ -877,16 +911,22 @@ footer {
         padding: 10px;
     }
 
+    .product-image {
+        height: 150px;
+        padding: 10px;
+    }
+
     .product-title {
         font-size: 14px;
+        height: 40px;
     }
 
     .price {
         font-size: 16px;
     }
 
-    .add-cart {
-        padding: 8px 12px;
+    .add-cart, .buy-now {
+        padding: 8px 5px;
         font-size: 11px;
     }
 
@@ -933,8 +973,11 @@ footer {
         font-size: 8px;
         padding: 5px 8px;
     }
-}
 
+    .product-image {
+        height: 120px;
+    }
+}
 
 /* Hamburger Toggler Styling */
 .navbar-toggler {

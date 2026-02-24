@@ -21,14 +21,14 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
                 var response = await _httpClient.PostAsJsonAsync("api/Seller/CreateSeller", vmSeller);
-                var jsonString = await response.Content.ReadAsStringAsync();
+                
 
                 if (!response.IsSuccessStatusCode)
                 {
                     return ApiResponseDeserializer.FailResponse<VmSeller>(
                         $"Failed to add seller. Status: {response.StatusCode}");
                 }
-
+                var jsonString = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
             }
             catch (Exception ex)
@@ -48,11 +48,12 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
                 var response = await _httpClient.DeleteAsync($"api/Seller/DeleteSeller/{Id}");
-                var jsonString = await response.Content.ReadAsStringAsync();
+                
                 if (!response.IsSuccessStatusCode)
                 {
                     return ApiResponseDeserializer.FailResponse<string>($"Failed to delete seller. Status: {response.StatusCode}");
                 }
+                var jsonString = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<string>(jsonString);
             }
             catch(Exception ex)
@@ -71,11 +72,12 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
                 var response = await _httpClient.GetAsync($"api/Seller/GetSellerById{Id}");
-                var jsonString = await response.Content.ReadAsStringAsync();
+                
                 if (!response.IsSuccessStatusCode)
                 {
                     return ApiResponseDeserializer.FailResponse<VmSeller>($"Failed to retrieve seller.Status:{response.StatusCode}");
                 }
+                var jsonString = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
             }
             catch(Exception ex)
@@ -94,12 +96,13 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 _loader.Show();
 
                 var response = await _httpClient.GetAsync("api/Seller/GetAllSellers");
-                var jsonString=await response.Content.ReadAsStringAsync();
+                
 
                 if (!response.IsSuccessStatusCode)
                 {
                     return ApiResponseDeserializer.FailResponse<List<VmSeller>>("Failed to retrieve sellers. ");
                 }
+                var jsonString = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmSeller>>(jsonString);
             }
             catch( Exception ex)
@@ -118,12 +121,13 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 _loader.Show();
                 var response = await _httpClient.PutAsJsonAsync(
                     $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
-                var jsonString=await response.Content.ReadAsStringAsync();
+                
 
                 if (!response.IsSuccessStatusCode)
                 {
                     return ApiResponseDeserializer.FailResponse<VmSeller>($"Failed to update seller. Status: {response.StatusCode}");
                 }
+                var jsonString = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
             }
             catch (Exception ex)

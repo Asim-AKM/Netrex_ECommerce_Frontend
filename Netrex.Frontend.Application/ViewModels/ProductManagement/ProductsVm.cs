@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Text.Json.Serialization;
 
 namespace Netrex.Frontend.Application.ViewModels.ProductManagement
 {
@@ -30,6 +28,7 @@ namespace Netrex.Frontend.Application.ViewModels.ProductManagement
         [property: JsonPropertyName("uploadedAt")]
         public DateTime UploadedAt { get; set; }
         public bool IsPrimary { get; set; }
+        public List<string> DeletedImagePublicIds { get; set; } = new();
 
         public double FinalPrice => Price - (Price * Discount / 100);
         public string FormattedFinalPrice => $"Rs. {FinalPrice:N0}";

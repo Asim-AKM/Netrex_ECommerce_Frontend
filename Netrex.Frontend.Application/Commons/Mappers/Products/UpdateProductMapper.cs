@@ -25,7 +25,7 @@ namespace Netrex.Frontend.Application.Commons.Mappers.Products
                 CloudPublicId = productsVm.CloudPublicId,
                 IsPrimary = productsVm.IsPrimary, 
                 UploadedAt = productsVm.UploadedAt,
-
+                DeletedImagePublicIds = productsVm.DeletedImagePublicIds,
                 
                 Images = productsVm.Images?.Select(img => new ImageDto
                 {

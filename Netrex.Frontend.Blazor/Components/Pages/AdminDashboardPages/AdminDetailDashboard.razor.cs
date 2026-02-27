@@ -44,7 +44,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
 
             try
             {
-                Sellers = await SellerManager.GetSellerAsync();
+               var Sellers = await SellerManager.GetSellerAsync();
             }
             catch (Exception ex)
             {

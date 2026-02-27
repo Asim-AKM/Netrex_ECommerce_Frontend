@@ -1,4 +1,5 @@
 ﻿@page "/admindashboard"
+@using Domain_Service.Enums
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
@@ -66,6 +67,15 @@
 </aside>
 
 <main class="ad-main-content">
+
+    @if (!string.IsNullOrEmpty(StatusMessage))
+    {
+        <div class="ntx-toast @(IsSuccess ? "ntx-toast-success" : "ntx-toast-error")">
+            <i class="fa-solid @(IsSuccess ? "fa-circle-check" : "fa-circle-xmark")"></i>
+            @StatusMessage
+        </div>
+    }
+
     <section id="ad-dashboard" class="ad-section">
         <h2>Dashboard Overview</h2>
 
@@ -151,7 +161,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>CreatedAt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,21 +189,17 @@
                                 <td>@user.Email</td>
                                 <td>@user.RoleName.ToString()</td>
                                 <td>
-                                    <span class="ad-status-badge status-@user.Userstatus.ToString().ToLower()">
-                                        @user.Userstatus.ToString()
-                                    </span>
+                                    <select @onchange="(e) => OnStatusDropdownChanged(user, e)"
+                                            class="ntx-status-select status-@user.Userstatus.ToString().ToLower()">
+                                        @foreach (var status in Enum.GetValues<UserStatus>())
+                                        {
+                                            <option value="@status" selected="@(user.Userstatus == status)">
+                                                @status.ToString()
+                                            </option>
+                                        }
+                                    </select>
                                 </td>
-                                <td>
-                                    <button class="ad-action-btn edit"
-                                            title="Edit"
-                                            @onclick="() => EditUser(user)">
-                                    </button>
-
-                                    <button class="ad-action-btn delete"
-                                            @onclick="() => HandleDelete(user.Id)"
-                                            title="Delete">
-                                    </button>
-                                </td>
+                                <td>@user.CreateAt.ToString("MMM dd, yyyy")</td>
                             </tr>
                         }
                     }
@@ -224,21 +230,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (IsSellersLoading)
+                    @* @if (IsSellersLading)
                     {
                         <tr>
                             <td colspan="6" style="text-align:center;">Loading Sellers...</td>
                         </tr>
-                    }
-                    else if (Sellers != null && Sellers.Any())
+                    } *@
+                    @* else if (Sellers != null && Sellers.Any())
                     {
                         @foreach (var seller in Sellers)
                         {
                             <tr>
                                 <td>@seller.SellerId.ToString().Substring(0, 5)...</td>
-                                <td>@seller.FullName</td> @* VmSeller ki properties ke mutabiq change karein *@
+                                <td>@seller.FullName</td> // VmSeller ki properties ke mutabiq change karein 
                                 <td>@seller.Email</td>
-                                <td>@seller.TotalProducts</td> @* Agar ViewModel mein ye property hai *@
+                                <td>@seller.TotalProducts</td>  //Agar ViewModel mein ye property hai 
                                 <td>@seller.TotalRevenue.ToString("C")</td>
                                 <td>
                                     <button class="ad-btn" @onclick="() => ViewSeller(seller.SellerId)">View</button>
@@ -246,13 +252,13 @@
                                 </td>
                             </tr>
                         }
-                    }
-                    else
+                    } *@
+                    @* else
                     {
                         <tr>
                             <td colspan="6" style="text-align:center;">No sellers found.</td>
                         </tr>
-                    }
+                    } *@
                 </tbody>
             </table>
         </div>
@@ -501,4 +507,64 @@
             </div>
         </div>
     </section>
+
+    @if (ShowStatusModal && PendingStatusUser != null)
+    {
+        <!-- Backdrop -->
+        <div class="ntx-modal-backdrop" @onclick="CancelStatusChange"></div>
+
+        <!-- Modal -->
+        <div class="ntx-modal">
+            <div class="ntx-modal-header">
+                <div class="ntx-modal-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Change User Status</h3>
+            </div>
+
+            <div class="ntx-modal-body">
+                <div class="ntx-modal-user-info">
+                    @if (!string.IsNullOrWhiteSpace(PendingStatusUser.ImageUrl))
+                    {
+                        <img src="@PendingStatusUser.ImageUrl" class="ntx-modal-avatar" />
+                    }
+                    else
+                    {
+                        <div class="ntx-modal-avatar-placeholder">
+                            @PendingStatusUser.FullName.Substring(0, 1).ToUpper()
+                        </div>
+                    }
+                    <div>
+                        <p class="ntx-modal-username">@PendingStatusUser.FullName</p>
+                        <p class="ntx-modal-email">@PendingStatusUser.Email</p>
+                    </div>
+                </div>
+
+                <div class="ntx-modal-status-change">
+                    <span class="ntx-status-pill status-@PreviousStatus.ToString().ToLower()">
+                        @PreviousStatus.ToString()
+                    </span>
+                    <i class="fa-solid fa-arrow-right ntx-arrow"></i>
+                    <span class="ntx-status-pill status-@PendingNewStatus.ToString().ToLower()">
+                        @PendingNewStatus.ToString()
+                    </span>
+                </div>
+
+                <p class="ntx-modal-warning">
+                    Are you sure you want to change this user's status?
+                    This action will take effect immediately.
+                </p>
+            </div>
+
+            <div class="ntx-modal-footer">
+                <button class="ntx-modal-btn cancel" @onclick="CancelStatusChange">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+                <button class="ntx-modal-btn confirm" @onclick="ConfirmStatusChange">
+                    <i class="fa-solid fa-check"></i> Yes, Change It
+                </button>
+            </div>
+        </div>
+    }
+
 </main>

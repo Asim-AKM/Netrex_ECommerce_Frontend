@@ -1,5 +1,6 @@
 ﻿@page "/admindashboard"
 @using Domain_Service.Enums
+@using Netrex.Frontend.Application.Commons.Enums
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
@@ -150,7 +151,6 @@
 
     <section id="ad-user-management" class="ad-section">
         <h2>Customer Management</h2>
-        <button class="ad-btn">Add New Customer</button>
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
@@ -215,54 +215,61 @@
     </section>
     <section id="ad-seller-module" class="ad-section">
         <h2>Seller Module</h2>
-        <button class="ad-btn">Add New Seller</button>
+
+        @if (!string.IsNullOrEmpty(PayoutMessage))
+        {
+            <div class="ntx-toast @(IsPayoutSuccess ? "ntx-toast-success" : "ntx-toast-error")">
+                <i class="fa-solid @(IsPayoutSuccess ? "fa-circle-check" : "fa-circle-xmark")"></i>
+                @PayoutMessage
+            </div>
+        }
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Products Count</th>
-                        <th>Revenue</th>
+                        <th>Seller ID</th>
+                        <th>Store Name</th>
+                        <th>Description</th>
+                        <th>Address</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @* @if (IsSellersLading)
+                    @if (IsSellersLoading)
                     {
                         <tr>
-                            <td colspan="6" style="text-align:center;">Loading Sellers...</td>
+                            <td colspan="5" style="text-align:center;">Loading sellers...</td>
                         </tr>
-                    } *@
-                    @* else if (Sellers != null && Sellers.Any())
+                    }
+                    else if (Sellers != null && Sellers.Any())
                     {
                         @foreach (var seller in Sellers)
                         {
                             <tr>
-                                <td>@seller.SellerId.ToString().Substring(0, 5)...</td>
-                                <td>@seller.FullName</td> // VmSeller ki properties ke mutabiq change karein 
-                                <td>@seller.Email</td>
-                                <td>@seller.TotalProducts</td>  //Agar ViewModel mein ye property hai 
-                                <td>@seller.TotalRevenue.ToString("C")</td>
+                                <td>@seller.SellerId.ToString().Substring(0, 8)...</td>
+                                <td>@seller.StoreName</td>
+                                <td>@seller.StoreDescription</td>
+                                <td>@seller.StoreAddress</td>
                                 <td>
-                                    <button class="ad-btn" @onclick="() => ViewSeller(seller.SellerId)">View</button>
-                                    <button class="ad-btn" @onclick="() => EditSeller(seller)">Edit</button>
+                                    <button class="ad-btn"
+                                            @onclick="() => ViewPayout(seller.SellerId)">
+                                        <i class="fa-solid fa-money-bill-wave"></i> View Payout
+                                    </button>
                                 </td>
                             </tr>
                         }
-                    } *@
-                    @* else
+                    }
+                    else
                     {
                         <tr>
-                            <td colspan="6" style="text-align:center;">No sellers found.</td>
+                            <td colspan="5" style="text-align:center;">No sellers found.</td>
                         </tr>
-                    } *@
+                    }
                 </tbody>
             </table>
         </div>
-    </section>
+    </section>  
 
     <section id="ad-product-management" class="ad-section">
         <h2>Product Management</h2>
@@ -567,4 +574,61 @@
         </div>
     }
 
+
+    @* Payout Modal *@
+    @if (ShowPayoutModal && SelectedPayout != null)
+    {
+        <div class="ntx-modal-backdrop" @onclick="() => ShowPayoutModal = false"></div>
+        <div class="ntx-modal">
+            <div class="ntx-modal-header">
+                <div class="ntx-modal-icon">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <h3>Seller Payout Details</h3>
+            </div>
+            <div class="ntx-modal-body">
+                <div class="ntx-payout-details">
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Payout ID</span>
+                        <span class="ntx-payout-value">@SelectedPayout.SellerPayoutId.ToString().Substring(0, 8)...</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Order ID</span>
+                        <span class="ntx-payout-value">@SelectedPayout.OrderId.ToString().Substring(0, 8)...</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Amount</span>
+                        <span class="ntx-payout-value">@SelectedPayout.AmountToPay.ToString("C")</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Status</span>
+                        <span class="ntx-status-pill status-@SelectedPayout.PaymentStatus.ToString()">
+                            @SelectedPayout.PaymentStatus.ToString()
+                        </span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Payout Date</span>
+                        <span class="ntx-payout-value">
+                            @(SelectedPayout.PayOutDate == default(DateTime)
+                                                    ? "Not paid yet"
+                                                    : SelectedPayout.PayOutDate.ToString("MMM dd, yyyy"))
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="ntx-modal-footer">
+            <button class="ntx-modal-btn cancel"
+                    @onclick="() => ShowPayoutModal = false">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
+            @if (SelectedPayout.PaymentStatus != PaymentStatus.success)
+                {
+                    <button class="ntx-modal-btn confirm"
+                            @onclick="() => MarkAsPaid(SelectedPayout.SellerPayoutId)">
+                        <i class="fa-solid fa-check"></i> Mark as Paid
+                    </button>
+                }
+            </div>
+        </div>
+    }
 </main>

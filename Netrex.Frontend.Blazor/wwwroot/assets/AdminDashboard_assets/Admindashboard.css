@@ -1056,3 +1056,45 @@ CONSOLIDATED RESPONSIVE SYSTEM (All-in-One)
         transform: translateX(0);
     }
 }
+
+.ntx-status-pill.status-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.ntx-status-pill.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ntx-status-pill.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ntx-payout-details {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ntx-payout-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--light-bg);
+    border-radius: 8px;
+}
+
+.ntx-payout-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.ntx-payout-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+}

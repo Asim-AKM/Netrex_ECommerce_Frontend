@@ -1,7 +1,11 @@
 ﻿using Domain_Service.Enums;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Netrex.Frontend.Application.Commons.Enums;
+using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
+using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
+using Netrex.Frontend.Application.ViewModels.PaymentAndPayOutManagement;
 using Netrex.Frontend.Application.ViewModels.UserManagement;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
@@ -11,7 +15,10 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         [Inject] public required IJSRuntime JSRuntime { get; set; }
         [Inject] public required IUserManager UserManager { get; set; }
         [Inject] public required NavigationManager Navigation { get; set; }
+        [Inject] public required ISellerManager SellerManager { get; set; }
 
+
+        //fields for user management
         private List<VmUser> Users = [];
         private bool IsUserLoading = true;
         private string? StatusMessage;
@@ -22,10 +29,12 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         private UserStatus PreviousStatus;
         private bool IsSuccess = false;
 
+        //methods for user management
 
         protected override async Task OnInitializedAsync()
         {
             await LoadUsers();
+            await LoadSellers();
         }
 
         private async Task LoadUsers()
@@ -36,20 +45,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
                 Users = response.Data;
             IsUserLoading = false;
         }
-
-        //private async Task HandleStatusChange(Guid userId, ChangeEventArgs e)
-        //{
-        //    if (Enum.TryParse<UserStatus>(e.Value?.ToString(), out var newStatus))
-        //    {
-        //        var response = await UserManager.UpdateUserStatusAsync(userId, newStatus);
-        //        StatusMessage = response.IsSuccess ? "Status updated successfully" : response.Message;
-
-        //        if (response.IsSuccess)
-        //            await LoadUsers();
-
-        //        StateHasChanged();
-        //    }
-        //}
 
         private void OnStatusDropdownChanged(VmUser user, ChangeEventArgs e)
         {
@@ -98,5 +93,66 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
             if (firstRender)
                 await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
         }
+
+
+        // fields for seller management
+        private List<VmSeller> Sellers = [];
+        private bool IsSellersLoading = true;
+        private VmSellerPayout? SelectedPayout;
+        private bool ShowPayoutModal = false;
+        private string? PayoutMessage;
+        private bool IsPayoutSuccess = false;
+
+        // methods for seller management
+        private async Task LoadSellers()
+        {
+            IsSellersLoading = true;
+            var response = await SellerManager.GetSellerAsync();
+            if (response.IsSuccess)
+                Sellers = response.Data;
+            IsSellersLoading = false;
+        }
+
+        // this is the correct method when payout module is complete we will use this method 
+
+        //private async Task ViewPayout(Guid sellerPayoutId)
+        //{
+        //    var response = await SellerManager.GetSellerPayoutByIdAsync(sellerPayoutId);
+        //    if (response.IsSuccess)
+        //    {
+        //        SelectedPayout = response.Data;
+        //        ShowPayoutModal = true;
+        //    }
+        //}
+
+        // this method is just for checking the Modal 
+        private async Task ViewPayout(Guid sellerId)
+        {
+            var response = await SellerManager.GetSellerPayoutByIdAsync(sellerId);
+
+            // Show modal even if no payout found
+            SelectedPayout = response.IsSuccess ? response.Data : new VmSellerPayout
+            {
+                SellerId = sellerId,
+                PaymentStatus = PaymentStatus.pending,
+                AmountToPay = 0
+            };
+            ShowPayoutModal = true;
+        }
+
+        private async Task MarkAsPaid(Guid sellerPayoutId)
+        {
+            var response = await SellerManager.UpdateSellerPayoutAsPaidAsync(sellerPayoutId);
+            IsPayoutSuccess = response.IsSuccess;
+            PayoutMessage = response.IsSuccess ? "Payout marked as paid successfully!" : response.Message;
+            ShowPayoutModal = false;
+            StateHasChanged();
+
+            await Task.Delay(3000);
+            PayoutMessage = string.Empty;
+            StateHasChanged();
+        }
+
+       
     }
 }

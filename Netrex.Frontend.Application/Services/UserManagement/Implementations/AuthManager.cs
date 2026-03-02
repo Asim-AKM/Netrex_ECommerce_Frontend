@@ -32,7 +32,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 await Task.Delay(2000);
 
                 var response = await _httpClient.PostAsJsonAsync(
-                    "api/Authentication/Register",
+                    "api/v1/Authentication/Register",
                     registerView
                 );
 
@@ -55,7 +55,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
             {
                 _loader.Show();
 
-                var response = await _httpClient.PostAsJsonAsync("api/Authentication/Login", viewModel);
+                var response = await _httpClient.PostAsJsonAsync("api/v1/Authentication/Login", viewModel);
                 return response.IsSuccessStatusCode;
             }
             finally
@@ -71,7 +71,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 _loader.Show();
 
                 var response = await _httpClient.PostAsJsonAsync(
-                    "api/Authentication/VerifyEmail",
+                    "api/v1/Authentication/VerifyEmail",
                     verifyOtp
                 );
 
@@ -91,7 +91,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 _loader.Show();
 
                 var response = await _httpClient.PostAsJsonAsync(
-                    "api/Authentication/ResendOtp",
+                    "api/v1/Authentication/ResendOtp",
                     email
                 );
 

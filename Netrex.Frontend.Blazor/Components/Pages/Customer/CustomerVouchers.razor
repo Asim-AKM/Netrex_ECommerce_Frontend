@@ -1,0 +1,56 @@
+﻿@page "/customer/vouchers"
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
+
+<div class="customer-card">
+    <div class="customer-card-header">
+        <h5 class="customer-card-title">My Vouchers</h5>
+    </div>
+    <div class="customer-card-body">
+        <div class="customer-vouchers-list" id="spVouchersList">
+            <div class="customer-voucher-card mb-3 p-3" data-voucher-id="1">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="customer-voucher-code-big">SAVE20</h5>
+                        <p class="mb-1">20% off on electronics</p>
+                        <small class="text-muted">Valid until 30 Jun 2024</small>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <button class="btn customer-btn-copy" data-code="SAVE20">Copy Code</button>
+                    </div>
+                </div>
+            </div>
+            <div class="customer-voucher-card mb-3 p-3" data-voucher-id="2">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="customer-voucher-code-big">FREESHIP</h5>
+                        <p class="mb-1">Free shipping on orders above $50</p>
+                        <small class="text-muted">Valid until 15 Jul 2024</small>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <button class="btn customer-btn-copy" data-code="FREESHIP">Copy Code</button>
+                    </div>
+                </div>
+            </div>
+            <div class="customer-voucher-card p-3" data-voucher-id="3">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="customer-voucher-code-big">WELCOME10</h5>
+                        <p class="mb-1">10% off for new users</p>
+                        <small class="text-muted">Valid until 31 Dec 2024</small>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <button class="btn customer-btn-copy" data-code="WELCOME10">Copy Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty vouchers message (hidden by default) -->
+        <div class="text-center py-4 customer-empty-vouchers" style="display: none;">
+            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+            <p>No vouchers available</p>
+            <a href="/customer/dashboard" class="btn customer-btn-primary">Continue Shopping</a>
+        </div>
+    </div>
+</div>

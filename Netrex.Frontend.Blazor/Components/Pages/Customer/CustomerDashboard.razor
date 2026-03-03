@@ -1,0 +1,188 @@
+﻿@page "/customer/dashboard"
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
+
+<!-- Welcome Card -->
+<div class="customer-welcome-card mb-4">
+    <div class="customer-welcome-content p-4">
+        <div class="row align-items-center">
+            <div class="col-sm-8">
+                <h2 class="customer-welcome-title fw-bold">Welcome back, Saqib! 👋</h2>
+                <p class="customer-welcome-text text-muted">Manage your account, vouchers, and cart from here.</p>
+                <button class="btn customer-btn-primary mt-2" id="spQuickEdit">
+                    <i class="fas fa-edit me-2"></i>Quick Edit
+                </button>
+            </div>
+            <div class="col-sm-4 text-end d-none d-sm-block">
+                <i class="fas fa-user-circle customer-welcome-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-4">
+        <div class="customer-stat-card">
+            <div class="d-flex align-items-center">
+                <div class="customer-stat-icon me-3"><i class="fas fa-box fa-2x"></i></div>
+                <div>
+                    <h6 class="customer-stat-label">Total Orders</h6>
+                    <h3 class="fw-bold mb-0" id="spTotalOrders">24</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="customer-stat-card">
+            <div class="d-flex align-items-center">
+                <div class="customer-stat-icon me-3"><i class="fas fa-ticket-alt fa-2x"></i></div>
+                <div>
+                    <h6 class="customer-stat-label">Vouchers</h6>
+                    <h3 class="fw-bold mb-0" id="spTotalVouchers">5</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="customer-stat-card">
+            <div class="d-flex align-items-center">
+                <div class="customer-stat-icon me-3"><i class="fas fa-shopping-cart fa-2x"></i></div>
+                <div>
+                    <h6 class="customer-stat-label">Cart Items</h6>
+                    <h3 class="fw-bold mb-0" id="spCartCount">3</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders & Vouchers -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="customer-card">
+            <div class="customer-card-header"><h5 class="customer-card-title">Recent Orders</h5></div>
+            <div class="customer-card-body">
+                <div class="customer-order-item d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">Wireless Headphones</h6>
+                        <small class="text-muted">Order #12345 • 2 days ago</small>
+                    </div>
+                    <span class="customer-badge customer-badge-success">Delivered</span>
+                </div>
+                <div class="customer-order-item d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">Smart Watch</h6>
+                        <small class="text-muted">Order #12346 • 5 days ago</small>
+                    </div>
+                    <span class="customer-badge customer-badge-warning">Shipped</span>
+                </div>
+                <div class="customer-order-item d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">Gaming Mouse</h6>
+                        <small class="text-muted">Order #12347 • 1 week ago</small>
+                    </div>
+                    <span class="customer-badge customer-badge-info">Processing</span>
+                </div>
+            </div>
+            <div class="customer-card-footer p-3 pt-0">
+                <a class="customer-view-all-link" href="/customer/orders" data-section="orders">
+                    View all orders <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="customer-card">
+            <div class="customer-card-header"><h5 class="customer-card-title">Available Vouchers</h5></div>
+            <div class="customer-card-body">
+                <div class="d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">SAVE20</h6>
+                        <small class="text-muted">20% off electronics</small>
+                    </div>
+                    <button class="customer-btn-copy" data-code="SAVE20">Copy</button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">FREESHIP</h6>
+                        <small class="text-muted">Free shipping $50+</small>
+                    </div>
+                    <button class="customer-btn-copy" data-code="FREESHIP">Copy</button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <h6 class="mb-0">WELCOME10</h6>
+                        <small class="text-muted">10% off new users</small>
+                    </div>
+                    <button class="customer-btn-copy" data-code="WELCOME10">Copy</button>
+                </div>
+            </div>
+            <div class="customer-card-footer p-3 pt-0">
+                <a class="customer-view-all-link" href="/customer/vouchers" data-section="vouchers">
+                    View all vouchers <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Summary -->
+<div class="customer-card">
+    <div class="customer-card-header"><h5 class="customer-card-title">Your Cart (<span id="spCartItemCount">3</span> items)</h5></div>
+    <div class="customer-card-body">
+        <div class="table-responsive">
+            <table class="table customer-table">
+                <tbody id="spCartItems">
+                    <tr class="customer-cart-row" data-id="1">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/04ADB1/fff?text=M" class="rounded me-3" width="40">
+                                Wireless Mouse
+                            </div>
+                        </td>
+                        <td>$25.99</td>
+                        <td>1</td>
+                        <td>$25.99</td>
+                        <td><a href="#" class="customer-remove-item" data-id="1"><i class="fas fa-trash"></i></a></td>
+                    </tr>
+                    <tr class="customer-cart-row" data-id="2">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/04ADB1/fff?text=C" class="rounded me-3" width="40">
+                                USB-C Cable
+                            </div>
+                        </td>
+                        <td>$9.99</td>
+                        <td>2</td>
+                        <td>$19.98</td>
+                        <td><a href="#" class="customer-remove-item" data-id="2"><i class="fas fa-trash"></i></a></td>
+                    </tr>
+                    <tr class="customer-cart-row" data-id="3">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/04ADB1/fff?text=S" class="rounded me-3" width="40">
+                                Laptop Stand
+                            </div>
+                        </td>
+                        <td>$45.00</td>
+                        <td>1</td>
+                        <td>$45.00</td>
+                        <td><a href="#" class="customer-remove-item" data-id="3"><i class="fas fa-trash"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <h5 class="customer-total-amount">Total: $<span id="spCartTotal">90.97</span></h5>
+            <a href="/customer/cart" class="btn customer-btn-primary">View Cart</a>
+        </div>
+    </div>
+</div>
+
+<!-- Empty cart message (hidden by default - will be shown by JS) -->
+<div class="text-center py-4 customer-empty-cart" style="display: none;">
+    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+    <p>Your cart is empty</p>
+    <button class="btn customer-btn-primary" data-section="dashboard">Continue Shopping</button>
+</div>

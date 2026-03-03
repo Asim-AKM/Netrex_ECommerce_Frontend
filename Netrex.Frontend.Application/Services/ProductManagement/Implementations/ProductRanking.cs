@@ -31,14 +31,22 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _loaderService.Hide();
             }
         }
-        public async Task<ApiResponse<List<ProductsVm>>> GetHomepageProductsAsync()
+        public async Task<ApiResponse<List<ProductsVm>>> GetHomepageProductsAsync(Guid? categoryid = null,int pageNumber = 1,   int pageSize = 10)
         {
             try
             {
                 _loaderService.Show();
 
-                var response = await _httpClient.GetAsync("api/ProductRanking/homepage");
+                var url = $"api/ProductRanking/homepage?pageNumber={pageNumber}&pageSize={pageSize}";
+
+                if (categoryid.HasValue && categoryid != Guid.Empty)
+                {
+                    url += $"&categoryid={categoryid}";
+                }
+
+                var response = await _httpClient.GetAsync(url);
                 var json = await response.Content.ReadAsStringAsync();
+
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
             finally

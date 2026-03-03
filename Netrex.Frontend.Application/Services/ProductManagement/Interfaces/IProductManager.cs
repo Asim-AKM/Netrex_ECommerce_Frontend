@@ -15,5 +15,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Interfaces
 
         Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync();
 
+        Task<ApiResponse<List<VmProductCategory>>> GetCategoriesAsync();
+
     }
 }

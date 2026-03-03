@@ -215,5 +215,24 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _loaderService.Hide();
             }
         }
+
+        public async Task<ApiResponse<List<VmProductCategory>>> GetCategoriesAsync()
+        {
+            try
+            {
+                _loaderService.Show();
+                var response = await _httpClient.GetAsync("api/ProductRanking/GetProductCategory");
+                var json = await response.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<List<VmProductCategory>>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<List<VmProductCategory>>(ex.Message);
+            }
+            finally
+            {
+                _loaderService.Hide();
+            }
+        }
     }
 }

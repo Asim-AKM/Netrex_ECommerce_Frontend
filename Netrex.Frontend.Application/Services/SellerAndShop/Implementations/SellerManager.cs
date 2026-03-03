@@ -21,7 +21,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.PostAsJsonAsync("api/Seller/CreateSeller", vmSeller);
+                var response = await _httpClient.PostAsJsonAsync("api/v1/Seller/CreateSeller", vmSeller);
                 var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -48,7 +48,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.DeleteAsync($"api/Seller/DeleteSeller/{Id}");
+                var response = await _httpClient.DeleteAsync($"api/v1/Seller/DeleteSeller/{Id}");
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -71,7 +71,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById/{Id}");
+                var response = await _httpClient.GetAsync($"api/v1/Seller/GetSellerById/{Id}");
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -94,7 +94,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
 
-                var response = await _httpClient.GetAsync("api/Seller/GetAllSellers");
+                var response = await _httpClient.GetAsync("api/v1/Seller/GetAllSellers");
                 var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -118,7 +118,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
                 var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Seller/UpdateSeller/{vmSeller.SellerId}", vmSeller);
+                    $"api/v1/Seller/UpdateSeller/{vmSeller.SellerId}", vmSeller);
                 var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -143,7 +143,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.GetAsync($"api/SellerPayout/GetSellerPayoutById/{sellerPayoutId}");
+                var response = await _httpClient.GetAsync($"api/v1/SellerPayout/GetSellerPayoutById/{sellerPayoutId}");
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                     return ApiResponseDeserializer.FailResponse<VmSellerPayout>($"Failed to retrieve payout. Status: {response.StatusCode}");
@@ -161,7 +161,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.PutAsync($"api/SellerPayout/UpdateSellerPayoutAsPaid/{sellerPayoutId}", null);
+                var response = await _httpClient.PutAsync($"api/v1/SellerPayout/UpdateSellerPayoutAsPaid/{sellerPayoutId}", null);
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                     return ApiResponseDeserializer.FailResponse<string>($"Failed to update payout. Status: {response.StatusCode}");

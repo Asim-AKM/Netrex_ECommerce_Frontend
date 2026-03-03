@@ -32,69 +32,35 @@
     </div>
 
     <!-- Categories -->
-    <section class="categories my-5">
-        <div class="container">
-            <div class="row justify-content-around text-center">
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/responsive.png" width="50" alt="" />
-                            <p>Technology</p>
+    @if (isLoadingCategories)
+    {
+        <p>Loading categories...</p>
+    }
+    else if (categories != null && categories.Any())
+    {
+        <section class="categories my-5">
+            <div class="container">
+                <div class="row justify-content-around text-center">
+                    @foreach (var category in categories)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
+                            <a @onclick="() => LoadProductsAsync(category.Id)">
+                                <div class="catg">
+                                    <img src="@category.IconUrl" width="50" />
+
+                                    <p>@category.ProductCategoryName</p>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/small-appliance.png" width="50" alt="" />
-                            <p>Home & Kitchen</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/fashion.png" width="50" alt="" />
-                            <p>Fashion</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/apple.png" width="50" alt="" />
-                            <p>Watch</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/clothes.png" width="50" alt="" />
-                            <p>Mens</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto mb-4 mb-lg-0">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/sports.png" width="50" alt="" />
-                            <p>Sports</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3 col-lg-auto">
-                    <a href="">
-                        <div class="catg">
-                            <img src="/assets/icons/kids.png" width="50" alt="" />
-                            <p>Kids</p>
-                        </div>
-                    </a>
+                    }
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+    }
+    else
+    {
+        <p>No categories found</p>
+    }
     <!-- Products Section -->
     <section class="product-list py-4">
         <div class="container">
@@ -136,7 +102,7 @@
                                     <a href="">
                                         <h3 class="product-title">@product.ProductName</h3>
                                     </a>
-                               
+
                                     <div class="price mt-auto">
                                         @if (product.Discount > 0)
                                         {
@@ -163,10 +129,22 @@
                     }
                 </div>
             }
-
-            <div class="text-center">
-                <button class="more-products">More Products</button>
-            </div>
+                 <div aria-label="Product navigation" class="mt-5 mb-4">
+                    <ul class="pagination justify-content-center custom-unique-pagination">
+                        <li class="page-item">
+                            @* <a class="page-link nav-text" href="#">&lsaquo; Back</a> *@
+                        <button class="page-link nav-text" @onclick="PreviousPage" disabled="@(currentPage == 1)">
+                            &lsaquo; Back
+                        </button>
+                        </li>
+                        <li class="page-item">
+                            @* <a class="page-link nav-text" href="#">Next</a> *@
+                        <button class="page-link nav-text" @onclick="NextPage">
+                            Next &rsaquo;
+                        </button>
+                        </li>
+                    </ul>
+                </div> 
         </div>
     </section>
 

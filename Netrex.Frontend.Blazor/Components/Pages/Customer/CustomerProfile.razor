@@ -1,0 +1,38 @@
+﻿@page "/customer/profile"
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
+
+<div class="customer-card">
+    <div class="customer-card-header">
+        <h5 class="customer-card-title">Profile Information</h5>
+    </div>
+    <div class="customer-card-body">
+        <form id="spProfileForm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="customer-form-label" for="spFullName">Full Name</label>
+                    <input type="text" class="form-control customer-form-control" id="spFullName" value="Saqib Khan" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="customer-form-label" for="spEmail">Email Address</label>
+                    <input type="email" class="form-control customer-form-control" id="spEmail" value="saqibkhanskm1@gmail.com" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="customer-form-label" for="spPhone">Phone Number</label>
+                    <input type="tel" class="form-control customer-form-control" id="spPhone" value="+92 333 5011154" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="customer-form-label" for="spDob">Date of Birth</label>
+                    <input type="date" class="form-control customer-form-control" id="spDob" value="1995-05-15" />
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="customer-form-label" for="spAddress">Address</label>
+                    <textarea class="form-control customer-form-control" id="spAddress" rows="3">123 Main Street, City, Country</textarea>
+                </div>
+            </div>
+
+            <!-- Update Profile Button - Active -->
+            <button type="button" class="btn customer-btn-primary mt-2" id="spUpdateProfile">Update Profile</button>
+        </form>
+    </div>
+</div>

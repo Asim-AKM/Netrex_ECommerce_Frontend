@@ -1,0 +1,59 @@
+﻿@page "/customer/settings"
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
+
+<div class="customer-card">
+    <div class="customer-card-header">
+        <h5 class="customer-card-title">Account Settings</h5>
+    </div>
+    <div class="customer-card-body">
+        <!-- Notification Preferences -->
+        <div class="customer-settings-group mb-4">
+            <h6>Notification Preferences</h6>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="spEmailNotifications" checked>
+                <label class="form-check-label" for="spEmailNotifications">Email Notifications</label>
+            </div>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="spSmsNotifications">
+                <label class="form-check-label" for="spSmsNotifications">SMS Notifications</label>
+            </div>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="spPromotionalEmails" checked>
+                <label class="form-check-label" for="spPromotionalEmails">Promotional Emails</label>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="customer-settings-group mb-4">
+            <h6>Privacy Settings</h6>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="spProfileVisibility" checked>
+                <label class="form-check-label" for="spProfileVisibility">Make profile public</label>
+            </div>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="spOrderHistory" checked>
+                <label class="form-check-label" for="spOrderHistory">Show order history</label>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="customer-settings-group">
+            <h6>Change Password</h6>
+            <div class="row mt-2">
+                <div class="col-md-4 mb-3">
+                    <input type="password" class="form-control" id="spCurrentPassword" placeholder="Current Password">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <input type="password" class="form-control" id="spNewPassword" placeholder="New Password">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <input type="password" class="form-control" id="spConfirmPassword" placeholder="Confirm Password">
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Settings Button -->
+        <button class="btn customer-btn-primary mt-3" id="spSaveSettings">Save Settings</button>
+    </div>
+</div>

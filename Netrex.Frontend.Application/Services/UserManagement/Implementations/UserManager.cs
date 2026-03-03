@@ -25,7 +25,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
             {
                 _loader.Show();
                
-                var response = await _httpClient.GetAsync("api/User/getall");
+                var response = await _httpClient.GetAsync("api/v1/User/getall");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmUser>>(json);
             }
@@ -45,7 +45,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
             {
                 _loader.Show();
                 var payload = new { Id = id, Status = status };
-                var response = await _httpClient.PutAsJsonAsync("api/User/updatestatus", payload);
+                var response = await _httpClient.PutAsJsonAsync("api/v1/User/updatestatus", payload);
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<string>(json);
             }

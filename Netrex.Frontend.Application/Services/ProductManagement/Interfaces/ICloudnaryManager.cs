@@ -9,5 +9,6 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Interfaces
           List<byte[]> images,
           List<string> fileNames,
           string contentType);
+
     }
 }

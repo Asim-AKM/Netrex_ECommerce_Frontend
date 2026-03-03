@@ -1,37 +1,138 @@
-﻿using Netrex.Frontend.Application.DTO_s;
+﻿using Netrex.Frontend.Application.Commons;
+using Netrex.Frontend.Application.Commons.AppResponses;
 using Netrex.Frontend.Application.Services.Customer.Interfaces;
+using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
+using Netrex.Frontend.Application.ViewModels.Customer;
+using Netrex.Frontend.Application.ViewModels.ProductManagement;
+using Netrex.Frontend.Blazor.Services;
 using System.Net.Http.Json;
-using System.Net.Http.Headers;
 
 namespace Netrex.Frontend.Application.Services.Customer.Implementation
 {
-    // Primary Constructor use ho raha hai
-    public class CustomerManager(HttpClient http) : ICustomerManager
+    public class CustomerManager : ICustomerManager
     {
-        public async Task UpdateCustomerAsync(UpdateCustomerDto customer)
-        {
-            var response = await http.PutAsJsonAsync("api/Customer/updateCustomer", customer);
+        private readonly HttpClient _httpClient;
+        private readonly LoaderService _loaderService;
+        private readonly ICloudnaryManager _cloudinaryManager;
 
-            if (!response.IsSuccessStatusCode)
+        public CustomerManager(
+            IHttpClientFactory httpClientFactory,
+            LoaderService loaderService,
+            ICloudnaryManager cloudinaryManager)
+        {
+            _httpClient = httpClientFactory.CreateClient("ApiClient");
+            _loaderService = loaderService;
+            _cloudinaryManager = cloudinaryManager;
+        }
+
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLower();
+            return extension switch
             {
-                throw new Exception("Failed to update customer");
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".bmp" => "image/bmp",
+                ".tiff" or ".tif" => "image/tiff",
+                _ => "image/jpeg"
+            };
+        }
+
+        public async Task<ApiResponse<string>> DeleteCustomer(Guid customerId)
+        {
+            try
+            {
+                _loaderService.Show();
+                var response = await _httpClient.DeleteAsync($"api/Customer/DeleteCustomer/{customerId}");
+                var json = await response.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<string>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>(ex.Message);
+            }
+            finally
+            {
+                _loaderService.Hide();
             }
         }
 
-        public async Task UpdateProfileImageAsync(Guid userId, byte[] imageData)
+        public async Task<ApiResponse<List<VMCustomer>>> GetAllCustomers()
         {
-            using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(new MemoryStream(imageData));
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-
-            content.Add(fileContent, "File", "profile.jpg");
-            content.Add(new StringContent(userId.ToString()), "UserId");
-
-            var response = await http.PostAsync("api/customer/updateProfileImage", content);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                throw new Exception("Image upload failed");
+                _loaderService.Show();
+                var response = await _httpClient.GetAsync("api/Customer/GetAllCustomers");
+                var json = await response.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<List<VMCustomer>>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<List<VMCustomer>>(ex.Message);
+            }
+            finally
+            {
+                _loaderService.Hide();
+            }
+        }
+
+        public async Task<ApiResponse<string>> UpdateCustomer(
+            VMCustomer customer,
+            byte[]? newImageBytes = null,
+            string? newImageName = null)
+        {
+            if (customer == null)
+                return ApiResponseDeserializer.FailResponse<string>("Customer cannot be null");
+
+            string? oldPublicId = customer.Images?.CloudPublicId;
+
+            try
+            {
+                _loaderService.Show();
+
+                if (newImageBytes != null && newImageBytes.Length > 0 && !string.IsNullOrEmpty(newImageName))
+                {
+                    string contentType = GetContentType(newImageName);
+
+                    var uploadResponse = await _cloudinaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
+                        new List<byte[]> { newImageBytes },
+                        new List<string> { newImageName },
+                        contentType);
+
+                    if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                        return ApiResponseDeserializer.FailResponse<string>($"Image upload failed: {uploadResponse.Message}");
+
+                    if (customer.Images == null)
+                        customer.Images = new ProfileImage();
+
+                    customer.Images.ImageURL = uploadResponse.Data.Url ?? "";
+                    customer.Images.CloudPublicId = uploadResponse.Data.CloudPublicId ?? "";
+
+                    if (!string.IsNullOrEmpty(oldPublicId))
+                    {
+                        var deleteResponse = await _httpClient.DeleteAsync($"api/v1/Image/delete?publicId={oldPublicId}");
+                        if (!deleteResponse.IsSuccessStatusCode)
+                        {
+                            var errorJson = await deleteResponse.Content.ReadAsStringAsync();
+                            var errorResponse = ApiResponseDeserializer.Deserialize<bool>(errorJson);
+                            return ApiResponseDeserializer.FailResponse<string>($"Failed to delete old image: {errorResponse?.Message ?? "Unknown error"}");
+                        }
+                    }
+                }
+
+                var apiResponse = await _httpClient.PutAsJsonAsync($"api/Customer/UpdateCustomer/{customer.UserId}", customer);
+                var json = await apiResponse.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<string>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>(ex.Message);
+            }
+            finally
+            {
+                _loaderService.Hide();
             }
         }
     }

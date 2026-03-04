@@ -19,10 +19,11 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         [Inject] public required ISellerManager SellerManager { get; set; }
         [Inject] public required IProductManager ProductManager { get; set; }
 
-        // Fields for user management
-        private List<VmUser> Users = new();
+        //fields for user management
+        private List<VmUser> Users = [];
         private bool IsUserLoading = true;
         private string? StatusMessage;
+        
         private bool ShowStatusModal = false;
         private VmUser? PendingStatusUser;
         private UserStatus PendingNewStatus;

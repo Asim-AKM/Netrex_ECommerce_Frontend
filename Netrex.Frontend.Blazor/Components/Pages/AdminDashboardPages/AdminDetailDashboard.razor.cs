@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Netrex.Frontend.Application.Commons.Enums;
-using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
+using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
 using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.PaymentAndPayOutManagement;
+using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Application.ViewModels.UserManagement;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
@@ -16,33 +17,62 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         [Inject] public required IUserManager UserManager { get; set; }
         [Inject] public required NavigationManager Navigation { get; set; }
         [Inject] public required ISellerManager SellerManager { get; set; }
+        [Inject] public required IProductManager ProductManager { get; set; }
 
-
-        //fields for user management
-        private List<VmUser> Users = [];
+        // Fields for user management
+        private List<VmUser> Users = new();
         private bool IsUserLoading = true;
         private string? StatusMessage;
-
         private bool ShowStatusModal = false;
         private VmUser? PendingStatusUser;
         private UserStatus PendingNewStatus;
         private UserStatus PreviousStatus;
         private bool IsSuccess = false;
 
-        //methods for user management
+        // Product Management
+        private List<ProductsVm> Products = new(); // Initialize to avoid null
+        private bool IsProductsLoading = true;
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadUsers();
-            await LoadSellers();
+            // Concurrent loading start kar sakte hain performance ke liye
+            await Task.WhenAll(LoadUsers(), LoadSellers(), LoadProducts());
         }
 
+        private async Task LoadProducts()
+        {
+            try
+            {
+                IsProductsLoading = true;
+                var response = await ProductManager.GetAllProductsAsync();
+
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    Products = response.Data;
+                }
+                else
+                {
+                    Products = new List<ProductsVm>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading products: {ex.Message}");
+                Products = new List<ProductsVm>();
+            }
+            finally
+            {
+                IsProductsLoading = false;
+                StateHasChanged(); // UI update lazmi hai
+            }
+        }
+
+        // --- User Management Methods ---
         private async Task LoadUsers()
         {
             IsUserLoading = true;
             var response = await UserManager.GetUsersAsync();
-            if (response.IsSuccess)
-                Users = response.Data;
+            if (response.IsSuccess) Users = response.Data ?? new();
             IsUserLoading = false;
         }
 
@@ -60,21 +90,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         private async Task ConfirmStatusChange()
         {
             if (PendingStatusUser == null) return;
-
             ShowStatusModal = false;
             var response = await UserManager.UpdateUserStatusAsync(PendingStatusUser.Id, PendingNewStatus);
-
             IsSuccess = response.IsSuccess;
             StatusMessage = response.IsSuccess ? "User status updated successfully!" : response.Message;
-
-            if (response.IsSuccess)
-                await LoadUsers();
-            else
-                PendingStatusUser.Userstatus = PreviousStatus;
-
+            if (response.IsSuccess) await LoadUsers();
+            else PendingStatusUser.Userstatus = PreviousStatus;
             StateHasChanged();
-
-            // Auto-hide after 3 seconds
             await Task.Delay(3000);
             StatusMessage = string.Empty;
             StateHasChanged();
@@ -82,55 +104,35 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
 
         private void CancelStatusChange()
         {
-            if (PendingStatusUser != null)
-                PendingStatusUser.Userstatus = PreviousStatus; // revert dropdown
-
+            if (PendingStatusUser != null) PendingStatusUser.Userstatus = PreviousStatus;
             ShowStatusModal = false;
             StateHasChanged();
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
-                await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
+            if (firstRender) await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
         }
 
-
-        // fields for seller management
-        private List<VmSeller> Sellers = [];
+        // --- Seller Management ---
+        private List<VmSeller> Sellers = new();
         private bool IsSellersLoading = true;
         private VmSellerPayout? SelectedPayout;
         private bool ShowPayoutModal = false;
         private string? PayoutMessage;
         private bool IsPayoutSuccess = false;
 
-        // methods for seller management
         private async Task LoadSellers()
         {
             IsSellersLoading = true;
             var response = await SellerManager.GetSellerAsync();
-            if (response.IsSuccess)
-                Sellers = response.Data;
+            if (response.IsSuccess) Sellers = response.Data ?? new();
             IsSellersLoading = false;
         }
 
-        // this is the correct method when payout module is complete we will use this method 
-
-        //private async Task ViewPayout(Guid sellerPayoutId)
-        //{
-        //    var response = await SellerManager.GetSellerPayoutByIdAsync(sellerPayoutId);
-        //    if (response.IsSuccess)
-        //    {
-        //        SelectedPayout = response.Data;
-        //        ShowPayoutModal = true;
-        //    }
-        //}
-
-        // this method is just for checking the Modal 
         private async Task ViewPayout(Guid sellerId)
         {
             var response = await SellerManager.GetSellerPayoutByIdAsync(sellerId);
-
-            // Show modal even if no payout found
             SelectedPayout = response.IsSuccess ? response.Data : new VmSellerPayout
             {
                 SellerId = sellerId,
@@ -147,12 +149,9 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
             PayoutMessage = response.IsSuccess ? "Payout marked as paid successfully!" : response.Message;
             ShowPayoutModal = false;
             StateHasChanged();
-
             await Task.Delay(3000);
             PayoutMessage = string.Empty;
             StateHasChanged();
         }
-
-       
     }
 }

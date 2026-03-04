@@ -270,46 +270,96 @@
             </table>
         </div>
     </section>  
-
     <section id="ad-product-management" class="ad-section">
-        <h2>Product Management</h2>
-        <button class="ad-btn">Add New Product</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Product Management</h2>
+            <button class="ad-btn" @onclick='() => Navigation.NavigateTo("/admin/add-product")'>
+                <i class="fas fa-plus"></i> Add New Product
+            </button>
+        </div>
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>Product</th>
+                        <th>Category</th>
                         <th>Price</th>
                         <th>Stock</th>
-                        <th>Seller</th>
+                        <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Product A</td>
-                        <td>$29.99</td>
-                        <td>50</td>
-                        <td>Seller A</td>
-                        <td>
-                            <button class="ad-btn">Edit</button>
-                            <button class="ad-btn ad-btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Product B</td>
-                        <td>$49.99</td>
-                        <td>30</td>
-                        <td>Seller B</td>
-                        <td>
-                            <button class="ad-btn">Edit</button>
-                            <button class="ad-btn ad-btn-danger">Delete</button>
-                        </td>
-                    </tr>
+                    @if (IsProductsLoading)
+                    {
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 20px;">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <br />Loading products...
+                            </td>
+                        </tr>
+                    }
+                    else if (Products != null && Products.Count > 0)
+                    {
+                        @foreach (var product in Products)
+                        {
+                            <tr>
+                                <td>@product.ProductId.ToString().Substring(0, 8)...</td>
+
+                                <td style="display:flex;align-items:center;gap:10px;">
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                    {
+                                        <img src="@product.ImageUrl"
+                                             style="width:40px;height:40px;border-radius:6px;object-fit:cover;" />
+                                    }
+                                    <span>@product.ProductName</span>
+                                </td>
+
+                                <td>@product.CategoryName</td>
+
+                                <td>
+                                    @if (product.Discount > 0)
+                                    {
+                                        <div>
+                                            <span style="text-decoration:line-through;color:#9ca3af; font-size: 0.85em;">
+                                                @product.FormattedOriginalPrice
+                                            </span><br />
+                                            <strong style="color: #2563eb;">@product.FormattedFinalPrice</strong>
+                                            <span style="color:green;font-size:11px; display:block;">
+                                                (@product.DiscountDisplay Off)
+                                            </span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <strong>@product.FormattedOriginalPrice</strong>
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="badge @(product.StockQuantity < 10 ? "bg-danger" : "bg-success")">
+                                        @product.StockQuantity
+                                    </span>
+                                </td>
+                                <td>@product.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 20px; color: #6b7280;">
+                                No products found in the database.
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

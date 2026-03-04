@@ -221,7 +221,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync("ProductRanking/GetProductCategory");
+                var response = await _httpClient.GetAsync("api/v1/ProductRanking/GetProductCategory");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmProductCategory>>(json);
             }

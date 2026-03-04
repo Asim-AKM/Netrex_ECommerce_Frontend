@@ -121,8 +121,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
                 await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
         }
 
-        // --- Seller Management ---
-        private List<VmSeller> Sellers = new();
+        // fields for seller management
+        private List<VmSeller> Sellers = [];
         private bool IsSellersLoading = true;
         private VmSellerPayout? SelectedPayout;
         private bool ShowPayoutModal = false;
@@ -133,7 +133,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         {
             IsSellersLoading = true;
             var response = await SellerManager.GetSellerAsync();
-            if (response.IsSuccess) Sellers = response.Data ?? new();
+            if (response.IsSuccess)
+                Sellers = response.Data;
             IsSellersLoading = false;
         }
 

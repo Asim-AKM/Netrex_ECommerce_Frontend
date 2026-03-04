@@ -1,5 +1,8 @@
 @using Microsoft.AspNetCore.Http
+@using Netrex.Frontend.Application.Services.WishList
 @inject IJSRuntime JS
+@inject WishListStateService WishListState
+@inject IWishListManager WishListManager
 
 <nav>
     <div class="container-fluid">
@@ -45,11 +48,18 @@
 
                         <!-- Wishlist -->
                         <li>
-                            <a href="javascript:void(0)"
-                               data-bs-toggle="tooltip"
-                               data-bs-placement="bottom"
-                               title="Wishlist">
-                                <img src="/assets/icons/love.png" width="28" alt="Wishlist" />
+                            <a href="/wishlist">
+                                <div style="position:relative; display:inline-block;">
+                                    <img src="/assets/icons/love.png" width="28" alt="Wishlist" />
+                                    @if (WishListState.Count > 0)
+                                    {
+                                        <span class="position-absolute top-0 start-100 translate-middle
+                                         badge rounded-pill bg-danger"
+                                              style="font-size:10px;">
+                                            @WishListState.Count
+                                        </span>
+                                    }
+                                </div>
                             </a>
                         </li>
 
@@ -113,6 +123,28 @@
 </nav>
 
 @code {
+    private readonly Guid _userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
+
+    protected override async Task OnInitializedAsync()
+    {
+        WishListState.OnCountChanged += async () =>
+            await InvokeAsync(StateHasChanged);
+
+        await LoadCountAsync();
+    }
+
+    private async Task LoadCountAsync()
+    {
+        var response = await WishListManager.GetWishListCountAsync(_userId);
+        if (response.IsSuccess)
+            WishListState.SetCount(response.Data);
+    }
+
+    public void Dispose()
+    {
+        WishListState.OnCountChanged -= async () =>
+            await InvokeAsync(StateHasChanged);
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

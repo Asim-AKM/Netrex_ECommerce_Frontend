@@ -127,7 +127,26 @@
                                     {
                                         <span class="discount">-@product.Discount%</span>
                                     }
-                                    <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
+                                    <span class="wishlist"
+                                          style="font-size:25px; cursor:pointer;"
+                                          @onclick="() => ToggleWishList(product.ProductId)"
+                                          @onclick:stopPropagation="true">
+
+                                        @if (_loadingWishIds.Contains(product.ProductId))
+                                        {
+                                            <span class="spinner-border spinner-border-sm"
+                                                  style="width:16px; height:16px; color:#e74c3c;"></span>
+                                        }
+                                        else if (_wishedProducts.ContainsKey(product.ProductId))
+                                        {
+                                            <span style="color:#e74c3c; font-size:25px;">&#9829;</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:#ccc; font-size:25px;">&#9825;</span>
+                                        }
+
+                                    </span>
                                     <img src="@(product.ImageUrl ?? "/assets/placeholder.jpg")"
                                          alt="@product.ProductName"
                                          onerror="this.src='/assets/placeholder.jpg'" />
@@ -136,7 +155,7 @@
                                     <a href="">
                                         <h3 class="product-title">@product.ProductName</h3>
                                     </a>
-                               
+
                                     <div class="price mt-auto">
                                         @if (product.Discount > 0)
                                         {
@@ -231,62 +250,3 @@
     </section>
 </div>
 
-@code {
-    private List<ProductsVm> products = new();
-    private bool isLoading = true;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadProductsAsync();
-    }
-
-    private async Task LoadProductsAsync()
-    {
-        try
-        {
-            isLoading = true;
-            var response = await ProductManager.GetAllProductsAsync();
-            if (response.IsSuccess)
-            {
-                products = response.Data ?? new();
-            }
-            else
-            {
-                Console.WriteLine($"Failed to load products: {response.Message}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading products: {ex.Message}");
-        }
-        finally
-        {
-            isLoading = false;
-        }
-    }
-
-    private void AddToCart(Guid productId)
-    {
-        // Product Id CartIteam module developer necha deya gya line sa la sakta hain
-        Console.WriteLine($"Product {productId} added to cart.");
-        
-    }
-
-    private void BuyNow(Guid productId)
-    {
-        
-        Navigation.NavigateTo($"/ProductlandingPage", new NavigationOptions
-        {
-            
-        });
-       
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("initializeHomePage");
-        }
-    }
-}

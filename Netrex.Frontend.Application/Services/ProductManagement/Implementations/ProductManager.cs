@@ -72,16 +72,16 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 if (uploadedImages.Count == 0)
                     return ApiResponseDeserializer.FailResponse<ProductsVm>("No images uploaded");
 
-               
+
                 for (int i = 0; i < uploadedImages.Count; i++)
                 {
                     uploadedImages[i].IsPrimary = i == 0;
                 }
 
-                
+
                 productsVm.Images = uploadedImages;
 
-               
+
                 var primary = uploadedImages.FirstOrDefault(i => i.IsPrimary);
                 if (primary != null)
                 {
@@ -89,7 +89,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                     productsVm.CloudPublicId = primary.CloudPublicId!;
                 }
 
-              
+
                 var dto = productsVm.Map();
                 var apiResponse = await _httpClient.PostAsJsonAsync("api/Product/CreateProduct", dto);
                 var json = await apiResponse.Content.ReadAsStringAsync();
@@ -108,14 +108,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         {
             try
             {
-                _loaderService.Show();
                 var response = await _httpClient.GetAsync("api/Product/GetAllProducts");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
-            finally
+            catch (Exception ex)
             {
-                _loaderService.Hide();
+                return ApiResponseDeserializer.FailResponse<List<ProductsVm>>(ex.Message);
             }
         }
 
@@ -165,23 +164,23 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                         uploadedImages = uploadResponse.Data;
                     }
 
-                    
+
                     bool hasExistingImages = productsVm.Images.Any();
                     for (int i = 0; i < uploadedImages.Count; i++)
                     {
                         uploadedImages[i].IsPrimary = !hasExistingImages && i == 0;
                     }
 
-                   
+
                     productsVm.Images.AddRange(uploadedImages);
 
-                   
+
                     if (!productsVm.Images.Any(i => i.IsPrimary) && productsVm.Images.Any())
                     {
                         productsVm.Images.First().IsPrimary = true;
                     }
 
-                    
+
                     var primary = productsVm.Images.FirstOrDefault(i => i.IsPrimary);
                     if (primary != null)
                     {
@@ -190,7 +189,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                     }
                 }
 
-               
+
                 var updateDto = productsVm.MapToUpdateDto();
                 var apiResponse = await _httpClient.PutAsJsonAsync($"api/Product/UpdateProduct/{productsVm.ProductId}", updateDto);
                 var json = await apiResponse.Content.ReadAsStringAsync();

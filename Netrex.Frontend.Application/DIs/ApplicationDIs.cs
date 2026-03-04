@@ -8,6 +8,7 @@ using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
 using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Implementations;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
+using Netrex.Frontend.Application.Services.WishList;
 
 namespace Netrex.Frontend.Application.DIs
 {
@@ -21,6 +22,8 @@ namespace Netrex.Frontend.Application.DIs
                                                                  .AddScoped<ICloudnaryManager, CloudnaryManager>()
                                                                 .AddScoped<IShopManager, ShopManager>()
                                                                 .AddScoped<ISellerManager, SellerManager>()
-                                                                .AddScoped<IUserManager, UserManager>();
+                                                                .AddScoped<IUserManager, UserManager>()
+                                                                .AddScoped<IWishListManager, WishListManager>()
+                                                                .AddScoped<WishListStateService>();
     }
 }

@@ -93,11 +93,16 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
             if (PendingStatusUser == null) return;
             ShowStatusModal = false;
             var response = await UserManager.UpdateUserStatusAsync(PendingStatusUser.Id, PendingNewStatus);
+            
             IsSuccess = response.IsSuccess;
             StatusMessage = response.IsSuccess ? "User status updated successfully!" : response.Message;
-            if (response.IsSuccess) await LoadUsers();
-            else PendingStatusUser.Userstatus = PreviousStatus;
+            if (response.IsSuccess)
+                await LoadUsers();
+            else
+                PendingStatusUser.Userstatus = PreviousStatus;
             StateHasChanged();
+
+            // Auto-hide after 3 seconds
             await Task.Delay(3000);
             StatusMessage = string.Empty;
             StateHasChanged();
@@ -105,14 +110,15 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
 
         private void CancelStatusChange()
         {
-            if (PendingStatusUser != null) PendingStatusUser.Userstatus = PreviousStatus;
+            if (PendingStatusUser != null)
+                PendingStatusUser.Userstatus = PreviousStatus; // revert dropdown
             ShowStatusModal = false;
             StateHasChanged();
         }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender) await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
+            if (firstRender)
+                await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
         }
 
         // --- Seller Management ---

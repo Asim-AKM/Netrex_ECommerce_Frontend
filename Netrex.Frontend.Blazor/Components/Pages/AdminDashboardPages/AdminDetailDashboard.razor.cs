@@ -141,6 +141,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         private async Task ViewPayout(Guid sellerId)
         {
             var response = await SellerManager.GetSellerPayoutByIdAsync(sellerId);
+
+            // Show modal even if no payout found
             SelectedPayout = response.IsSuccess ? response.Data : new VmSellerPayout
             {
                 SellerId = sellerId,

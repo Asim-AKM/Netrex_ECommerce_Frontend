@@ -9,9 +9,18 @@ using Netrex.Frontend.Blazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. HttpClient Setup
+var baseUrl = builder.Configuration["ApiSettings:BaseUrl"]!;
+var v1 = builder.Configuration["ApiSettings:V1"]!;
+var v2 = builder.Configuration["ApiSettings:V2"]!;
+
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7239/");
+    client.BaseAddress = new Uri($"{baseUrl}{v1}");
+});
+
+builder.Services.AddHttpClient("ApiClientV2", client =>
+{
+    client.BaseAddress = new Uri($"{baseUrl}{v2}");
 });
 
 // 2. Add Razor Components

@@ -112,7 +112,7 @@ namespace Netrex.Frontend.Application.Services.Customer.Implementation
 
                     if (!string.IsNullOrEmpty(oldPublicId))
                     {
-                        var deleteResponse = await _httpClient.DeleteAsync($"api/v1/Image/delete?publicId={oldPublicId}");
+                        var deleteResponse = await _httpClient.DeleteAsync($"Image/delete?publicId={oldPublicId}");
                         if (!deleteResponse.IsSuccessStatusCode)
                         {
                             var errorJson = await deleteResponse.Content.ReadAsStringAsync();

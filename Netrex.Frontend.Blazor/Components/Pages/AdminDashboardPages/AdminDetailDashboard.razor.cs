@@ -73,7 +73,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         {
             IsUserLoading = true;
             var response = await UserManager.GetUsersAsync();
-            if (response.IsSuccess) Users = response.Data ?? new();
+            if (response.IsSuccess)
+                Users = response.Data;
             IsUserLoading = false;
         }
 
@@ -91,15 +92,18 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         private async Task ConfirmStatusChange()
         {
             if (PendingStatusUser == null) return;
+
             ShowStatusModal = false;
             var response = await UserManager.UpdateUserStatusAsync(PendingStatusUser.Id, PendingNewStatus);
-            
+
             IsSuccess = response.IsSuccess;
             StatusMessage = response.IsSuccess ? "User status updated successfully!" : response.Message;
+
             if (response.IsSuccess)
                 await LoadUsers();
             else
                 PendingStatusUser.Userstatus = PreviousStatus;
+
             StateHasChanged();
 
             // Auto-hide after 3 seconds

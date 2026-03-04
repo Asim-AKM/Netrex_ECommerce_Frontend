@@ -1,0 +1,59 @@
+﻿@page "/customer/refunds"
+@using Netrex.Frontend.Blazor.Components.Layout.CustomerLayout
+@layout CustomerMainLayout
+
+<div class="customer-card">
+    <div class="customer-card-header">
+        <h5 class="customer-card-title">My Refunds</h5>
+    </div>
+    <div class="customer-card-body">
+        <div class="customer-refunds-list" id="spRefundsList">
+            <div class="customer-order-card mb-3 p-3" data-refund-id="1">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6>Wireless Headphones</h6>
+                        <p class="text-muted mb-1">Order #12345 • Refund requested on 20 May 2024</p>
+                        <span class="customer-badge customer-badge-warning">Pending</span>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <strong>$59.99</strong>
+                        <button class="btn customer-btn-outline btn-sm ms-2" data-refund-id="1">Track</button>
+                    </div>
+                </div>
+            </div>
+            <div class="customer-order-card mb-3 p-3" data-refund-id="2">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6>Smart Watch</h6>
+                        <p class="text-muted mb-1">Order #12346 • Refund approved on 18 May 2024</p>
+                        <span class="customer-badge customer-badge-success">Approved</span>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <strong>$199.99</strong>
+                        <button class="btn customer-btn-outline btn-sm ms-2" data-refund-id="2">Track</button>
+                    </div>
+                </div>
+            </div>
+            <div class="customer-order-card p-3" data-refund-id="3">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6>Gaming Mouse</h6>
+                        <p class="text-muted mb-1">Order #12347 • Refund completed on 15 May 2024</p>
+                        <span class="customer-badge customer-badge-info">Completed</span>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <strong>$45.00</strong>
+                        <button class="btn customer-btn-outline btn-sm ms-2" data-refund-id="3">Track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty refunds message (hidden by default) -->
+        <div class="text-center py-4 customer-empty-refunds" style="display: none;">
+            <i class="fas fa-undo-alt fa-3x text-muted mb-3"></i>
+            <p>No refunds found</p>
+            <a href="/customer/dashboard" class="btn customer-btn-primary">Continue Shopping</a>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿using Netrex.Frontend.Application.Commons.AppResponses;
+using Netrex.Frontend.Application.ViewModels.PaymentAndPayOutManagement;
 
 namespace Netrex.Frontend.Application.Services.SellerAndShop.Interfaces
 {
@@ -9,6 +10,8 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Interfaces
         Task<ApiResponse<string>> DeleteSellerAsync(Guid Id);
         Task<ApiResponse<List<VmSeller>>> GetSellerAsync();
         Task<ApiResponse<VmSeller>> GetSellerbyIdAsync(Guid Id);
+        Task<ApiResponse<VmSellerPayout>> GetSellerPayoutByIdAsync(Guid sellerPayoutId); 
+        Task<ApiResponse<string>> UpdateSellerPayoutAsPaidAsync(Guid sellerPayoutId);
 
     }
 }

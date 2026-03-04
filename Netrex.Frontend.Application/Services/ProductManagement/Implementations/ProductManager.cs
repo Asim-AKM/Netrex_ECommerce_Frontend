@@ -37,10 +37,11 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _ => "image/jpeg"
             };
         }
+
         public async Task<ApiResponse<ProductsVm>> AddProducts(
-           ProductsVm productsVm,
-           List<byte[]> imageBytes,
-           List<string> imageNames)
+            ProductsVm productsVm,
+            List<byte[]> imageBytes,
+            List<string> imageNames)
         {
             try
             {
@@ -69,18 +70,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                     uploadedImages = uploadResponse.Data;
                 }
 
-                if (uploadedImages.Count == 0)
-                    return ApiResponseDeserializer.FailResponse<ProductsVm>("No images uploaded");
-
-
+                // Set first image as primary
                 for (int i = 0; i < uploadedImages.Count; i++)
                 {
                     uploadedImages[i].IsPrimary = i == 0;
                 }
 
-
                 productsVm.Images = uploadedImages;
-
 
                 var primary = uploadedImages.FirstOrDefault(i => i.IsPrimary);
                 if (primary != null)
@@ -89,9 +85,8 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                     productsVm.CloudPublicId = primary.CloudPublicId!;
                 }
 
-
                 var dto = productsVm.Map();
-                var apiResponse = await _httpClient.PostAsJsonAsync("api/Product/CreateProduct", dto);
+                var apiResponse = await _httpClient.PostAsJsonAsync("api/v1/Product/CreateProduct", dto);
                 var json = await apiResponse.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
@@ -104,11 +99,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 _loaderService.Hide();
             }
         }
+
         public async Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync("api/Product/GetAllProducts");
+                _loaderService.Show();
+                var response = await _httpClient.GetAsync("api/v1/Product/GetAllProducts");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
@@ -123,7 +120,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync($"api/Product/GetProductById/{productId}");
+                var response = await _httpClient.GetAsync($"api/v1/Product/GetProductById/{productId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
@@ -134,64 +131,63 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         }
 
         public async Task<ApiResponse<string>> UpdateProducts(
-            ProductsVm productsVm,
-            List<byte[]>? newImageBytes = null,
-            List<string>? newImageNames = null)
+           ProductsVm productsVm,
+           List<byte[]>? newImageBytes = null,
+           List<string>? newImageNames = null)
         {
             try
             {
                 _loaderService.Show();
 
-                if (newImageBytes != null && newImageBytes.Any() && newImageNames != null && newImageNames.Any())
+                // Upload new images first
+                if (newImageBytes != null && newImageBytes.Any() &&
+                    newImageNames != null && newImageNames.Any())
                 {
                     string contentType = GetContentType(newImageNames[0]);
-                    List<CloudinaryUploadResult> uploadedImages;
 
-                    if (newImageBytes.Count == 1)
-                    {
-                        var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<CloudinaryUploadResult>(
+                    var uploadResponse =
+                        await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
                             newImageBytes, newImageNames, contentType);
-                        if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
-                            return ApiResponseDeserializer.FailResponse<string>($"Image upload failed: {uploadResponse.Message}");
-                        uploadedImages = new List<CloudinaryUploadResult> { uploadResponse.Data };
-                    }
-                    else
+
+                    if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
+                        return ApiResponseDeserializer.FailResponse<string>(
+                            $"Image upload failed: {uploadResponse.Message}");
+
+                    var uploadedImages = uploadResponse.Data;
+
+                    foreach (var img in uploadedImages)
                     {
-                        var uploadResponse = await _cloudnaryManager.UploadToCloudinaryAsync<List<CloudinaryUploadResult>>(
-                            newImageBytes, newImageNames, contentType);
-                        if (!uploadResponse.IsSuccess || uploadResponse.Data == null)
-                            return ApiResponseDeserializer.FailResponse<string>($"Image upload failed: {uploadResponse.Message}");
-                        uploadedImages = uploadResponse.Data;
+                        img.IsPrimary = productsVm.Images == null || !productsVm.Images.Any();
                     }
 
-
-                    bool hasExistingImages = productsVm.Images.Any();
-                    for (int i = 0; i < uploadedImages.Count; i++)
-                    {
-                        uploadedImages[i].IsPrimary = !hasExistingImages && i == 0;
-                    }
-
+                    if (productsVm.Images == null)
+                        productsVm.Images = new List<CloudinaryUploadResult>();
 
                     productsVm.Images.AddRange(uploadedImages);
-
-
-                    if (!productsVm.Images.Any(i => i.IsPrimary) && productsVm.Images.Any())
-                    {
-                        productsVm.Images.First().IsPrimary = true;
-                    }
-
-
-                    var primary = productsVm.Images.FirstOrDefault(i => i.IsPrimary);
-                    if (primary != null)
-                    {
-                        productsVm.ImageUrl = primary.Url!;
-                        productsVm.CloudPublicId = primary.CloudPublicId!;
-                    }
                 }
 
+                // Ensure one primary
+                if (productsVm.Images.Any() && !productsVm.Images.Any(i => i.IsPrimary))
+                {
+                    productsVm.Images.First().IsPrimary = true;
+                }
+
+                var primary = productsVm.Images.FirstOrDefault(i => i.IsPrimary);
+                if (primary != null)
+                {
+                    productsVm.ImageUrl = primary.Url!;
+                    productsVm.CloudPublicId = primary.CloudPublicId!;
+                }
 
                 var updateDto = productsVm.MapToUpdateDto();
-                var apiResponse = await _httpClient.PutAsJsonAsync($"api/Product/UpdateProduct/{productsVm.ProductId}", updateDto);
+
+                
+                updateDto.DeletedImagePublicIds = productsVm.DeletedImagePublicIds;
+
+                var apiResponse = await _httpClient.PutAsJsonAsync(
+                    $"api/v1/Product/UpdateProduct/{productsVm.ProductId}",
+                    updateDto);
+
                 var json = await apiResponse.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<string>(json);
             }
@@ -210,9 +206,28 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.DeleteAsync($"api/Product/DeleteProduct/{productId}");
+                var response = await _httpClient.DeleteAsync($"api/v1/Product/DeleteProduct/{productId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<bool>(json);
+            }
+            finally
+            {
+                _loaderService.Hide();
+            }
+        }
+
+        public async Task<ApiResponse<List<VmProductCategory>>> GetCategoriesAsync()
+        {
+            try
+            {
+                _loaderService.Show();
+                var response = await _httpClient.GetAsync("api/v1/ProductRanking/GetProductCategory");
+                var json = await response.Content.ReadAsStringAsync();
+                return ApiResponseDeserializer.Deserialize<List<VmProductCategory>>(json);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<List<VmProductCategory>>(ex.Message);
             }
             finally
             {

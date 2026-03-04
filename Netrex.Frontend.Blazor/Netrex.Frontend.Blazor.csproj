@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Netrex.Frontend.Application\Netrex.Frontend.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Pages\UserManagementPages\Customer\CustomerPage\" />
+  </ItemGroup>
+
 </Project>

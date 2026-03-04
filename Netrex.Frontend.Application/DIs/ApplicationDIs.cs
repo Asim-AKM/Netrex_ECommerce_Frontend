@@ -25,5 +25,6 @@ namespace Netrex.Frontend.Application.DIs
                                                                 .AddScoped<IUserManager, UserManager>()
                                                                 .AddScoped<IWishListManager, WishListManager>()
                                                                 .AddScoped<WishListStateService>();
+                                                                .AddScoped<IProductRanking, ProductRanking>();
     }
 }

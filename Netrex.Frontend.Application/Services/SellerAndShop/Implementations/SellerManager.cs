@@ -1,6 +1,7 @@
 ﻿using Netrex.Frontend.Application.Commons;
 using Netrex.Frontend.Application.Commons.AppResponses;
 using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
+using Netrex.Frontend.Application.ViewModels.PaymentAndPayOutManagement;
 using Netrex.Frontend.Blazor.Services;
 using System.Net.Http.Json;
 
@@ -20,7 +21,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.PostAsJsonAsync("api/Seller/CreateSeller", vmSeller);
+                var response = await _httpClient.PostAsJsonAsync("api/v1/Seller/CreateSeller", vmSeller);
                 var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -47,7 +48,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.DeleteAsync($"api/Seller/DeleteSeller/{Id}");
+                var response = await _httpClient.DeleteAsync($"api/v1/Seller/DeleteSeller/{Id}");
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -55,7 +56,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 }
                 return ApiResponseDeserializer.Deserialize<string>(jsonString);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ApiResponseDeserializer.FailResponse<string>(
            $"Unexpected error occurred: {ex.Message}");
@@ -70,7 +71,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             try
             {
                 _loader.Show();
-                var response = await _httpClient.GetAsync($"api/Seller/GetSellerById{Id}");
+                var response = await _httpClient.GetAsync($"api/v1/Seller/GetSellerById/{Id}");
                 var jsonString = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -78,7 +79,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 }
                 return ApiResponseDeserializer.Deserialize<VmSeller>(jsonString);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ApiResponseDeserializer.FailResponse<VmSeller>($"Unexpected error occurred: {ex.Message}");
             }
@@ -93,8 +94,8 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
 
-                var response = await _httpClient.GetAsync("api/Seller/GetAllSellers");
-                var jsonString=await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.GetAsync("api/v1/Seller/GetAllSellers");
+                var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -102,7 +103,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 }
                 return ApiResponseDeserializer.Deserialize<List<VmSeller>>(jsonString);
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
                 return ApiResponseDeserializer.FailResponse<List<VmSeller>>($"Error retrieving sellers: {ex.Message}");
             }
@@ -117,8 +118,8 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
             {
                 _loader.Show();
                 var response = await _httpClient.PutAsJsonAsync(
-                    $"api/Product/UpdateSeller/{vmSeller.SellerId}", vmSeller);
-                var jsonString=await response.Content.ReadAsStringAsync();
+                    $"api/v1/Seller/UpdateSeller/{vmSeller.SellerId}", vmSeller);
+                var jsonString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -136,5 +137,42 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
                 _loader.Hide();
             }
         }
+
+        public async Task<ApiResponse<VmSellerPayout>> GetSellerPayoutByIdAsync(Guid sellerPayoutId)
+        {
+            try
+            {
+                _loader.Show();
+                var response = await _httpClient.GetAsync($"api/v1/SellerPayout/GetSellerPayoutById/{sellerPayoutId}");
+                var jsonString = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponseDeserializer.FailResponse<VmSellerPayout>($"Failed to retrieve payout. Status: {response.StatusCode}");
+                return ApiResponseDeserializer.Deserialize<VmSellerPayout>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<VmSellerPayout>($"Unexpected error occurred: {ex.Message}");
+            }
+            finally { _loader.Hide(); }
+        }
+
+        public async Task<ApiResponse<string>> UpdateSellerPayoutAsPaidAsync(Guid sellerPayoutId)
+        {
+            try
+            {
+                _loader.Show();
+                var response = await _httpClient.PutAsync($"api/v1/SellerPayout/UpdateSellerPayoutAsPaid/{sellerPayoutId}", null);
+                var jsonString = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponseDeserializer.FailResponse<string>($"Failed to update payout. Status: {response.StatusCode}");
+                return ApiResponseDeserializer.Deserialize<string>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>($"Unexpected error occurred: {ex.Message}");
+            }
+            finally { _loader.Hide(); }
+        }
     }
 }
+

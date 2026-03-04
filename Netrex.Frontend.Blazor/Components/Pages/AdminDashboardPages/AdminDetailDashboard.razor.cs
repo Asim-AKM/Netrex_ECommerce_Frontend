@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Domain_Service.Enums;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Netrex.Frontend.Application.Services.Customer.Interfaces;
+using Netrex.Frontend.Application.Commons.Enums;
+using Netrex.Frontend.Application.Services.SellerAndShop.Implementations;
 using Netrex.Frontend.Application.Services.SellerAndShop.Interfaces;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
-using Netrex.Frontend.Blazor.DTOs;
+using Netrex.Frontend.Application.ViewModels.PaymentAndPayOutManagement;
+using Netrex.Frontend.Application.ViewModels.UserManagement;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
 {
@@ -11,14 +14,22 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
     {
         [Inject] public required IJSRuntime JSRuntime { get; set; }
         [Inject] public required IUserManager UserManager { get; set; }
-        [Inject] public required ICustomerManager CustomerManager { get; set; }
+        [Inject] public required NavigationManager Navigation { get; set; }
         [Inject] public required ISellerManager SellerManager { get; set; }
 
-        [Inject] public required NavigationManager Navigation { get; set; }
-        private List<GetUsersDto> Users = [];
+
+        //fields for user management
+        private List<VmUser> Users = [];
         private bool IsUserLoading = true;
-        private List<VmSeller> Sellers = []; 
-        private bool IsSellersLoading = true;
+        private string? StatusMessage;
+
+        private bool ShowStatusModal = false;
+        private VmUser? PendingStatusUser;
+        private UserStatus PendingNewStatus;
+        private UserStatus PreviousStatus;
+        private bool IsSuccess = false;
+
+        //methods for user management
 
         protected override async Task OnInitializedAsync()
         {
@@ -31,64 +42,117 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
             IsUserLoading = true;
             var response = await UserManager.GetUsersAsync();
             if (response.IsSuccess)
-            {
                 Users = response.Data;
-            }
-
             IsUserLoading = false;
         }
 
-        private async Task LoadSellers()
+        private void OnStatusDropdownChanged(VmUser user, ChangeEventArgs e)
         {
-            IsSellersLoading = true;
-
-            try
+            if (Enum.TryParse<UserStatus>(e.Value?.ToString(), out var newStatus))
             {
-                Sellers = await SellerManager.GetSellerAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading sellers: {ex.Message}");
-            }
-            finally
-            {
-                IsSellersLoading = false;
-                StateHasChanged();
+                PendingStatusUser = user;
+                PreviousStatus = user.Userstatus;
+                PendingNewStatus = newStatus;
+                ShowStatusModal = true;
             }
         }
 
-        private void ViewSeller(Guid sellerId)
+        private async Task ConfirmStatusChange()
         {
-            Navigation.NavigateTo($"/seller-details/{sellerId}");
+            if (PendingStatusUser == null) return;
+
+            ShowStatusModal = false;
+            var response = await UserManager.UpdateUserStatusAsync(PendingStatusUser.Id, PendingNewStatus);
+
+            IsSuccess = response.IsSuccess;
+            StatusMessage = response.IsSuccess ? "User status updated successfully!" : response.Message;
+
+            if (response.IsSuccess)
+                await LoadUsers();
+            else
+                PendingStatusUser.Userstatus = PreviousStatus;
+
+            StateHasChanged();
+
+            // Auto-hide after 3 seconds
+            await Task.Delay(3000);
+            StatusMessage = string.Empty;
+            StateHasChanged();
         }
 
-        private void EditSeller(VmSeller seller)
+        private void CancelStatusChange()
         {
-            Navigation.NavigateTo($"/edit-seller/{seller.SellerId}");
-        }
-        private void EditUser(GetUsersDto user)
-        {
-            Navigation.NavigateTo($"/admin/edit-user/{user.Id}");
-        }
-        private async Task HandleDelete(Guid userId)
-        {
-            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this user?");
-            if (confirmed)
-            {
-                var response = await UserManager.DeleteUserAsync(userId);
-                if (response.IsSuccess)
-                {
-                    await LoadUsers();
-                }
-            }
-        }
+            if (PendingStatusUser != null)
+                PendingStatusUser.Userstatus = PreviousStatus; // revert dropdown
 
+            ShowStatusModal = false;
+            StateHasChanged();
+        }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
-            {
                 await JSRuntime.InvokeVoidAsync("ntxNavigation.init");
-            }
         }
+
+
+        // fields for seller management
+        private List<VmSeller> Sellers = [];
+        private bool IsSellersLoading = true;
+        private VmSellerPayout? SelectedPayout;
+        private bool ShowPayoutModal = false;
+        private string? PayoutMessage;
+        private bool IsPayoutSuccess = false;
+
+        // methods for seller management
+        private async Task LoadSellers()
+        {
+            IsSellersLoading = true;
+            var response = await SellerManager.GetSellerAsync();
+            if (response.IsSuccess)
+                Sellers = response.Data;
+            IsSellersLoading = false;
+        }
+
+        // this is the correct method when payout module is complete we will use this method 
+
+        //private async Task ViewPayout(Guid sellerPayoutId)
+        //{
+        //    var response = await SellerManager.GetSellerPayoutByIdAsync(sellerPayoutId);
+        //    if (response.IsSuccess)
+        //    {
+        //        SelectedPayout = response.Data;
+        //        ShowPayoutModal = true;
+        //    }
+        //}
+
+        // this method is just for checking the Modal 
+        private async Task ViewPayout(Guid sellerId)
+        {
+            var response = await SellerManager.GetSellerPayoutByIdAsync(sellerId);
+
+            // Show modal even if no payout found
+            SelectedPayout = response.IsSuccess ? response.Data : new VmSellerPayout
+            {
+                SellerId = sellerId,
+                PaymentStatus = PaymentStatus.pending,
+                AmountToPay = 0
+            };
+            ShowPayoutModal = true;
+        }
+
+        private async Task MarkAsPaid(Guid sellerPayoutId)
+        {
+            var response = await SellerManager.UpdateSellerPayoutAsPaidAsync(sellerPayoutId);
+            IsPayoutSuccess = response.IsSuccess;
+            PayoutMessage = response.IsSuccess ? "Payout marked as paid successfully!" : response.Message;
+            ShowPayoutModal = false;
+            StateHasChanged();
+
+            await Task.Delay(3000);
+            PayoutMessage = string.Empty;
+            StateHasChanged();
+        }
+
+       
     }
 }

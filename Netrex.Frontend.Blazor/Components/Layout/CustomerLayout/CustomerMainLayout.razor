@@ -1,80 +1,54 @@
-﻿@inherits LayoutComponentBase
-@inject IJSRuntime JS
+﻿@using Netrex.Frontend.Blazor.Components.Pages.Customer
+@inherits LayoutComponentBase
 
-<nav class="customer-sidebar @(IsCollapsed ? "collapsed" : "") @(IsMobile && IsMobileOpen ? "show" : "")">
-    <div class="sidebar-header">
-        <h2>Dashboard</h2>
-        <div class="mobile-topbar">
-            @if (!IsMobile)  
-            {
-                <button class="toggle-btn" @onclick="ToggleSidebar">
-                    <i class="bi @(IsCollapsed || IsMobileOpen ? "bi-x-lg" : "bi-list")"></i>
-                </button>
-            }
+<!-- Customer Module Files -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/customerassets/CustomerProfile.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/customerassets/CustomerProfile.js"></script>
+
+<div class="customer-layout-root">
+    <!-- Header (optional) -->
+    <CustomerHeader />
+    
+    <!-- Sidebar + Main Content Row -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Column -->
+            <div class="col-md-3 col-lg-2 d-none d-md-block p-0">
+                <CustomerSidebar />
+            </div>
+            
+            <!-- Main Content Column -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto customer-main-content">
+                <!-- Mobile Header -->
+                <div class="d-md-none customer-mobile-header py-3 px-3">
+                    <button class="btn customer-menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#customerMobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                
+                <!-- Mobile Offcanvas Menu -->
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="customerMobileMenu">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Navigation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <CustomerSidebar IsMobile="true" />
+                    </div>
+                </div>
+                
+                <!-- Page Content Renders Here -->
+                <div class="customer-content-wrapper p-4">
+                    @Body
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Rest of the sidebar content remains unchanged -->
-    <div class="user-info">
-        <img src="/assets/images/Logo for Netrex.png" alt="User Avatar">
-        <div class="user-details">
-            <h4>John Doe</h4>
-            <p>Customer</p>
-        </div>
-    </div>
-
-    <ul class="sidebar-menu">
-        <li><a href="/" class="active"><i class="fas fa-tachometer-alt"></i><span>Home</span></a></li>
-        <li><a href="/orders"><i class="fas fa-shopping-cart"></i><span>Orders</span></a></li>
-        <li><a href="/customer-payments-records"><i class="fas fa-credit-card"></i><span>Payments</span></a></li>
-        <li><a href="/account"><i class="fas fa-user"></i><span>Profile</span></a></li>
-        <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
-    </ul>
-</nav>
-
-<!-- New mobile toggle button: Always visible on mobile, outside the sidebar -->
-@if (IsMobile)
-{
-    <button class="mobile-toggle-btn" @onclick="ToggleSidebar">
-        <i class="bi @(IsMobileOpen ? "bi-x-lg" : "bi-list")"></i>
-    </button>
-}
-
-<div class="Cust-main-content @(IsCollapsed && !IsMobile ? "expanded" : "")">
-    @Body
+    
+    <!-- Footer (optional) -->
+    <CustomerFooter />
 </div>
-
-<script>
-    window.sidebarHelper = {
-        isMobile: () => window.innerWidth <= 767
-    };
-</script>
-
-@code {
-    private bool IsCollapsed;
-    private bool IsMobile;
-    private bool IsMobileOpen;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            IsMobile = await JS.InvokeAsync<bool>("sidebarHelper.isMobile");
-            StateHasChanged();
-        }
-    }
-
-    private async Task ToggleSidebar()
-    {
-        IsMobile = await JS.InvokeAsync<bool>("sidebarHelper.isMobile");
-
-        if (IsMobile)
-        {
-            IsMobileOpen = !IsMobileOpen;
-        }
-        else
-        {
-            IsCollapsed = !IsCollapsed;
-        }
-    }
-}

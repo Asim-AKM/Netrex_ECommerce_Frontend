@@ -1,4 +1,6 @@
 ﻿@page "/admindashboard"
+@using Domain_Service.Enums
+@using Netrex.Frontend.Application.Commons.Enums
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
@@ -66,6 +68,15 @@
 </aside>
 
 <main class="ad-main-content">
+
+    @if (!string.IsNullOrEmpty(StatusMessage))
+    {
+        <div class="ntx-toast @(IsSuccess ? "ntx-toast-success" : "ntx-toast-error")">
+            <i class="fa-solid @(IsSuccess ? "fa-circle-check" : "fa-circle-xmark")"></i>
+            @StatusMessage
+        </div>
+    }
+
     <section id="ad-dashboard" class="ad-section">
         <h2>Dashboard Overview</h2>
 
@@ -140,7 +151,6 @@
 
     <section id="ad-user-management" class="ad-section">
         <h2>Customer Management</h2>
-        <button class="ad-btn">Add New Customer</button>
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
@@ -151,7 +161,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>CreatedAt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,21 +189,17 @@
                                 <td>@user.Email</td>
                                 <td>@user.RoleName.ToString()</td>
                                 <td>
-                                    <span class="ad-status-badge status-@user.Userstatus.ToString().ToLower()">
-                                        @user.Userstatus.ToString()
-                                    </span>
+                                    <select @onchange="(e) => OnStatusDropdownChanged(user, e)"
+                                            class="ntx-status-select status-@user.Userstatus.ToString().ToLower()">
+                                        @foreach (var status in Enum.GetValues<UserStatus>())
+                                        {
+                                            <option value="@status" selected="@(user.Userstatus == status)">
+                                                @status.ToString()
+                                            </option>
+                                        }
+                                    </select>
                                 </td>
-                                <td>
-                                    <button class="ad-action-btn edit"
-                                            title="Edit"
-                                            @onclick="() => EditUser(user)">
-                                    </button>
-
-                                    <button class="ad-action-btn delete"
-                                            @onclick="() => HandleDelete(user.Id)"
-                                            title="Delete">
-                                    </button>
-                                </td>
+                                <td>@user.CreateAt.ToString("MMM dd, yyyy")</td>
                             </tr>
                         }
                     }
@@ -209,17 +215,23 @@
     </section>
     <section id="ad-seller-module" class="ad-section">
         <h2>Seller Module</h2>
-        <button class="ad-btn">Add New Seller</button>
+
+        @if (!string.IsNullOrEmpty(PayoutMessage))
+        {
+            <div class="ntx-toast @(IsPayoutSuccess ? "ntx-toast-success" : "ntx-toast-error")">
+                <i class="fa-solid @(IsPayoutSuccess ? "fa-circle-check" : "fa-circle-xmark")"></i>
+                @PayoutMessage
+            </div>
+        }
 
         <div class="ad-table-wrapper">
             <table class="ad-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Products Count</th>
-                        <th>Revenue</th>
+                        <th>Seller ID</th>
+                        <th>Store Name</th>
+                        <th>Description</th>
+                        <th>Address</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -227,7 +239,7 @@
                     @if (IsSellersLoading)
                     {
                         <tr>
-                            <td colspan="6" style="text-align:center;">Loading Sellers...</td>
+                            <td colspan="5" style="text-align:center;">Loading sellers...</td>
                         </tr>
                     }
                     else if (Sellers != null && Sellers.Any())
@@ -235,14 +247,15 @@
                         @foreach (var seller in Sellers)
                         {
                             <tr>
-                                <td>@seller.SellerId.ToString().Substring(0, 5)...</td>
-                                <td>@seller.FullName</td> @* VmSeller ki properties ke mutabiq change karein *@
-                                <td>@seller.Email</td>
-                                <td>@seller.TotalProducts</td> @* Agar ViewModel mein ye property hai *@
-                                <td>@seller.TotalRevenue.ToString("C")</td>
+                                <td>@seller.SellerId.ToString().Substring(0, 8)...</td>
+                                <td>@seller.StoreName</td>
+                                <td>@seller.StoreDescription</td>
+                                <td>@seller.StoreAddress</td>
                                 <td>
-                                    <button class="ad-btn" @onclick="() => ViewSeller(seller.SellerId)">View</button>
-                                    <button class="ad-btn" @onclick="() => EditSeller(seller)">Edit</button>
+                                    <button class="ad-btn"
+                                            @onclick="() => ViewPayout(seller.SellerId)">
+                                        <i class="fa-solid fa-money-bill-wave"></i> View Payout
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -250,13 +263,13 @@
                     else
                     {
                         <tr>
-                            <td colspan="6" style="text-align:center;">No sellers found.</td>
+                            <td colspan="5" style="text-align:center;">No sellers found.</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-    </section>
+    </section>  
 
     <section id="ad-product-management" class="ad-section">
         <h2>Product Management</h2>
@@ -501,4 +514,121 @@
             </div>
         </div>
     </section>
+
+    @if (ShowStatusModal && PendingStatusUser != null)
+    {
+        <!-- Backdrop -->
+        <div class="ntx-modal-backdrop" @onclick="CancelStatusChange"></div>
+
+        <!-- Modal -->
+        <div class="ntx-modal">
+            <div class="ntx-modal-header">
+                <div class="ntx-modal-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Change User Status</h3>
+            </div>
+
+            <div class="ntx-modal-body">
+                <div class="ntx-modal-user-info">
+                    @if (!string.IsNullOrWhiteSpace(PendingStatusUser.ImageUrl))
+                    {
+                        <img src="@PendingStatusUser.ImageUrl" class="ntx-modal-avatar" />
+                    }
+                    else
+                    {
+                        <div class="ntx-modal-avatar-placeholder">
+                            @PendingStatusUser.FullName.Substring(0, 1).ToUpper()
+                        </div>
+                    }
+                    <div>
+                        <p class="ntx-modal-username">@PendingStatusUser.FullName</p>
+                        <p class="ntx-modal-email">@PendingStatusUser.Email</p>
+                    </div>
+                </div>
+
+                <div class="ntx-modal-status-change">
+                    <span class="ntx-status-pill status-@PreviousStatus.ToString().ToLower()">
+                        @PreviousStatus.ToString()
+                    </span>
+                    <i class="fa-solid fa-arrow-right ntx-arrow"></i>
+                    <span class="ntx-status-pill status-@PendingNewStatus.ToString().ToLower()">
+                        @PendingNewStatus.ToString()
+                    </span>
+                </div>
+
+                <p class="ntx-modal-warning">
+                    Are you sure you want to change this user's status?
+                    This action will take effect immediately.
+                </p>
+            </div>
+
+            <div class="ntx-modal-footer">
+                <button class="ntx-modal-btn cancel" @onclick="CancelStatusChange">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+                <button class="ntx-modal-btn confirm" @onclick="ConfirmStatusChange">
+                    <i class="fa-solid fa-check"></i> Yes, Change It
+                </button>
+            </div>
+        </div>
+    }
+
+
+    @* Payout Modal *@
+    @if (ShowPayoutModal && SelectedPayout != null)
+    {
+        <div class="ntx-modal-backdrop" @onclick="() => ShowPayoutModal = false"></div>
+        <div class="ntx-modal">
+            <div class="ntx-modal-header">
+                <div class="ntx-modal-icon">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <h3>Seller Payout Details</h3>
+            </div>
+            <div class="ntx-modal-body">
+                <div class="ntx-payout-details">
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Payout ID</span>
+                        <span class="ntx-payout-value">@SelectedPayout.SellerPayoutId.ToString().Substring(0, 8)...</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Order ID</span>
+                        <span class="ntx-payout-value">@SelectedPayout.OrderId.ToString().Substring(0, 8)...</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Amount</span>
+                        <span class="ntx-payout-value">@SelectedPayout.AmountToPay.ToString("C")</span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Status</span>
+                        <span class="ntx-status-pill status-@SelectedPayout.PaymentStatus.ToString()">
+                            @SelectedPayout.PaymentStatus.ToString()
+                        </span>
+                    </div>
+                    <div class="ntx-payout-row">
+                        <span class="ntx-payout-label">Payout Date</span>
+                        <span class="ntx-payout-value">
+                            @(SelectedPayout.PayOutDate == default(DateTime)
+                                                    ? "Not paid yet"
+                                                    : SelectedPayout.PayOutDate.ToString("MMM dd, yyyy"))
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="ntx-modal-footer">
+            <button class="ntx-modal-btn cancel"
+                    @onclick="() => ShowPayoutModal = false">
+                <i class="fa-solid fa-xmark"></i> Close
+            </button>
+            @if (SelectedPayout.PaymentStatus != PaymentStatus.success)
+                {
+                    <button class="ntx-modal-btn confirm"
+                            @onclick="() => MarkAsPaid(SelectedPayout.SellerPayoutId)">
+                        <i class="fa-solid fa-check"></i> Mark as Paid
+                    </button>
+                }
+            </div>
+        </div>
+    }
 </main>

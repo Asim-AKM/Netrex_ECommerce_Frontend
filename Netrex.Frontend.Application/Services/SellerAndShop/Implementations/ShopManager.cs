@@ -13,7 +13,7 @@ namespace Netrex.Frontend.Application.Services.SellerAndShop.Implementations
         }
         public async Task<List<VmShopDetail>> GetAllShopsAsync()
         {
-             var response = await _httpClient.GetAsync("api/v1/ShopDetails/GetAllShopDetails");
+             var response = await _httpClient.GetAsync("ShopDetails/GetAllShopDetails");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to retrieve ShopCatagory.");

@@ -86,7 +86,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 }
 
                 var dto = productsVm.Map();
-                var apiResponse = await _httpClient.PostAsJsonAsync("api/v1/Product/CreateProduct", dto);
+                var apiResponse = await _httpClient.PostAsJsonAsync("Product/CreateProduct", dto);
                 var json = await apiResponse.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
@@ -105,7 +105,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync("api/v1/Product/GetAllProducts");
+                var response = await _httpClient.GetAsync("Product/GetAllProducts");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
@@ -120,7 +120,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync($"api/v1/Product/GetProductById/{productId}");
+                var response = await _httpClient.GetAsync($"Product/GetProductById/{productId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<ProductsVm>(json);
             }
@@ -185,7 +185,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 updateDto.DeletedImagePublicIds = productsVm.DeletedImagePublicIds;
 
                 var apiResponse = await _httpClient.PutAsJsonAsync(
-                    $"api/v1/Product/UpdateProduct/{productsVm.ProductId}",
+                    $"Product/UpdateProduct/{productsVm.ProductId}",
                     updateDto);
 
                 var json = await apiResponse.Content.ReadAsStringAsync();
@@ -206,7 +206,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.DeleteAsync($"api/v1/Product/DeleteProduct/{productId}");
+                var response = await _httpClient.DeleteAsync($"Product/DeleteProduct/{productId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<bool>(json);
             }
@@ -221,7 +221,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync("api/v1/ProductRanking/GetProductCategory");
+                var response = await _httpClient.GetAsync("ProductRanking/GetProductCategory");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmProductCategory>>(json);
             }

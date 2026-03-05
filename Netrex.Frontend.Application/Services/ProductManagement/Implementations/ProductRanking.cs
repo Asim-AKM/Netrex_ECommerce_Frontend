@@ -22,7 +22,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             {
                 _loaderService.Show();
 
-                var response = await _httpClient.GetAsync("api/v1/ProductRanking/best-sellers");
+                var response = await _httpClient.GetAsync("ProductRanking/best-sellers");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
@@ -37,7 +37,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             {
                 _loaderService.Show();
 
-                var url = $"api/v1/ProductRanking/homepage?pageNumber={pageNumber}&pageSize={pageSize}";
+                var url = $"ProductRanking/homepage?pageNumber={pageNumber}&pageSize={pageSize}";
 
                 if (categoryid.HasValue && categoryid != Guid.Empty)
                 {
@@ -60,7 +60,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             {
                 _loaderService.Show();
 
-                var response = await _httpClient.GetAsync("api/v1/ProductRanking/new-arrivals");
+                var response = await _httpClient.GetAsync("ProductRanking/new-arrivals");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
@@ -75,7 +75,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             {
                 _loaderService.Show();
 
-                var response = await _httpClient.GetAsync("api/v1/ProductRanking/top-rated");
+                var response = await _httpClient.GetAsync("ProductRanking/top-rated");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
@@ -89,7 +89,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync("api/v1/ProductRanking/trending");
+                var response = await _httpClient.GetAsync("ProductRanking/trending");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
 

@@ -93,7 +93,26 @@
                                     {
                                         <span class="discount">-@product.Discount%</span>
                                     }
-                                    <a href=""><span class="wishlist" style="font-size: 25px;">&#9825;</span></a>
+                                    <span class="wishlist"
+                                          style="font-size:25px; cursor:pointer;"
+                                          @onclick="() => ToggleWishList(product.ProductId)"
+                                          @onclick:stopPropagation="true">
+
+                                        @if (_loadingWishIds.Contains(product.ProductId))
+                                        {
+                                            <span class="spinner-border spinner-border-sm"
+                                                  style="width:16px; height:16px; color:#e74c3c;"></span>
+                                        }
+                                        else if (_wishedProducts.ContainsKey(product.ProductId))
+                                        {
+                                            <span style="color:#e74c3c; font-size:25px;">&#9829;</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:#ccc; font-size:25px;">&#9825;</span>
+                                        }
+
+                                    </span>
                                     <img src="@(product.ImageUrl ?? "/assets/placeholder.jpg")"
                                          alt="@product.ProductName"
                                          onerror="this.src='/assets/placeholder.jpg'" />
@@ -208,3 +227,4 @@
         </div>
     </section>
 </div>
+

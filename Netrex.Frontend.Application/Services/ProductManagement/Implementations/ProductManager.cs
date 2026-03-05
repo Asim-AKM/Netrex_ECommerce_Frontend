@@ -109,9 +109,9 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }
-            finally
+            catch (Exception ex)
             {
-                _loaderService.Hide();
+                return ApiResponseDeserializer.FailResponse<List<ProductsVm>>(ex.Message);
             }
         }
 

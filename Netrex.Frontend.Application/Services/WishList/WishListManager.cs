@@ -19,7 +19,7 @@ namespace Netrex.Frontend.Application.Services.WishList
             try
             {
                 userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
-                var response = await _http.GetAsync($"api/WishList/WishListItem/{userId}");
+                var response = await _http.GetAsync($"WishList/WishListItem/{userId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmGetWishListItem>>(json);
             }
@@ -33,7 +33,7 @@ namespace Netrex.Frontend.Application.Services.WishList
         {
             try
             {
-                var response = await _http.PostAsJsonAsync("api/WishList/WishListItem", request);
+                var response = await _http.PostAsJsonAsync("WishList/WishListItem", request);
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<Guid>(json);
             }
@@ -48,7 +48,7 @@ namespace Netrex.Frontend.Application.Services.WishList
             try
             {
                 var response = await _http.DeleteAsync(
-                    $"api/WishList/WishListItem/{wishListItemId}");
+                    $"WishList/WishListItem/{wishListItemId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<string>(json);
             }
@@ -62,7 +62,7 @@ namespace Netrex.Frontend.Application.Services.WishList
             try
             {
                 var response = await _http.GetAsync(
-                    $"api/WishList/WishListCount/{userId}");
+                    $"WishList/WishListCount/{userId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<int>(json);
             }

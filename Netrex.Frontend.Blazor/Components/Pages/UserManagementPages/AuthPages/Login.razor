@@ -1,6 +1,11 @@
 ﻿@page "/login"
 @rendermode InteractiveServer
 
+<form id="cookieForm" method="post" action="/setcookies">
+    <input type="hidden" id="jwtToken" name="token" />
+    <input type="hidden" id="rememberMeInput" name="rememberMe" />
+</form>
+
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 py-4">
     <div class="auth-wrapper">
         <div class="auth-left">
@@ -25,6 +30,10 @@
                     <img id="eyeIcon" src="assets/user-management-assets/icons/monkey-password-hide.png" style="height:25px" />
                 </span>
             </div>
+            <div class="form-check mb-3">
+                <InputCheckbox @bind-Value="rememberMe" class="form-check-input" id="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Remember Me</label>
+            </div>
             <button class="btn btn-primary w-100">Login</button>
             <div class="auth-footer mt-3">
                 <div class="auth-footer-links">
@@ -37,3 +46,4 @@
         </EditForm>
     </div>
 </div>
+

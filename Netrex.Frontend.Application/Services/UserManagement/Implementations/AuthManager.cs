@@ -20,7 +20,6 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
             _httpClient = httpClientFactory.CreateClient("ApiClient");
             _loader = loader;
         }
-
         public async Task<ApiResponse<T>> RegisterAsync<T>(VmRegister registerView)
         {
             try
@@ -46,24 +45,18 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 _loader.Hide();
             }
         }
-
-
-
-        public async Task<bool> LoginAsync(VmLogin viewModel)
+        public async Task<ApiResponse<string>> LoginAsync(VmLogin viewModel)
         {
             try
             {
-                _loader.Show();
-
-                var response = await _httpClient.PostAsJsonAsync("Authentication/Login", viewModel);
-                return response.IsSuccessStatusCode;
+                var response = await _httpClient.PostAsJsonAsync("Authentication/SignIn", viewModel);
+                return ApiResponseDeserializer.Deserialize<string>(await response.Content.ReadAsStringAsync());
             }
-            finally
+            catch (Exception ex)
             {
-                _loader.Hide();
+                return ApiResponseDeserializer.FailResponse<string>(ex.Message);
             }
         }
-
         public async Task<ApiResponse<T>> VerifyOtpAsync<T>(VmVerifyOtp verifyOtp)
         {
             try
@@ -83,7 +76,6 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 _loader.Hide();
             }
         }
-
         public async Task<ApiResponse<T>> ResendOtpAsync<T>(string email)
         {
             try

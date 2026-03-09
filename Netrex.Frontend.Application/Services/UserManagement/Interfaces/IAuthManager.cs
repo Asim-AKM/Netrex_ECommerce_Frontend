@@ -7,7 +7,7 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Interfaces
     public interface IAuthManager
     {
         Task<ApiResponse<T>> RegisterAsync<T>(VmRegister registerView);
-        Task<bool> LoginAsync(VmLogin viewModel);
+        Task<ApiResponse<string>> LoginAsync(VmLogin viewModel);
 
         Task<ApiResponse<T>> VerifyOtpAsync<T>(VmVerifyOtp verifyOtp);  
         Task<ApiResponse<T>> ResendOtpAsync<T>(string email);

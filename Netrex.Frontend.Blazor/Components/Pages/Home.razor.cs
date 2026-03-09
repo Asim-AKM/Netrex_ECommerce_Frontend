@@ -7,6 +7,8 @@ using Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Application.ViewModels.WishList;
 using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Netrex.Frontend.Blazor.Components.Pages
 {
@@ -20,8 +22,10 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         [Inject] private IProductManager ProductManageres { get; set; } = default!;
         [Inject] private WishListStateService WishListState { get; set; } = default!;
         [Inject] private IWishListManager WishListManager { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject] private AuthenticationStateProvider AuthenticationState { get; set; } = default!;
         #endregion
-          
+
         #region State
         // ── State ───────────────────────────────────────────────
         private List<ProductsVm> products = new();
@@ -33,7 +37,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         private int pageSize = 10;
         VmAddCartItem model = new VmAddCartItem();
         #endregion
-          
+
         #region Lifecycle
         // ── Lifecycle ───────────────────────────────────────────
         protected override async Task OnInitializedAsync()
@@ -49,7 +53,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
                 await JS.InvokeVoidAsync("initializeHomePage");
         }
         #endregion
-          
+
         #region Categories
         // ── Categories ──────────────────────────────────────────
         private async Task LoadProductCategory()
@@ -66,13 +70,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages
                         ProductCategoryName = c.ProductCategoryName,
                         IconUrl = c.ProductCategoryName switch
                         {
-                            "Clothing"       => "/assets/icons/icons8-bag-100.png",
+                            "Clothing" => "/assets/icons/icons8-bag-100.png",
                             "Home & Kitchen" => "/assets/icons/small-appliance.png",
-                            "Electronics"    => "/assets/icons/responsive.png",
-                            "Books"          => "/assets/icons/icons8-books-100.png",
-                            "Sports"         => "/assets/icons/sports.png",
-                            "Kids"           => "/assets/icons/kids.png",
-                            _                => "/assets/icons/default.png",
+                            "Electronics" => "/assets/icons/responsive.png",
+                            "Books" => "/assets/icons/icons8-books-100.png",
+                            "Sports" => "/assets/icons/sports.png",
+                            "Kids" => "/assets/icons/kids.png",
+                            _ => "/assets/icons/default.png",
                         }
                     }).ToList();
                 }
@@ -161,11 +165,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             await LoadProductsAsync(categoryId);
         }
         #endregion
-          
+
         #region Cart
         // ── Cart ────────────────────────────────────────────────
         public async Task AddToCart()
         {
+            if (!await EnsureLoggedIn()) return;
+
             var response = await CartItemManager.AddCartItemAsync(model);
             if (!response.IsSuccess)
                 _Toast.Error(response.Message);
@@ -181,8 +187,9 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             Navigation.NavigateTo($"/ProductlandingPage", new NavigationOptions { });
         }
         #endregion
-        
+
         #region WishList
+
         // ── WishList ────────────────────────────────────────────
         private readonly Guid _userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
         private Dictionary<Guid, Guid> _wishedProducts = new();
@@ -200,6 +207,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages
 
         private async Task ToggleWishList(Guid productId)
         {
+            if (!await EnsureLoggedIn()) return;
+
             _loadingWishIds.Add(productId);
             StateHasChanged();
 
@@ -239,6 +248,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             _loadingWishIds.Remove(productId);
             StateHasChanged();
         }
+
         #endregion
     }
 }

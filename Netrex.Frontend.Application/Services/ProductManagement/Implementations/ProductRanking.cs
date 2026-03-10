@@ -35,7 +35,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         {
             try
             {
-                _loaderService.Show();
+                //_loaderService.Show();
 
                 var url = $"ProductRanking/homepage?pageNumber={pageNumber}&pageSize={pageSize}";
 
@@ -51,7 +51,7 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
             finally
             {
-                _loaderService.Hide();
+                //_loaderService.Hide();
             }
         }
         public async Task<ApiResponse<List<ProductsVm>>> GetNewArrivalsAsync()

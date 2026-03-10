@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Netrex.Frontend.Application.Commons;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -18,7 +19,7 @@ namespace Netrex.Frontend.Blazor.Pages
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token);
             var claims = jwt.Claims.ToList();
-            claims.Add(new Claim("jwt", token));
+            claims.Add(new Claim(ClaimKey.Jwt, token));
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 

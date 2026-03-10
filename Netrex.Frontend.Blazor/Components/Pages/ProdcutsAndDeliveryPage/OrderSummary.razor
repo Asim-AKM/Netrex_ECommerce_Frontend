@@ -63,30 +63,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Wireless Headphones</td>
-                                <td>1</td>
-                                <td>Rs. 5,000</td>
-                                <td>Rs. 5,000</td>
-                            </tr>
+
+                            @if (OrderItems != null && OrderItems.Count > 0)
+                            {
+                                @foreach (var item in OrderItems)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>Rs. @item.price</td>
+                                        <td>Rs. @item.total</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">
+                                        No items in your cart
+                                    </td>
+                                </tr>
+                            }
+
                         </tbody>
                     </table>
 
                 </div>
-
                 <!-- Total -->
                 <div class="section-card total-box">
+
                     <div class="total-row">
                         <span>Subtotal</span>
-                        <span>Rs. 5,000</span>
+                        <span>Rs. @SubTotal</span>
                     </div>
 
                     <div class="total-row grand-total">
                         <span>Total Payable</span>
-                        <span>Rs. 5,000</span>
+                        <span>Rs. @SubTotal</span>
                     </div>
-                </div>
 
+                </div>
             </div>
 
             <!-- Footer -->

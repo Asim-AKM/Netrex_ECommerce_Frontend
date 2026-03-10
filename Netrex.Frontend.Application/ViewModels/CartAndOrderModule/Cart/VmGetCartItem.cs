@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart
+﻿namespace Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart
 {
     public  class VmGetCartItem
     {
@@ -15,6 +9,7 @@ namespace Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart
         public string Description { get; set; } = string.Empty;
 
         public double Price { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         public int Quantity { get; set; }
     }

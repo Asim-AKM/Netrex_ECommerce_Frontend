@@ -24,7 +24,7 @@ namespace Netrex.Frontend.Application.Services.CartAndOrder.Implementations
             {
                 _loader.Show();
 
-                var response = await _httpClient.GetAsync("CartItem/CartItems");
+                var response = await _httpClient.GetAsync("/api/v1/CartItem");
                 var json = await response.Content.ReadAsStringAsync();
 
                 return ApiResponseDeserializer.Deserialize<List<VmGetCartItem>>(json);

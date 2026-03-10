@@ -11,18 +11,17 @@ namespace Netrex.Frontend.Blazor.Components.Pages.WishListPages
         [Inject] private ToastService ToastService { get; set; } = default!;
         [Inject] private WishListStateService WishListState { get; set; } = default!;
 
-        private readonly Guid _userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
-
-
         private bool isLoading = true;
         private bool isDeleting = false;
         private bool ShowPopup = false;
         private Guid? itemToDeleteId = null;
+        private Guid? currentUserId = null;
 
         private List<VmGetWishListItem> Products = new();
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
             if (Products.Count == 0)
                 await LoadWishList();
         }
@@ -30,13 +29,11 @@ namespace Netrex.Frontend.Blazor.Components.Pages.WishListPages
         private async Task LoadWishList()
         {
             isLoading = true;
-
-            var response = await WishListManager.GetWishListItemsAsync(_userId);
-
+            var response = await WishListManager.GetWishListItemsAsync(CurrentUserId);
             if (response.IsSuccess)
                 Products = response.Data ?? new();
             else
-                ToastService.Error(response.Message);
+                ToastService.Info(response.Message);
 
             isLoading = false;
         }
@@ -57,9 +54,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.WishListPages
         {
             if (itemToDeleteId == null) return;
             isDeleting = true;
-
             var response = await WishListManager.DeleteWishListItemAsync(itemToDeleteId.Value);
-
             if (response.IsSuccess)
             {
                 Products.RemoveAll(x => x.WishListItemId == itemToDeleteId.Value);

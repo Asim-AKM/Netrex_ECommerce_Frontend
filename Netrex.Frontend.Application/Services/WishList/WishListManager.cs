@@ -8,6 +8,7 @@ namespace Netrex.Frontend.Application.Services.WishList
     public class WishListManager : IWishListManager
     {
         private readonly HttpClient _http;
+        
 
         public WishListManager(IHttpClientFactory httpClientFactory)
         {
@@ -18,7 +19,6 @@ namespace Netrex.Frontend.Application.Services.WishList
         {
             try
             {
-                userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
                 var response = await _http.GetAsync($"WishList/WishListItem/{userId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<VmGetWishListItem>>(json);

@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Netrex.Frontend.Application.Services.CartAndOrder.Interfaces;
 using Netrex.Frontend.Application.Services.Common;
+using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
 using Netrex.Frontend.Application.Services.WishList;
 using Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Application.ViewModels.WishList;
-using Netrex.Frontend.Application.Services.ProductManagement.Interfaces;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Netrex.Frontend.Blazor.Components.Pages
 {
@@ -27,24 +26,36 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         #endregion
 
         #region State
-        // ── State ───────────────────────────────────────────────
+
+        // products and categories
         private List<ProductsVm> products = new();
         private List<VmProductCategory> categories = new();
-        private bool isLoading = true;
         private bool isLoadingCategories = false;
-        private string errorMessage = "";
         private int currentPage = 1;
         private int pageSize = 10;
+
+        // UI state
+        private bool isLoading = true;
+        private string errorMessage = "";
         VmAddCartItem model = new VmAddCartItem();
+
+
+        // WishList state
+        private Dictionary<Guid, Guid> _wishedProducts = new();
+        private HashSet<Guid> _loadingWishIds = new();
+
         #endregion
 
         #region Lifecycle
         // ── Lifecycle ───────────────────────────────────────────
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+            // loading data
             await LoadProductsAsync();
             await LoadProductCategory();
-            await LoadWishedProductsAsync();
+            if (IsAuthenticated)
+                await LoadWishedProductsAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -191,17 +202,13 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         #region WishList
 
         // ── WishList ────────────────────────────────────────────
-        private readonly Guid _userId = Guid.Parse("4818cc53-f71a-4bfe-97f0-2453268a22a0");
-        private Dictionary<Guid, Guid> _wishedProducts = new();
-        private HashSet<Guid> _loadingWishIds = new();
-
         private async Task LoadWishedProductsAsync()
         {
-            var response = await WishListManager.GetWishListItemsAsync(_userId);
+            var response = await WishListManager.GetWishListItemsAsync(CurrentUserId);
             if (response.IsSuccess && response.Data != null)
             {
                 _wishedProducts = response.Data
-                    .ToDictionary(x => x.ProductId, x => x.WishListItemId);
+                                  .ToDictionary(x => x.ProductId, x => x.WishListItemId);
             }
         }
 
@@ -230,7 +237,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             }
             else
             {
-                var request = new VmAddWishListItem(productId, _userId);
+                var request = new VmAddWishListItem(productId, CurrentUserId);
                 var response = await WishListManager.AddWishListItemAsync(request);
 
                 if (response.IsSuccess && response.Data != Guid.Empty)

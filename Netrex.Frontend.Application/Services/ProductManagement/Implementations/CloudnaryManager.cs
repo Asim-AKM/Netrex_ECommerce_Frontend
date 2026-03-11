@@ -42,8 +42,8 @@ public class CloudnaryManager : ICloudnaryManager
 
 
             string url = images.Count > 1
-                ? "api/Image/upload-batch"
-                : "api/Image/upload";
+                ? "Image/upload-batch"
+                : "Image/upload";
 
             var response = await _httpClient.PostAsync(url, content);
 

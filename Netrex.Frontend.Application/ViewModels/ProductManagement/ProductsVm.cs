@@ -6,6 +6,8 @@ namespace Netrex.Frontend.Application.ViewModels.ProductManagement
     {
         [property: JsonPropertyName("productId")]
         public Guid ProductId { get; set; }
+        [property: JsonPropertyName("sellerId")]
+        public Guid SellerId { get; set; }
         [property: JsonPropertyName("productName")]
         public string ProductName { get; set; } = string.Empty;
         [property: JsonPropertyName("productDescription")]

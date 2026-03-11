@@ -41,11 +41,13 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
         public async Task<ApiResponse<ProductsVm>> AddProducts(
             ProductsVm productsVm,
             List<byte[]> imageBytes,
-            List<string> imageNames)
+            List<string> imageNames,
+            Guid SellerId)
         {
             try
             {
                 _loaderService.Show();
+                productsVm.SellerId = SellerId;
 
                 if (imageBytes == null || imageBytes.Count == 0)
                     return ApiResponseDeserializer.FailResponse<ProductsVm>("No images to upload");
@@ -100,12 +102,12 @@ namespace Netrex.Frontend.Application.Services.ProductManagement.Implementations
             }
         }
 
-        public async Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync()
+        public async Task<ApiResponse<List<ProductsVm>>> GetAllProductsAsync(Guid SellerId)
         {
             try
             {
                 _loaderService.Show();
-                var response = await _httpClient.GetAsync("Product/GetAllProducts");
+                var response = await _httpClient.GetAsync($"Product/GetAllProducts/{SellerId}");
                 var json = await response.Content.ReadAsStringAsync();
                 return ApiResponseDeserializer.Deserialize<List<ProductsVm>>(json);
             }

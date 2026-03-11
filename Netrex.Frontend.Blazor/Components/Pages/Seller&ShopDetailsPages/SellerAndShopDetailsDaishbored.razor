@@ -8,6 +8,8 @@
 @inject IProductManager ProductManager
 @inject IJSRuntime JSRuntime
 @inject ICloudnaryManager CloudnaryManager
+@inherits AuthComponentBase
+@attribute [Authorize(Roles = "Admin, Seller")]
 
 <PageTitle>Seller Hub</PageTitle>
 
@@ -531,7 +533,7 @@
 @if (IsModalVisible)
 {
     <div class="modal-backdrop fade show"></div>
-    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5); margin-left:135px">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1022,6 +1024,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         await LoadProductsAsync();
     }
 
@@ -1032,7 +1035,7 @@
             isLoadingProducts = true;
             StateHasChanged();
 
-            var response = await ProductManager.GetAllProductsAsync();
+            var response = await ProductManager.GetAllProductsAsync(CurrentUserId);
 
             if (response.IsSuccess)
             {
@@ -1069,7 +1072,7 @@
             isSaving = true;
             StateHasChanged();
 
-            var result = await ProductManager.AddProducts(_model, ImageBytesList, ImageNames);
+            var result = await ProductManager.AddProducts(_model, ImageBytesList, ImageNames, CurrentUserId);
 
             if (result.IsSuccess)
             {

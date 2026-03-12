@@ -43,17 +43,17 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         {
             try
             {
-                //IsProductsLoading = true;
-                //var response = await ProductManager.GetAllProductsAsync();
+                IsProductsLoading = true;
+                var response = await ProductManager.GetAllProductsAsync(CurrentUserId);
 
-                //if (response != null && response.IsSuccess && response.Data != null)
-                //{
-                //    Products = response.Data;
-                //}
-                //else
-                //{
-                //    Products = new List<ProductsVm>();
-                //}
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    Products = response.Data;
+                }
+                else
+                {
+                    Products = new List<ProductsVm>();
+                }
             }
             catch (Exception ex)
             {

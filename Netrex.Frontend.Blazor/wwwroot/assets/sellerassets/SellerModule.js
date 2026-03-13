@@ -253,3 +253,24 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(initializeCharts, 300);
     }
 });
+
+
+window.scrollToElement = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};
+
+let searchTimeout;
+window.setupSearchDebounce = (dotNetHelper) => {
+    const searchInput = document.querySelector('.topbar-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function (e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                dotNetHelper.invokeMethodAsync('OnSearchChanged', e.target.value);
+            }, 300); 
+        });
+    }
+};

@@ -11,6 +11,29 @@
 @inherits AuthComponentBase
 @attribute [Authorize(Roles = "Admin, Seller")]
 
+<div class="topbar">
+    <div class="topbar-inner">
+        <h2 class="topbar-title" style="padding-left:250px">Seller Dashboard</h2>
+
+        <div class="topbar-actions">
+
+            <input type="text"
+                   class="topbar-search"
+                   placeholder="Search products..."
+                   @bind="searchTerm"
+                   @bind:event="oninput" />
+            <div class="topbar-profile">
+                <i class="fas fa-bell"></i>
+                <img src="/assets/sellerassets/Pictures/MyImage.png" alt="Profile">
+            </div>
+        </div>
+    </div>
+
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
 <PageTitle>Seller Hub</PageTitle>
 
 <!-- Main Content -->
@@ -103,6 +126,18 @@
                 </button>
             </div>
 
+            <!-- SEARCH RESULTS INFO -->
+            @if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                <div class="alert alert-info mb-3" style="background-color: #e3f2fd; border-color: #90caf9; padding: 10px 15px; border-radius: 8px;">
+                    <i class="fas fa-search me-2"></i>
+                    Searching for "<strong>@searchTerm</strong>" - Found @filteredProducts.Count products
+                    <button class="btn btn-sm btn-outline-primary ms-3" @onclick="ClearSearch">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            }
+
             <!-- Product Gallery with Pagination -->
             <div class="product-grid" id="productGrid">
                 @if (isLoadingProducts)
@@ -114,13 +149,23 @@
                         <p style="margin-top: 10px;">Loading products...</p>
                     </div>
                 }
-                else if (products == null || products.Count == 0)
+                else if (filteredProducts == null || filteredProducts.Count == 0)
                 {
                     <div class="no-products" style="text-align: center; padding: 40px; width: 100%;">
-                        <p>No products found</p>
-                        <button class="btn btn-primary" @onclick="ShowModal">
-                            Add Your First Product
-                        </button>
+                        @if (string.IsNullOrWhiteSpace(searchTerm))
+                        {
+                            <p>No products found</p>
+                            <button class="btn btn-primary" @onclick="ShowModal">
+                                Add Your First Product
+                            </button>
+                        }
+                        else
+                        {
+                            <p>No products match "<strong>@searchTerm</strong>"</p>
+                            <button class="btn btn-outline-primary" @onclick="ClearSearch">
+                                <i class="fas fa-times"></i> Clear Search
+                            </button>
+                        }
                     </div>
                 }
                 else
@@ -174,7 +219,7 @@
                         </div>
                     }
 
-                    <!-- Modern Pagination Controls -->
+                    <!-- PAGINATION - FIXED -->
                     @if (totalPages > 1)
                     {
                         <div class="pagination-container" style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; margin-top: 30px; margin-bottom: 20px;">
@@ -183,19 +228,20 @@
                                 <button class="pagination-btn prev"
                                         @onclick="PreviousPage"
                                         disabled="@(currentPage == 1)"
-                                        style="padding: 10px 20px; border: none; background: @(currentPage == 1 ? "#e9ecef" : "linear-gradient(135deg, #04ADB1 0%, #028d91 100%)"); color: @(currentPage == 1 ? "#6c757d" : "white"); border-radius: 40px; cursor: @(currentPage == 1 ? "not-allowed" : "pointer"); font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: @(currentPage == 1 ? "none" : "0 4px 10px rgba(4, 173, 177, 0.3)");">
+                                        style="padding: 10px 20px; border: none; background: @(currentPage == 1 ? "#e9ecef" : "linear-gradient(135deg, #04ADB1 0%, #028d91 100%)"); color: @(currentPage == 1 ? "#6c757d" : "white"); border-radius: 40px; cursor: @(currentPage == 1 ? "not-allowed" : "pointer"); font-weight: 500; display: flex; align-items: center; gap: 8px;">
                                     <i class="fas fa-chevron-left"></i> Previous
                                 </button>
 
-                                <!-- Page Numbers -->
+                                <!-- Page Numbers - FIXED WITH LOCAL VARIABLE -->
                                 <div class="page-numbers" style="display: flex; gap: 5px; align-items: center;">
                                     @for (int i = 1; i <= totalPages; i++)
                                     {
-                                        <button class="page-number"
-                                                @onclick="() => GoToPage(i)"
-                                                style="width: 40px; height: 40px; border: none; background: @(currentPage == i ? "#04ADB1" : "transparent"); color: @(currentPage == i ? "white" : "#333"); border-radius: 50%; cursor: pointer; font-weight: @(currentPage == i ? "bold" : "normal"); transition: all 0.3s ease; box-shadow: @(currentPage == i ? "0 4px 10px rgba(4, 173, 177, 0.3)" : "none"); border: @(currentPage == i ? "none" : "1px solid #dee2e6");">
-                                            @i
-                                        </button>
+                                        var pageNumber = i; // IMPORTANT: Local variable capture
+                                                            <button class="page-number"
+                                                                    @onclick="() => GoToPage(pageNumber)"
+                                                                    style="width: 40px; height: 40px; border: none; background: @(currentPage == i ? "#04ADB1" : "transparent"); color: @(currentPage == i ? "white" : "#333"); border-radius: 50%; cursor: pointer; font-weight: @(currentPage == i ? "bold" : "normal"); border: @(currentPage == i ? "none" : "1px solid #dee2e6");">
+                                                                @i
+                                                            </button>
                                     }
                                 </div>
 
@@ -203,7 +249,7 @@
                                 <button class="pagination-btn next"
                                         @onclick="NextPage"
                                         disabled="@(currentPage == totalPages)"
-                                        style="padding: 10px 20px; border: none; background: @(currentPage == totalPages ? "#e9ecef" : "linear-gradient(135deg, #04ADB1 0%, #028d91 100%)"); color: @(currentPage == totalPages ? "#6c757d" : "white"); border-radius: 40px; cursor: @(currentPage == totalPages ? "not-allowed" : "pointer"); font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: @(currentPage == totalPages ? "none" : "0 4px 10px rgba(4, 173, 177, 0.3)");">
+                                        style="padding: 10px 20px; border: none; background: @(currentPage == totalPages ? "#e9ecef" : "linear-gradient(135deg, #04ADB1 0%, #028d91 100%)"); color: @(currentPage == totalPages ? "#6c757d" : "white"); border-radius: 40px; cursor: @(currentPage == totalPages ? "not-allowed" : "pointer"); font-weight: 500; display: flex; align-items: center; gap: 8px;">
                                     Next <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -504,7 +550,7 @@
     </div>
 </div>
 
-<!-- ============ PROFILE MODALS (from old HTML) ============ -->
+<!-- ============ PROFILE MODALS ============ -->
 <div class="modal fade" id="profileModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -565,7 +611,7 @@
     </div>
 </div>
 
-<!-- ============ ADD PRODUCT MODAL (Blazor version) ============ -->
+<!-- ============ ADD PRODUCT MODAL ============ -->
 @if (IsModalVisible)
 {
     <div class="modal-backdrop fade show"></div>
@@ -1001,15 +1047,24 @@
     const long MaxFileSize = 2_621_440;
     const int MaxFiles = 5;
 
+    // SEARCH PROPERTY
+    private string searchTerm = "";
+
+    // FILTERED PRODUCTS - Search by product name only
+    private List<ProductsVm> filteredProducts => string.IsNullOrWhiteSpace(searchTerm)
+        ? products
+        : products.Where(p => p.ProductName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true).ToList();
+
     // Pagination Properties
     private int currentPage = 1;
     private int pageSize = 6;
-    private int totalPages => (int)Math.Ceiling((double)products.Count / pageSize);
-    private List<ProductsVm> paginatedProducts => products
+    private int totalPages => (int)Math.Ceiling((double)filteredProducts.Count / pageSize);
+    private List<ProductsVm> paginatedProducts => filteredProducts
         .Skip((currentPage - 1) * pageSize)
         .Take(pageSize)
         .ToList();
 
+    // Pagination Methods
     private void NextPage()
     {
         if (currentPage < totalPages)
@@ -1035,6 +1090,14 @@
             currentPage = page;
             StateHasChanged();
         }
+    }
+
+    // Clear Search
+    private void ClearSearch()
+    {
+        searchTerm = "";
+        currentPage = 1;
+        StateHasChanged();
     }
 
     void ShowModal() => IsModalVisible = true;
@@ -1112,8 +1175,8 @@
             if (response.IsSuccess)
             {
                 products = response.Data ?? new();
-                // Reset to first page when products are reloaded
                 currentPage = 1;
+                searchTerm = "";
                 Console.WriteLine($"✅ {products.Count} products loaded");
             }
             else
@@ -1218,7 +1281,7 @@
                 StockQuantity = product.StockQuantity,
                 ImageUrl = product.ImageUrl ?? string.Empty,
                 CloudPublicId = product.CloudPublicId ?? string.Empty,
-                // ✅ Copy existing images
+                // Copy existing images
                 Images = product.Images?.Select(img => new CloudinaryUploadResult
                 {
                     Url = img.Url,

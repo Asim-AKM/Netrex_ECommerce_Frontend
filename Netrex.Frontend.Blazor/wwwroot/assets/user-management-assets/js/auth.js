@@ -17,3 +17,7 @@ window.submitLoginForm = function (token, rememberMe) {
         rememberMe ? 'true' : 'false';
     document.getElementById('cookieForm').submit();
 };
+
+window.submitLogoutForm = function () {
+    document.getElementById('logoutForm').submit();
+};

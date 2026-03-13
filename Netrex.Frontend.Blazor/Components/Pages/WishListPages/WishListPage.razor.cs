@@ -30,6 +30,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.WishListPages
         {
             isLoading = true;
             var response = await WishListManager.GetWishListItemsAsync(CurrentUserId);
+            HandleApiResponse(response);
             if (response.IsSuccess)
                 Products = response.Data ?? new();
             else

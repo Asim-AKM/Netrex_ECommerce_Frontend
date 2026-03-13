@@ -1,4 +1,5 @@
 ﻿using Netrex.Frontend.Application.Commons.AppResponses;
+using System.Net;
 using System.Text.Json;
 
 namespace Netrex.Frontend.Application.Commons
@@ -32,13 +33,13 @@ namespace Netrex.Frontend.Application.Commons
             }
         }
 
-        public static ApiResponse<T> FailResponse<T>(string message)
+        public static ApiResponse<T> FailResponse<T>(string message, HttpStatusCode status = HttpStatusCode.InternalServerError)
         {
             return new ApiResponse<T>
             {
                 IsSuccess = false,
                 Message = message,
-                Status = 500,
+                Status = (int)status,
                 Data = default!
             };
         }

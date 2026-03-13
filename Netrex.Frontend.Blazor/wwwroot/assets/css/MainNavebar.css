@@ -69,3 +69,78 @@
         color: #c0392b;
     }
 
+navbar__login-text {
+    color: white;
+}
+
+/* Dropdown Toggle - Arrow hide */
+.mainnavbar__profile-toggle::after {
+    display: none;
+}
+
+/* Profile Img */
+.mainnavbar__profile-img {
+    width: 36px;
+    height: 36px;
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+/* Default Avatar */
+.mainnavbar__profile-avatar {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+}
+
+.mainnavbar__profile-initial {
+    color: #03ADAE;
+    font-size: 15px;
+}
+
+/* Dropdown */
+.mainnavbar__dropdown {
+    min-width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* User Info Header */
+.mainnavbar__dropdown-header p {
+    font-size: 14px;
+    color: #222;
+}
+
+.mainnavbar__dropdown-role {
+    color: #03ADAE;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+/* Dropdown Items */
+.mainnavbar__dropdown-item {
+    font-size: 14px;
+    color: #444;
+    padding: 8px 16px;
+}
+
+    .mainnavbar__dropdown-item:hover {
+        background-color: #f0fafa;
+        color: #03ADAE;
+    }
+
+/* Logout */
+.mainnavbar__dropdown-logout {
+    font-size: 14px;
+    color: #e74c3c;
+    padding: 8px 16px;
+}
+
+    .mainnavbar__dropdown-logout:hover {
+        background-color: #fff5f5;
+        color: #c0392b;
+    }
+

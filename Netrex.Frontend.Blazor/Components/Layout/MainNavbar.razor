@@ -1,12 +1,16 @@
 @using Microsoft.AspNetCore.Components.Authorization
+@using Netrex.Frontend.Application.Commons
+@using Netrex.Frontend.Application.Commons.SharedClasses
 @using Netrex.Frontend.Application.Services.WishList
+@using Netrex.Frontend.Blazor.Shared
 @inject IJSRuntime JS
 @inject WishListStateService WishListState
 @inject IWishListManager WishListManager
+@inject LogoutService LogoutService
 @inherits AuthComponentBase
 
 @*  Logout form  *@
-<form method="post" action="/logout" id="navLogoutForm"></form>
+<form method="post" action="/Logout" id="logoutForm"></form>
 
 <nav>
     <div class="container-fluid">
@@ -48,8 +52,8 @@
                                         @if (WishListState.Count > 0)
                                         {
                                             <span class="position-absolute top-0 start-100
-                                                                 translate-middle badge
-                                                                 rounded-pill bg-danger"
+                                                                                 translate-middle badge
+                                                                                 rounded-pill bg-danger"
                                                   style="font-size:10px;">
                                                 @WishListState.Count
                                             </span>
@@ -81,7 +85,7 @@
                                     else
                                     {
                                         <div class="mainnavbar__profile-avatar d-flex align-items-center
-                                                                    justify-content-center rounded-circle">
+                                                                                    justify-content-center rounded-circle">
                                             <span class="mainnavbar__profile-initial fw-bold">
                                                 @CurrentUserName.FirstOrDefault()
                                             </span>
@@ -130,25 +134,24 @@
                         {
                             <!-- Login -->
                             <li>
-                                <NavLink href="/login"
-                                         class="d-flex align-items-center gap-1
-                                                    navbar__login-link">
-                                    <img src="/assets/icons/people.png" width="28" />
-                                    <span class="navbar__login-text">Login</span>
+                                <NavLink href="/login">
+                                    <img src="/assets/icons/people.png" style="width:28px" />
                                 </NavLink>
                             </li>
                         }
 
                         <!-- Become a Seller -->
-                        <li class="nav-item ms-2">
-                            <a href="/sellerregister"
-                               class="btn btn-outline-light btn-sm px-4 py-2
-                                      rounded-pill d-flex align-items-center
-                                      gap-2 fw-semibold shadow-sm custom-sell-btn">
-                                <i class="fas fa-store"></i>
-                                <span>Become a Seller</span>
-                            </a>
-                        </li>
+                        @if (!IsAuthenticated || CurrentUserRole == AppRoles.Customer)
+                        {
+                            <li class="nav-item ms-2">
+                                <a href="/sellerregister"
+                                   class="btn btn-outline-light btn-sm px-4 py-2 rounded-pill d-flex align-items-center
+                                                                     gap-2 fw-semibold custom-sell-btn">
+                                    <i class="fas fa-store"></i>
+                                    <span>Become a Seller</span>
+                                </a>
+                            </li>
+                        }
 
                     </ul>
                 </div>
@@ -224,18 +227,10 @@
 
     private async Task LoadCountAsync()
     {
-        var response = await WishListManager
-            .GetWishListCountAsync(CurrentUserId);
+        var response = await WishListManager.GetWishListCountAsync(CurrentUserId);
+         HandleApiResponse(response);
         if (response.IsSuccess)
             WishListState.SetCount(response.Data);
-    }
-
-    private async Task Logout()
-    {
-        await JS.InvokeVoidAsync(
-            "eval",
-            "document.getElementById('navLogoutForm').submit()"
-        );
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -251,6 +246,13 @@
             ");
         }
     }
+
+
+    private async Task Logout()
+    {
+        await LogoutService.LogoutAsync();
+    }
+
 
     public void Dispose()
     {

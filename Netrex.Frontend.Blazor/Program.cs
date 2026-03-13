@@ -5,6 +5,7 @@ using Netrex.Frontend.Application.Services.Customer.Interfaces;
 using Netrex.Frontend.Blazor.Components;
 using Netrex.Frontend.Blazor.Middleware;
 using Netrex.Frontend.Blazor.Services;
+using Netrex.Frontend.Blazor.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,15 +14,16 @@ var baseUrl = builder.Configuration["ApiSettings:BaseUrl"]!;
 var v1 = builder.Configuration["ApiSettings:V1"]!;
 var v2 = builder.Configuration["ApiSettings:V2"]!;
 
+builder.Services.AddScoped<JwtAuthHandler>();
 builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri($"{baseUrl}{v1}");
-});
+}).AddHttpMessageHandler<JwtAuthHandler>();
 
 builder.Services.AddHttpClient("ApiClientV2", client =>
 {
     client.BaseAddress = new Uri($"{baseUrl}{v2}");
-});
+}).AddHttpMessageHandler<JwtAuthHandler>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                                   .AddCookie(options =>
@@ -34,6 +36,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LogoutService>();
 
 
 // 3. --- LOADER SERVICE REGISTER KAREIN ---

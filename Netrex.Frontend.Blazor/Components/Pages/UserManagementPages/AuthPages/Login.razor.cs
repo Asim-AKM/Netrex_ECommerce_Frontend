@@ -4,6 +4,7 @@ using Netrex.Frontend.Application.Services.Common;
 using Netrex.Frontend.Application.Services.UserManagement.Interfaces;
 using Netrex.Frontend.Application.ViewModels.UserManagement.Authentication;
 using Netrex.Frontend.Blazor.Services;
+using System.Net;
 
 namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
 {
@@ -15,14 +16,25 @@ namespace Netrex.Frontend.Blazor.Components.Pages.UserManagementPages.AuthPages
         [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
         private readonly VmLogin _model = new VmLogin();
         private bool rememberMe = false;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+        }
         public async Task HandleLogin()
         {
             try
             {
                 Loader.Show();
                 var result = await AuthManager!.LoginAsync(_model);
+                HandleApiResponse(result);
                 if (!result.IsSuccess || result.Data == null)
                 {
+                    if (result.Status == (int)HttpStatusCode.InternalServerError)
+                    {
+                        Toast.Error("Internal Server Error", "Login failed");
+                        return;
+                    }
                     Toast.Error(result.Message ?? "Login failed", "Error");
                     return;
                 }

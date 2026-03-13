@@ -1,6 +1,6 @@
 ﻿@page "/login"
 @rendermode InteractiveServer
-
+@inherits AuthComponentBase
 <form id="cookieForm" method="post" action="/setcookies">
     <input type="hidden" id="jwtToken" name="token" />
     <input type="hidden" id="rememberMeInput" name="rememberMe" />

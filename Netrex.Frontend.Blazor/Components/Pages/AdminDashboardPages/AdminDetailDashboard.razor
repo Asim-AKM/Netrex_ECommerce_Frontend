@@ -4,6 +4,7 @@
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
 @layout MainAdmindashboardLayout
 @inherits AuthComponentBase
+@attribute [Authorize(Roles ="Admin")]
 <aside class="ad-sidebar">
 
     <div class="sidebar-header" style="display: flex;

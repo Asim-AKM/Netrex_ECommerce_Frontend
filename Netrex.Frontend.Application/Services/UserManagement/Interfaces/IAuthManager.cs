@@ -9,7 +9,8 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Interfaces
         Task<ApiResponse<T>> RegisterAsync<T>(VmRegister registerView);
         Task<ApiResponse<string>> LoginAsync(VmLogin viewModel);
 
-        Task<ApiResponse<T>> VerifyOtpAsync<T>(VmVerifyOtp verifyOtp);  
+        Task<ApiResponse<T>> VerifyOtpAsync<T>(VmVerifyOtp verifyOtp);
         Task<ApiResponse<T>> ResendOtpAsync<T>(string email);
+        Task<ApiResponse<string>> RefreshTokenAsync();
     }
 }

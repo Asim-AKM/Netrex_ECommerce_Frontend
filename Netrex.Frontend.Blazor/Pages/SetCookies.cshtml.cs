@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Netrex.Frontend.Application.Commons;
+using Netrex.Frontend.Application.Commons.SharedClasses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -35,11 +35,12 @@ namespace Netrex.Frontend.Blazor.Pages
 
             var role = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
+
             return role switch
             {
-                "Customer" => Redirect("/"),
-                "Admin" => Redirect("/admindashboard"),
-                "Seller" => Redirect("/SellerAndShopDetailsDashboard"),
+                AppRoles.Customer => Redirect("/"),
+                AppRoles.Admin => Redirect("/admindashboard"),
+                AppRoles.Seller => Redirect("/SellerAndShopDetailsDashboard"),
                 _ => Redirect("/401")
             };
 

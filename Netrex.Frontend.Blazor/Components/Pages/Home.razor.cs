@@ -8,6 +8,9 @@ using Netrex.Frontend.Application.Services.WishList;
 using Netrex.Frontend.Application.ViewModels.CartAndOrderModule.Cart;
 using Netrex.Frontend.Application.ViewModels.ProductManagement;
 using Netrex.Frontend.Application.ViewModels.WishList;
+using Netrex.Frontend.Blazor.Components.Layout;
+using System.Net;
+using System.Reflection.Metadata;
 
 namespace Netrex.Frontend.Blazor.Components.Pages
 {
@@ -205,11 +208,18 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         private async Task LoadWishedProductsAsync()
         {
             var response = await WishListManager.GetWishListItemsAsync(CurrentUserId);
+            if (response.Status == (int)HttpStatusCode.Unauthorized)
+            {
+                _Toast.Warning("UnAuthorize Person");
+                Navigation.NavigateTo("/401");
+                return;
+            }
             if (response.IsSuccess && response.Data != null)
             {
                 _wishedProducts = response.Data
                                   .ToDictionary(x => x.ProductId, x => x.WishListItemId);
             }
+
         }
 
         private async Task ToggleWishList(Guid productId)
@@ -223,7 +233,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             {
                 var wishListItemId = _wishedProducts[productId];
                 var response = await WishListManager.DeleteWishListItemAsync(wishListItemId);
-
+                HandleApiResponse(response);
                 if (response.IsSuccess)
                 {
                     _wishedProducts.Remove(productId);
@@ -239,7 +249,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             {
                 var request = new VmAddWishListItem(productId, CurrentUserId);
                 var response = await WishListManager.AddWishListItemAsync(request);
-
+                HandleApiResponse(response);
                 if (response.IsSuccess && response.Data != Guid.Empty)
                 {
                     _wishedProducts[productId] = response.Data;

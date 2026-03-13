@@ -1,4 +1,4 @@
-﻿namespace Netrex.Frontend.Application.Commons
+﻿namespace Netrex.Frontend.Application.Commons.SharedClasses
 {
     public class ClaimKey
     {

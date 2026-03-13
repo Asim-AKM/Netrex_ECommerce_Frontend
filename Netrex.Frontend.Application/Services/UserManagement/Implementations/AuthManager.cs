@@ -95,5 +95,18 @@ namespace Netrex.Frontend.Application.Services.UserManagement.Implementations
                 _loader.Hide();
             }
         }
+
+        public async Task<ApiResponse<string>> RefreshTokenAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("UserSession/GetRefreshJwt");
+                return ApiResponseDeserializer.Deserialize<string>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseDeserializer.FailResponse<string>(ex.Message);
+            }
+        }
     }
 }

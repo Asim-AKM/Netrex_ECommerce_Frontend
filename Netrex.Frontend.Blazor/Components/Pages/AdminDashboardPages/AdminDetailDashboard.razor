@@ -2,6 +2,8 @@
 @using Domain_Service.Enums
 @using Netrex.Frontend.Application.Commons.Enums
 @using Netrex.Frontend.Blazor.Components.Layout.AdmindashboardLayout
+@using Netrex.Frontend.Application.Commons.SharedClasses
+@attribute [Authorize(Roles = AppRoles.Admin)]
 @layout MainAdmindashboardLayout
 <aside class="ad-sidebar">
 
@@ -269,10 +271,10 @@
                 </tbody>
             </table>
         </div>
-    </section>  
+    </section>
     <section id="ad-product-management" class="ad-section">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2>Product Management</h2>       
+            <h2>Product Management</h2>
         </div>
 
         <div class="ad-table-wrapper">
@@ -659,16 +661,16 @@
                             @(SelectedPayout.PayOutDate == default(DateTime)
                                                     ? "Not paid yet"
                                                     : SelectedPayout.PayOutDate.ToString("MMM dd, yyyy"))
-                    </span>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="ntx-modal-footer">
-            <button class="ntx-modal-btn cancel"
-                    @onclick="() => ShowPayoutModal = false">
-                <i class="fa-solid fa-xmark"></i> Close
-            </button>
-            @if (SelectedPayout.PaymentStatus != PaymentStatus.success)
+            <div class="ntx-modal-footer">
+                <button class="ntx-modal-btn cancel"
+                        @onclick="() => ShowPayoutModal = false">
+                    <i class="fa-solid fa-xmark"></i> Close
+                </button>
+                @if (SelectedPayout.PaymentStatus != PaymentStatus.success)
                 {
                     <button class="ntx-modal-btn confirm"
                             @onclick="() => MarkAsPaid(SelectedPayout.SellerPayoutId)">

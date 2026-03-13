@@ -9,6 +9,7 @@ namespace Netrex.Frontend.Application.Commons.Mappers.Products
         {
             return new AddProductDto
             {
+                SellerId=vm.SellerId,
                 ProductName = vm.ProductName,
                 ProductDescription = vm.ProductDescription ?? string.Empty,
                 CategoryName = vm.CategoryName,

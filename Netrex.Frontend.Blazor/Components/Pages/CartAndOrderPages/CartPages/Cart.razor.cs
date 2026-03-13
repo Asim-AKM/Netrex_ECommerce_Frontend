@@ -105,9 +105,9 @@ namespace Netrex.Frontend.Blazor.Components.Pages.CartAndOrderPages.CartPages
      
         }
 
-        private async Task ProceedToCheckOut()
+        private void ProceedToCheckOut()
         {
-            navigationManager.NavigateTo("/DeliveryAddressPage");
+             navigationManager.NavigateTo("/DeliveryAddressPage");
         }
 
 

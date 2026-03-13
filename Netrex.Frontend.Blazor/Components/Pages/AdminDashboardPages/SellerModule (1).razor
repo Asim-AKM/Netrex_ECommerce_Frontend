@@ -1,0 +1,380 @@
+@page "/admin/sellers"
+@* 
+    SellerModule.razor
+    Unique prefix: "slr-" — won't clash with existing "ad-" or "ntx-" classes
+    Pure Bootstrap + minimal scoped styles only for things Bootstrap can't do
+    
+    Endpoints:
+      GET /api/v1/AdminSeller/pending
+      PUT /api/v1/AdminSeller/approve?sellerId
+      PUT /api/v1/AdminSeller/reject?sellerId
+      PUT /api/v1/AdminSeller/suspend?sellerId
+*@
+
+
+<div class="ad-main-content"> 
+    <div class="container-fluid px-0">
+
+        <!-- ── Page Heading ── -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h5 class="fw-bold mb-1" style="color:var(--secondary);">Seller Module</h5>
+                <p class="text-muted small mb-0">Manage seller registrations, approvals and payouts</p>
+            </div>
+        </div>
+
+        <!-- ── Stat Cards (reuse .ad-card pattern) ── -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="ad-card sales d-flex align-items-center gap-3 py-3">
+                    <div class="slr-stat-icon" style="background:rgba(4,173,177,0.1);color:#04ADB1;">🏪</div>
+                    <div>
+                        <div class="fw-bold fs-5" style="color:var(--secondary);">@(sellers?.Count ?? 0)</div>
+                        <div class="text-muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;">Total Sellers</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="ad-card orders d-flex align-items-center gap-3 py-3">
+                    <div class="slr-stat-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;">⏳</div>
+                    <div>
+                        <div class="fw-bold fs-5" style="color:var(--secondary);">@(sellers?.Count(s => s.Status == "Pending") ?? 0)</div>
+                        <div class="text-muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;">Pending</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="ad-card customers d-flex align-items-center gap-3 py-3">
+                    <div class="slr-stat-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">✅</div>
+                    <div>
+                        <div class="fw-bold fs-5" style="color:var(--secondary);">@(sellers?.Count(s => s.Status == "Approved") ?? 0)</div>
+                        <div class="text-muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;">Approved</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="ad-card payments d-flex align-items-center gap-3 py-3">
+                    <div class="slr-stat-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">🚫</div>
+                    <div>
+                        <div class="fw-bold fs-5" style="color:var(--secondary);">@(sellers?.Count(s => s.Status == "Suspended") ?? 0)</div>
+                        <div class="text-muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;">Suspended</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Table Card (reuse .ad-table-wrapper) ── -->
+        <div class="ad-table-wrapper">
+
+            <!-- Tabs + Search -->
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-3">
+                <ul class="nav slr-tabs border-bottom w-100 w-md-auto">
+                    @foreach (var tab in new[] { "All", "Pending", "Approved", "Rejected", "Suspended" })
+                    {
+                        <li class="nav-item">
+                            <button class="nav-link px-3 py-2 @(activeTab == tab ? "active" : "")"
+                                    @onclick="() => activeTab = tab">
+                                @tab
+                                @if (tab == "Pending" && (sellers?.Count(s => s.Status == "Pending") ?? 0) > 0)
+                                {
+                                    <span class="badge ms-1 text-dark" style="background:#fef3c7;font-size:.7rem;">
+                                        @sellers!.Count(s => s.Status == "Pending")
+                                    </span>
+                                }
+                            </button>
+                        </li>
+                    }
+                </ul>
+
+                <!-- Search — reuse .ad-search-container style -->
+                <div class="ad-search-container" style="flex:0 1 260px;min-width:200px;">
+                    <input type="text"
+                           placeholder="Search store or address..."
+                           @bind="searchQuery"
+                           @bind:event="oninput" />
+                </div>
+            </div>
+
+            <!-- Table -->
+            @if (isLoading)
+            {
+                <div class="text-center py-5 text-muted">
+                    <div class="spinner-border mb-2" style="color:var(--primary);" role="status"></div>
+                    <p class="small">Loading sellers...</p>
+                </div>
+            }
+            else if (!FilteredSellers.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <div style="font-size:2.5rem;" class="mb-2">🏪</div>
+                    <p class="small mb-0">No sellers found for this filter.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="ad-table">
+                        <thead>
+                            <tr>
+                                <th>Seller ID</th>
+                                <th>Store</th>
+                                <th class="d-none d-md-table-cell">Address</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var seller in FilteredSellers)
+                            {
+                                <tr>
+                                    <!-- ID -->
+                                    <td>
+                                        <span class="slr-id-badge">
+                                            @seller.SellerId.ToString()[..8]…
+                                        </span>
+                                    </td>
+
+                                    <!-- Store -->
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="slr-avatar">@seller.StoreName[0]</div>
+                                            <div>
+                                                <div class="fw-semibold" style="font-size:.9rem;">@seller.StoreName</div>
+                                                <div class="text-muted" style="font-size:.75rem;">@seller.Description</div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Address -->
+                                    <td class="text-muted d-none d-md-table-cell" style="font-size:.88rem;">
+                                        @seller.Address
+                                    </td>
+
+                                    <!-- Status — reuse ntx-status-pill -->
+                                    <td>
+                                        @{
+                                            var pillClass = seller.Status switch
+                                            {
+                                                "Approved"  => "status-active",
+                                                "Pending"   => "status-pending",
+                                                "Rejected"  => "status-suspended",
+                                                "Suspended" => "status-inactive",
+                                                _           => "status-inactive"
+                                            };
+                                        }
+                                        <span class="ntx-status-pill @pillClass">@seller.Status</span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td>
+                                        @if (loadingIds.Contains(seller.SellerId))
+                                        {
+                                            <div class="spinner-border spinner-border-sm" style="color:var(--primary);" role="status"></div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if (seller.Status == "Pending")
+                                                {
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;background:var(--success);"
+                                                           >
+                                                        ✓ Approve
+                                                    </button>
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;background:var(--danger);"
+                                                           >
+                                                        ✕ Reject
+                                                    </button>
+                                                }
+                                                @if (seller.Status == "Approved")
+                                                {
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;background:var(--warning);color:#fff;"
+                                                          >
+                                                        ⏸ Suspend
+                                                    </button>
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;"
+                                                           >
+                                                        💰 Payout
+                                                    </button>
+                                                }
+                                                @if (seller.Status == "Suspended")
+                                                {
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;background:var(--success);"
+                                                           >
+                                                        ↺ Reinstate
+                                                    </button>
+                                                    <button class="ad-btn py-1 px-3" style="font-size:.82rem;margin-bottom:0;"
+                                                            >
+                                                        💰 Payout
+                                                    </button>
+                                                }
+                                                @if (seller.Status == "Rejected")
+                                                {
+                                                    <span class="text-muted fst-italic" style="font-size:.82rem;">No actions</span>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<!-- ── Confirmation Modal (uses ntx- modal pattern) ── -->
+@if (confirmSeller != null)
+{
+    <div class="slr-overlay" @onclick="CloseConfirm">
+        <div class="slr-modal" @onclick:stopPropagation="true">
+            <div class="slr-modal-header">
+                <div class="slr-modal-header-icon">
+                    @(confirmAction == "approve" ? "✅" : confirmAction == "reject" ? "❌" : "⚠️")
+                </div>
+                <h5>
+                    @(confirmAction == "approve" ? "Approve Seller"
+                      : confirmAction == "reject" ? "Reject Seller"
+                      : "Suspend Seller")
+                </h5>
+            </div>
+            <div class="ntx-modal-body">
+                <!-- Seller Info -->
+                <div class="ntx-modal-user-info">
+                    <div class="ntx-modal-avatar-placeholder">@confirmSeller.StoreName[0]</div>
+                    <div>
+                        <p class="ntx-modal-username">@confirmSeller.StoreName</p>
+                        <p class="ntx-modal-email">@confirmSeller.Address</p>
+                    </div>
+                </div>
+                <!-- Status Change Arrow -->
+                <div class="ntx-modal-status-change">
+                    <span class="ntx-status-pill @(confirmSeller.Status switch { "Approved" => "status-active", "Pending" => "status-pending", _ => "status-inactive" })">
+                        @confirmSeller.Status
+                    </span>
+                    <span class="ntx-arrow">→</span>
+                    <span class="ntx-status-pill @(confirmAction == "approve" ? "status-active" : confirmAction == "reject" ? "status-suspended" : "status-inactive")">
+                        @(confirmAction == "approve" ? "Approved" : confirmAction == "reject" ? "Rejected" : "Suspended")
+                    </span>
+                </div>
+                <p class="ntx-modal-warning">
+                    @if (confirmAction == "approve")
+                    { @($"This will allow \"{confirmSeller.StoreName}\" to list products immediately.") }
+                    else if (confirmAction == "reject")
+                    { @($"Rejecting \"{confirmSeller.StoreName}\" will notify the seller via email.") }
+                    else
+                    { @($"Suspending \"{confirmSeller.StoreName}\" will hide all their listings.") }
+                </p>
+            </div>
+            <div class="ntx-modal-footer">
+                <button class="ntx-modal-btn cancel" @onclick="CloseConfirm">Cancel</button>
+                <button class="ntx-modal-btn confirm" @onclick="ExecuteConfirm">
+                    @(confirmAction == "approve" ? "Yes, Approve"
+                      : confirmAction == "reject" ? "Yes, Reject"
+                      : "Yes, Suspend")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- ── Toast ── -->
+<div class="slr-toast-wrap">
+    @foreach (var t in toasts)
+    {
+        <div class="slr-toast @t.Type">
+            <span>@(t.Type == "success" ? "✅" : "❌")</span>
+            <span>@t.Message</span>
+        </div>
+    }
+</div>
+
+@code {
+    // @inject IAdminSellerService AdminSellerService
+    // @inject NavigationManager NavigationManager
+
+    private List<SellerViewModel>? sellers;
+    private bool isLoading = true;
+    private string activeTab = "All";
+    private string searchQuery = "";
+    private HashSet<Guid> loadingIds = new();
+    private SellerViewModel? confirmSeller;
+    private string confirmAction = "";
+    private List<ToastItem> toasts = new();
+
+    private IEnumerable<SellerViewModel> FilteredSellers => (sellers ?? new())
+        .Where(s => activeTab == "All" || s.Status == activeTab)
+        .Where(s => string.IsNullOrWhiteSpace(searchQuery) ||
+                    s.StoreName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    s.Address.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync() => await LoadSellersAsync();
+
+    private async Task LoadSellersAsync()
+    {
+        isLoading = true;
+        // TODO: replace with real call →
+        // var res = await AdminSellerService.GetPendingSellersAsync();
+        // sellers = res.Data;
+        await Task.Delay(500);
+        sellers = new()
+        {
+            new() { SellerId = Guid.NewGuid(), StoreName = "Cricket",    Description = "Sport kits and items",  Address = "Ashiana shopping store",  Status = "Approved"  },
+            new() { SellerId = Guid.NewGuid(), StoreName = "Laptop",     Description = "PC and Laptops",        Address = "Dikhan",                  Status = "Pending"   },
+            new() { SellerId = Guid.NewGuid(), StoreName = "TechZone",   Description = "Electronics & Gadgets", Address = "Lahore, Main Blvd",       Status = "Suspended" },
+            new() { SellerId = Guid.NewGuid(), StoreName = "Khan Store", Description = "General merchandise",   Address = "Khan Bazar, Peshawar",    Status = "Rejected"  },
+        };
+        isLoading = false;
+    }
+
+    private void OpenConfirm(SellerViewModel s, string action) { confirmSeller = s; confirmAction = action; }
+    private void CloseConfirm() { confirmSeller = null; confirmAction = ""; }
+
+    private async Task ExecuteConfirm()
+    {
+        if (confirmSeller == null) return;
+        var seller = confirmSeller; var action = confirmAction;
+        CloseConfirm();
+        loadingIds.Add(seller.SellerId); StateHasChanged();
+        try
+        {
+            await Task.Delay(700); // remove — replace with:
+            // await AdminSellerService.ApproveSellerAsync / RejectSellerAsync / SuspendSellerAsync
+            seller.Status = action switch
+            {
+                "approve" => "Approved",
+                "reject"  => "Rejected",
+                "suspend" => "Suspended",
+                _ => seller.Status
+            };
+            ShowToast($"\"{seller.StoreName}\" {action}d successfully.", "success");
+        }
+        catch { ShowToast("Action failed. Please try again.", "error"); }
+        finally { loadingIds.Remove(seller.SellerId); StateHasChanged(); }
+    }
+
+    private void ViewPayout(Guid id)
+    {
+        // NavigationManager.NavigateTo($"/admin/payouts/{id}");
+    }
+
+    private async void ShowToast(string msg, string type)
+    {
+        var t = new ToastItem { Message = msg, Type = type };
+        toasts.Add(t); StateHasChanged();
+        await Task.Delay(3500);
+        toasts.Remove(t); StateHasChanged();
+    }
+
+    public class SellerViewModel
+    {
+        public Guid   SellerId    { get; set; }
+        public string StoreName   { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Address     { get; set; } = "";
+        public string Status      { get; set; } = "Pending";
+    }
+    private class ToastItem { public string Message { get; set; } = ""; public string Type { get; set; } = "success"; }
+}

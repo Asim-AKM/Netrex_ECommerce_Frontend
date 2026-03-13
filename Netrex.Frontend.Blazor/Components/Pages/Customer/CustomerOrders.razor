@@ -7,50 +7,72 @@
         <h5 class="customer-card-title">My Orders</h5>
     </div>
     <div class="customer-card-body">
-        <div class="customer-orders-list" id="spOrdersList">
-            <div class="customer-order-card mb-3 p-3" data-order-id="12345">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h6>Wireless Headphones</h6>
-                        <p class="text-muted mb-1">Order #12345 • Placed on 15 May 2024</p>
-                        <span class="customer-badge customer-badge-success">Delivered</span>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <strong>$59.99</strong>
-                    </div>
-                </div>
+        @if (IsLoading)
+        {
+            <p>Loading orders...</p>
+        }
+        else if (orders == null || !orders.Any())
+        {
+            <div class="text-center py-4 customer-empty-orders">
+                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                <p>You have not created any order yet</p>
+                <a href="/customer/dashboard" class="btn customer-btn-primary">
+                    Continue Shopping
+                </a>
             </div>
-            <div class="customer-order-card mb-3 p-3" data-order-id="12346">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h6>Smart Watch</h6>
-                        <p class="text-muted mb-1">Order #12346 • Placed on 12 May 2024</p>
-                        <span class="customer-badge customer-badge-warning">Shipped</span>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <strong>$199.99</strong>
-                    </div>
-                </div>
-            </div>
-            <div class="customer-order-card p-3" data-order-id="12347">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h6>Gaming Mouse</h6>
-                        <p class="text-muted mb-1">Order #12347 • Placed on 10 May 2024</p>
-                        <span class="customer-badge customer-badge-info">Processing</span>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <strong>$45.00</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
+        else
+        {
+            <div class="customer-orders-list" id="spOrdersList">
 
-        <!-- Empty orders message (hidden by default) -->
-        <div class="text-center py-4 customer-empty-orders" style="display: none;">
-            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-            <p>No orders found</p>
-            <a href="/customer/dashboard" class="btn customer-btn-primary">Continue Shopping</a>
-        </div>
+                @foreach (var order in orders)
+                {
+                    <div class="customer-order-card mb-3 p-3" data-order-id="@order.OrderId">
+
+                        <div class="row align-items-center">
+
+                            <div class="col-md-8">
+
+                                <h6>Order #@order.OrderId</h6>
+
+                                <p class="text-muted mb-1">
+                                    Placed on @order.CreatedAt.ToString("dd MMM yyyy")
+                                </p>
+
+                                @if (order.OrderStatus)
+                                {
+                                    <span class="customer-badge customer-badge-success">
+                                        Delivered
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="customer-badge customer-badge-warning">
+                                        Pending
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="col-md-4 text-md-end">
+
+                                <strong>$@order.TotalAmount</strong>
+
+                                <br />
+
+                                <button class="btn customer-btn-outline btn-sm mt-2"
+                                        @onclick="() => ViewDetails(order.OrderId)">
+                                    Details
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
     </div>
 </div>

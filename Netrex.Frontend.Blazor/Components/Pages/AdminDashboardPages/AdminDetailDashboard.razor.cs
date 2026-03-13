@@ -37,6 +37,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
         {
             // Concurrent loading start kar sakte hain performance ke liye
             await Task.WhenAll(LoadUsers(), LoadSellers(), LoadProducts());
+            await LoadSellersAsync();
         }
 
         private async Task LoadProducts()
@@ -44,7 +45,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages.AdminDashboardPages
             try
             {
                 IsProductsLoading = true;
-                var response = await ProductManager.GetAllProductsAsync();
+                var response = await ProductManager.GetAllProductsAsync(CurrentUserId);
 
                 if (response != null && response.IsSuccess && response.Data != null)
                 {

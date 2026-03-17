@@ -1,6 +1,82 @@
 ﻿<footer>
     <div class="container">
         <div class="row">
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="address">
+                    <h2 class="h5 fs-4">Address</h2>
+                    <div class="address-content">
+                        <p>2nd Floor, Ashiyana center</p>
+                        <p>Dera Ismail Khan, Pakistan</p>
+                        <p><a href="tel:+923312435687">+92 3312435687</a></p>
+                        <p><a href="mailto:netrexEcommerce@gmail.com">netrexEcommerce@gmail.com</a></p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="links">
+                    <h2 class="h5 fs-4">Quick Links</h2>
+                    <ul class="nav-items ps-0">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about-us">About Us</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </section>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <section class="support">
+                    <h2 class="h5 fs-4">Support</h2>
+                    <ul class="nav-items ps-0">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                        <li><a href="/shipping-and-returns">Shipping & Returns</a></li>
+                    </ul>
+                </section>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+                <section class="subscribe-sect">
+                    <h2 class="h5 fs-4">Subscribe Us</h2>
+                    <div class="subscribe-info">
+                        <p>Subscribe to our newsletter to get updates about our grand offers.</p>
+                        <input type="email" class="form-control" placeholder="Email Address" @bind="email" />
+                        <input type="submit" class="btn mt-2" value="Subscribe" @onclick="Subscribe" />
+                        @if (!string.IsNullOrEmpty(message))
+                        {
+                            <p class="subscribe-msg mt-2">@message</p>
+                        }
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+@code {
+    private string email = string.Empty;
+    private string message = string.Empty;
+
+    private void Subscribe()
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            message = "Please enter an email address.";
+            return;
+        }
+        message = "Thanks for subscribing!";
+        email = string.Empty;
+    }
+}
+
+
+@* <footer>
+    <div class="container">
+        <div class="row">
             <div class="col-12 col-sm-6 col-lg-3 mb-4 mb-lg-0">
                 <section class="address">
                     <h2 class="h5 fs-4">Address</h2>
@@ -74,4 +150,4 @@
         message = "Thanks for subscribing!";
         email = string.Empty;
     }
-}
+} *@

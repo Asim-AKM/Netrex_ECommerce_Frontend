@@ -1,0 +1,99 @@
+﻿@page "/contact"
+
+<!-- Material Symbols for Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+
+<!-- BEGIN: Breadcrumb & Title -->
+<section class="page-header text-center" data-purpose="page-title">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-2">Contact Us</h1>
+        <p class="text-muted lead">We'd love to hear from you. Get in touch with our team.</p>
+    </div>
+</section>
+<!-- END: Breadcrumb & Title -->
+<!-- BEGIN: ContactContent -->
+<main class="container py-5">
+    <div class="row g-4">
+        <!-- Contact Details Sidebar -->
+        <div class="col-lg-4" data-purpose="contact-info-cards">
+            <div class="d-flex flex-column gap-4">
+                <div class="contact-card d-flex align-items-start gap-3">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold mb-2">Our Office</h3>
+                        <p class="text-muted mb-0">123 eCommerce St, Digital Plaza,<br />Karachi, Pakistan</p>
+                    </div>
+                </div>
+                <div class="contact-card d-flex align-items-start gap-3">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">mail</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold mb-2">Email Us</h3>
+                        <p class="text-muted mb-0">netrexEcommerce@gmail.com<br />support@netrex.com</p>
+                    </div>
+                </div>
+                <div class="contact-card d-flex align-items-start gap-3">
+                    <div class="icon-box">
+                        <span class="material-symbols-outlined">schedule</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold mb-2">Working Hours</h3>
+                        <p class="text-muted mb-0">Mon - Sat: 09:00 - 18:00<br />Sunday: Closed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contact Form -->
+        <div class="col-lg-8" data-purpose="contact-form-container">
+            <div class="contact-card">
+                <h2 class="h4 fw-bold mb-4">Send us a Message</h2>
+                <form id="contactForm">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6" data-purpose="form-group">
+                            <label class="form-label fw-semibold">Your Name</label>
+                            <input class="form-control form-control-lg" placeholder="John Doe" required="" type="text" />
+                        </div>
+                        <div class="col-md-6" data-purpose="form-group">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input class="form-control form-control-lg" placeholder="john@example.com" required="" type="email" />
+                        </div>
+                    </div>
+                    <div class="mb-4" data-purpose="form-group">
+                        <label class="form-label fw-semibold">Subject</label>
+                        <input class="form-control form-control-lg" placeholder="How can we help?" required="" type="text" />
+                    </div>
+                    <div class="mb-4" data-purpose="form-group">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea class="form-control form-control-lg" placeholder="Write your message here..." required="" rows="6"></textarea>
+                    </div>
+                    <button class="btn btn-brand-teal px-5 py-3" type="submit">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- END: ContactContent -->
+<!-- BEGIN: MapSection -->
+<section class="container pb-5">
+    <div class="map-container" data-purpose="google-map">
+        <iframe allowfullscreen="" height="100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d231666.11181514742!2d66.92484419999999!3d24.8732912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e0660293eb7%3A0xad6a529345672224!2sKarachi%2C%20Karachi%20City%2C%20Sindh%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s" style="border:0;" width="100%">
+        </iframe>
+    </div>
+</section>
+<!-- END: MapSection -->
+
+
+<script data-purpose="form-handlers">
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for contacting Netrex! We will get back to you shortly.');
+      this.reset();
+    });
+</script>
+

@@ -1,0 +1,297 @@
+﻿@using Netrex.Frontend.Application.Services.ChatBot.Interfaces
+@using Netrex.Frontend.Application.ViewModels.ChatBotVMS
+@inject IChatBotManager ChatManager
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<div class="chatbot-container">
+    <!-- Chat Button -->
+    @if (!_isChatOpen)
+    {
+        <div class="chat-button" @onclick="ToggleChat">
+            <img src="/assets/ChatBot/ai-robot--v3.jpg" class="chat-button-image" alt="AI Assistant" />
+            <span class="chat-tooltip">Need help?</span>
+        </div>
+    }
+
+    <!-- Chat Window -->
+    @if (_isChatOpen)
+    {
+        <div class="chat-window @(_isMinimized ? "minimized" : "")">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="header-left">
+                    <div class="header-avatar">
+                        <img src="/assets/ChatBot/ai-robot--v3.jpg" class="avatar-image" alt="Netrex AI" />
+                    </div>
+                    <div class="header-info">
+                        <h4>Netrex AI Assistant</h4>
+                        <span class="status online"><span></span> Online</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" @onclick="GoToMainPage" title="Go to Home">
+                        🏠
+                    </button>
+                    <button class="header-btn close-btn" @onclick="ToggleChat" title="Close">
+                        ✕
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            @if (!_isMinimized)
+            {
+                <div class="chat-messages" @ref="_messagesContainer">
+                    @foreach (var msg in _messages)
+                    {
+                        <div class="message @(msg.IsUser ? "user-message" : "bot-message")">
+                            @if (!msg.IsUser)
+                            {
+                                <div class="bot-avatar">
+                                    <img src="/assets/ChatBot/ai-robot--v3.jpg" class="avatar-image" alt="Netrex AI" />
+                                </div>
+                            }
+                            <div class="message-content">
+                                @if (!msg.IsUser)
+                                {
+                                    <div class="message-sender">Netrex AI Assistant</div>
+                                }
+                                <div class="message-text">@msg.Content</div>
+                                <span class="message-time">@msg.Timestamp.ToString("hh:mm tt")</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (_isTyping)
+                    {
+                        <div class="message bot-message typing">
+                            <div class="bot-avatar">
+                                <img src="/assets/ChatBot/ai-robot--v3.jpg" class="avatar-image" alt="Netrex AI" />
+                            </div>
+                            <div class="message-content">
+                                <div class="message-sender">Netrex AI Assistant</div>
+                                <div class="typing-indicator">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <textarea @bind="_currentMessage"
+                              @bind:event="oninput"
+                              @onkeydown="HandleKeyDown"
+                              placeholder="Type your message..."
+                              rows="1"
+                              disabled="@_isSending"></textarea>
+                    <button class="send-btn" @onclick="SendMessage" disabled="@_isSending">
+                        @if (_isSending)
+                        {
+                            <div class="loading-spinner"></div>
+                        }
+                        else
+                        {
+                            <span class="send-icon">➤</span>
+                        }
+                    </button>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool _isChatOpen = false;
+    private bool _isMinimized = false;
+    private bool _isTyping = false;
+    private bool _isSending = false;
+    private string _currentMessage = "";
+    private List<ChatMessageUIVM> _messages = new();
+    private ElementReference _messagesContainer;
+
+    protected override void OnInitialized()
+    {
+        // Welcome message
+        _messages.Add(new ChatMessageUIVM
+        {
+            Content = "👋 Hello! I'm Netrex AI Assistant. How can i help you today?",
+            IsUser = false,
+            Timestamp = DateTime.Now
+        });
+    }
+
+    private void ToggleChat() => _isChatOpen = !_isChatOpen;
+    private void GoToMainPage() => NavigationManager.NavigateTo("/");
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey && !_isSending)
+            await SendMessage();
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(_currentMessage) || _isSending) return;
+
+        var userMessage = _currentMessage;
+        _currentMessage = "";
+        _isSending = true;
+
+        // Add user message
+        _messages.Add(new ChatMessageUIVM
+        {
+            Content = userMessage,
+            IsUser = true,
+            Timestamp = DateTime.Now
+        });
+
+        // Show typing
+        _isTyping = true;
+        await ScrollToBottom();
+        StateHasChanged();
+
+        try
+        {
+            // Check if user is asking about creator
+            if (IsAskingAboutCreator(userMessage))
+            {
+                await Task.Delay(800); // Small delay for realistic typing
+                _isTyping = false;
+
+                // Professional Roman Urdu response
+                string response = "I was developed by Saqib Khan, a Software Developer at Netrex Solutions. 🚀\n\n" +
+"Saqib specializes in .NET development, Clean Architecture, and AI integrations. He designed me to help customers with their shopping experience and provide quick assistance. " +
+"If you have any technical questions about my development, feel free to ask!";
+
+                _messages.Add(new ChatMessageUIVM
+                {
+                    Content = response,
+                    IsUser = false,
+                    Timestamp = DateTime.Now
+                });
+            }
+            else
+            {
+                // Call actual API for other messages
+                var response = await ChatManager.SendMessageAsync(userMessage);
+                _isTyping = false;
+
+                if (response.IsSuccess && response.Data != null)
+                {
+                    _messages.Add(new ChatMessageUIVM
+                    {
+                        Content = response.Data.Message,
+                        IsUser = false,
+                        Timestamp = response.Data.Timestamp.ToLocalTime()
+                    });
+                }
+                else
+                {
+                    _messages.Add(new ChatMessageUIVM
+                    {
+                        Content = "😔 Sorry, main abhi connect nahi ho pa raha. Thodi der baad try karein.",
+                        IsUser = false,
+                        Timestamp = DateTime.Now
+                    });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _isTyping = false;
+            _messages.Add(new ChatMessageUIVM
+            {
+                Content = "😔 Network error. Please check your connection.",
+                IsUser = false,
+                Timestamp = DateTime.Now
+            });
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            _isSending = false;
+            await ScrollToBottom();
+            StateHasChanged();
+        }
+    }
+
+    private bool IsAskingAboutCreator(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return false;
+
+        var lowerMessage = message.ToLowerInvariant();
+
+        var creatorPhrases = new List<string>
+        {
+            // English variations
+            "who created you",
+            "who made you",
+            "who is your creator",
+            "who is your developer",
+            "who developed you",
+            "who programmed you",
+            "who built you",
+            "your creator",
+            "your developer",
+            "your maker",
+            "who created u",
+            "who made u",
+            "ur creator",
+            "ur developer",
+            
+            // Roman Urdu variations - Professional
+            "aapko kis ne banaya",
+            "aapko kisne banaya",
+            "apko kis ne banaya",
+            "tumhe kis ne banaya",
+            "kaun ho aap",
+            "aap kaun ho",
+            "ap kaun ho",
+            "aap kaun hain",
+            "introduce yourself",
+            "apna taaruf",
+            "apne baare mein batayein",
+            "aapke creator kaun hain",
+            "aapko kis company ne banaya",
+            "kis ne develop kiya",
+            "developer kaun hai",
+            
+            // Common questions
+            "who are you",
+            "tell me about yourself",
+            "about you",
+            "introduce yourself"
+        };
+
+        foreach (var phrase in creatorPhrases)
+        {
+            if (lowerMessage.Contains(phrase.ToLowerInvariant()))
+            {
+                return true;
+            }
+        }
+
+        // Special case for "who" + "you" combinations
+        if ((lowerMessage.Contains("who") || lowerMessage.Contains("kaun") || lowerMessage.Contains("kon")) &&
+            (lowerMessage.Contains("you") || lowerMessage.Contains("u") || lowerMessage.Contains("aap") || lowerMessage.Contains("ap") || lowerMessage.Contains("tum")))
+        {
+            if (!lowerMessage.Contains("product") && !lowerMessage.Contains("price") && !lowerMessage.Contains("shop"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(50);
+        await JSRuntime.InvokeVoidAsync("scrollChatToBottom", _messagesContainer);
+    }
+}

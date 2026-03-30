@@ -26,6 +26,7 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         [Inject] private IWishListManager WishListManager { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
         [Inject] private AuthenticationStateProvider AuthenticationState { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;  // Added for chatbot
         #endregion
 
         #region State
@@ -41,7 +42,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         private bool isLoading = true;
         private string errorMessage = "";
         VmAddCartItem model = new VmAddCartItem();
-
 
         // WishList state
         private Dictionary<Guid, Guid> _wishedProducts = new();
@@ -203,7 +203,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages
         #endregion
 
         #region WishList
-
         // ── WishList ────────────────────────────────────────────
         private async Task LoadWishedProductsAsync()
         {
@@ -233,7 +232,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             {
                 var wishListItemId = _wishedProducts[productId];
                 var response = await WishListManager.DeleteWishListItemAsync(wishListItemId);
-                HandleApiResponse(response);
                 if (response.IsSuccess)
                 {
                     _wishedProducts.Remove(productId);
@@ -247,9 +245,8 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             }
             else
             {
-                var request = new VmAddWishListItem(productId, CurrentUserId);
+                var request = new VmAddWishListItem(productId,CurrentUserId);
                 var response = await WishListManager.AddWishListItemAsync(request);
-                HandleApiResponse(response);
                 if (response.IsSuccess && response.Data != Guid.Empty)
                 {
                     _wishedProducts[productId] = response.Data;
@@ -265,7 +262,6 @@ namespace Netrex.Frontend.Blazor.Components.Pages
             _loadingWishIds.Remove(productId);
             StateHasChanged();
         }
-
         #endregion
     }
 }

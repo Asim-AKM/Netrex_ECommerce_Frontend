@@ -7,6 +7,7 @@
 @attribute [Authorize(Roles = AppRoles.Admin)]
 @layout MainAdmindashboardLayout
 @inherits AuthComponentBase
+@attribute [Authorize(Roles ="Admin")]
 <aside class="ad-sidebar">
 
     <div class="sidebar-header" style="display: flex;
